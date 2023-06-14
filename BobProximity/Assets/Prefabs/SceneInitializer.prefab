@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneObjectsList:
   - {fileID: 3495540595755424721, guid: 07575900dcc579b42aeed28a54155773, type: 3}
+  - {fileID: 4498203541992366259, guid: c78ea13eef5c04f408e79b46abbb51dd, type: 3}
