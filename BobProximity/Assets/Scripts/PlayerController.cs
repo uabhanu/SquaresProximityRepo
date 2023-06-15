@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,11 +6,17 @@ public class PlayerController : MonoBehaviour
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
     private InputActions _playerInputActions;
+    private int _coinValue;
     private int _currentPlayer = 0;
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
-    [SerializeField] private TMP_Text coinValueLabelTMP;
+
+    public int CoinValue
+    {
+        get => _coinValue;
+        set => _coinValue = value;
+    }
 
     private void Start()
     {
@@ -106,6 +111,7 @@ public class PlayerController : MonoBehaviour
 
     private void StartPlayerTurn()
     {
+        CoinValue = Random.Range(1 , 21);
         Debug.Log("Player " + (_currentPlayer + 1) + "'s Turn");
     }
 }
