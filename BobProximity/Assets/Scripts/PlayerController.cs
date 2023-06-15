@@ -21,18 +21,16 @@ public class PlayerController : MonoBehaviour
         _playerInputActions.ProximityMap.Enable();
 
         StartPlayerTurn();
-        
+
         _mouseTrailObj = Instantiate(coinObj , Vector3.zero , Quaternion.identity , gameObject.transform);
         SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
-        Color trailColor = GetPlayerColor(_currentPlayer);
-        trailColor.a = 0.5f;
-        trailRenderer.color = trailColor;
+        UpdateTrailColor();
         
         if(_mouseTrailObj != null)
         {
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
-        
+
         UpdateTrailVisibility();
     }
 
@@ -74,7 +72,7 @@ public class PlayerController : MonoBehaviour
                     break;
                 }
 
-                _gridManager.IsCellBlocked.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y, true);
+                _gridManager.IsCellBlocked.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
                 _isMouseMoving = false;
                 UpdateTrailVisibility();
                 EndPlayerTurn();
@@ -109,7 +107,7 @@ public class PlayerController : MonoBehaviour
                     _mouseTrailObj.transform.position = mouseWorldPos;
                 }
             }
-            
+
             if(!_isMouseMoving && Mouse.current.delta.ReadValue() != Vector2.zero)
             {
                 _isMouseMoving = true;
@@ -131,7 +129,6 @@ public class PlayerController : MonoBehaviour
 
     private void EndPlayerTurn()
     {
-        //Debug.Log("Player " + (_currentPlayer + 1) + "'s Turn Ended");
         _currentPlayer = (_currentPlayer + 1) % 3;
     }
 
@@ -139,14 +136,25 @@ public class PlayerController : MonoBehaviour
     {
         _coinValue = Random.Range(1 , 21);
         
-        //Debug.Log("Player " + (_currentPlayer + 1) + "'s Turn");
-        
+        UpdateTrailColor();
+
         if(_mouseTrailObj != null)
         {
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
     }
-    
+
+    private void UpdateTrailColor()
+    {
+        if(_mouseTrailObj != null)
+        {
+            SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
+            Color trailColour = GetPlayerColor(_currentPlayer);
+            trailColour.a = 0.5f;
+            trailRenderer.color = trailColour;
+        }
+    }
+
     private void UpdateTrailVisibility()
     {
         _mouseTrailObj.SetActive(_isMouseMoving);
