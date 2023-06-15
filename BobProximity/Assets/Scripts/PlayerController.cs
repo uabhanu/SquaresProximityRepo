@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    private bool _isMouseMoving;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
     private InputActions _playerInputActions;
@@ -31,6 +32,8 @@ public class PlayerController : MonoBehaviour
         {
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
+        
+        UpdateTrailVisibility();
     }
 
     private void Update()
@@ -48,15 +51,15 @@ public class PlayerController : MonoBehaviour
                 return;
             }
 
-            if(!_gridManager.IsCellBlocked.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
+            if(!_gridManager.IsCellBlocked.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
-                Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y);
-                GameObject newCoinObj = Instantiate(coinObj, spawnPos, Quaternion.identity, gameObject.transform);
+                Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+                GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
                 SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
                 _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
                 newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
 
-                switch (_currentPlayer)
+                switch(_currentPlayer)
                 {
                     case 0:
                         coinRenderer.color = Color.red;
@@ -71,34 +74,47 @@ public class PlayerController : MonoBehaviour
                     break;
                 }
 
-                _gridManager.IsCellBlocked.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
-                _mouseTrailObj.SetActive(false);
+                _gridManager.IsCellBlocked.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y, true);
+                _isMouseMoving = false;
+                UpdateTrailVisibility();
                 EndPlayerTurn();
                 StartPlayerTurn();
             }
         }
         else
         {
-            if(_mouseTrailObj == null)
+            if(_isMouseMoving)
             {
-                _mouseTrailObj = Instantiate(coinObj , Vector3.zero , Quaternion.identity , gameObject.transform);
-                SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
-                Color trailColor = GetPlayerColor(_currentPlayer);
-                trailColor.a = 0.5f;
-                trailRenderer.color = trailColor;
-            }
+                if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
+                {
+                    Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+                    _mouseTrailObj.transform.position = snapPos;
+                }
+                else
+                {
+                    _mouseTrailObj.transform.position = mouseWorldPos;
+                }
 
-            if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
-            {
-                Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
-                _mouseTrailObj.transform.position = snapPos;
+                UpdateTrailVisibility();
             }
             else
             {
-                _mouseTrailObj.transform.position = mouseWorldPos;
+                if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
+                {
+                    Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+                    _mouseTrailObj.transform.position = snapPos;
+                }
+                else
+                {
+                    _mouseTrailObj.transform.position = mouseWorldPos;
+                }
             }
-
-            _mouseTrailObj.SetActive(true);
+            
+            if(!_isMouseMoving && Mouse.current.delta.ReadValue() != Vector2.zero)
+            {
+                _isMouseMoving = true;
+                UpdateTrailVisibility();
+            }
         }
     }
 
@@ -129,5 +145,10 @@ public class PlayerController : MonoBehaviour
         {
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
+    }
+    
+    private void UpdateTrailVisibility()
+    {
+        _mouseTrailObj.SetActive(_isMouseMoving);
     }
 }
