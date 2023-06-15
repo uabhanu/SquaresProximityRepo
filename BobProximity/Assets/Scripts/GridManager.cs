@@ -4,7 +4,7 @@ public class GridManager : MonoBehaviour
 {
     private GridData<bool> _isCellBlocked;
     private GridData<SpriteRenderer> _cellSpriteRenderersData;
-    private static readonly Vector2Int _invalidCellIndex = new Vector2Int(-1 , -1);
+    private readonly Vector2Int _invalidCellIndex = new Vector2Int(-1 , -1);
     
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private GridInfo gridInfo;
@@ -20,6 +20,8 @@ public class GridManager : MonoBehaviour
         get => _cellSpriteRenderersData;
         set => _cellSpriteRenderersData = value;
     }
+
+    public Vector2Int InvalidCellIndex => _invalidCellIndex;
 
     private void Awake()
     {
@@ -52,7 +54,7 @@ public class GridManager : MonoBehaviour
         
         if(col < 0 || col >= gridInfo.Cols || row < 0 || row >= gridInfo.Rows)
         {
-            return _invalidCellIndex;
+            return InvalidCellIndex;
         }
 
         return new Vector2Int(col , row);
