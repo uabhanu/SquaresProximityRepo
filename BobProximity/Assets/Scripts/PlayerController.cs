@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,12 +12,6 @@ public class PlayerController : MonoBehaviour
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
-
-    public int CoinValue
-    {
-        get => _coinValue;
-        set => _coinValue = value;
-    }
 
     private void Start()
     {
@@ -47,6 +42,8 @@ public class PlayerController : MonoBehaviour
                 Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
                 GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
                 SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
+                _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
+                newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
 
                 switch(_currentPlayer)
                 {
@@ -78,8 +75,9 @@ public class PlayerController : MonoBehaviour
                 Color trailColor = GetPlayerColor(_currentPlayer);
                 trailColor.a = 0.5f;
                 trailRenderer.color = trailColor;
+                _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
             }
-            
+
             if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
             {
                 Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
@@ -102,16 +100,22 @@ public class PlayerController : MonoBehaviour
             default: return Color.white;
         }
     }
-    
+
     private void EndPlayerTurn()
     {
-        Debug.Log("Player " + (_currentPlayer + 1) + "'s Turn Ended");
+        //Debug.Log("Player " + (_currentPlayer + 1) + "'s Turn Ended");
         _currentPlayer = (_currentPlayer + 1) % 3;
     }
 
     private void StartPlayerTurn()
     {
-        CoinValue = Random.Range(1 , 21);
-        Debug.Log("Player " + (_currentPlayer + 1) + "'s Turn");
+        _coinValue = Random.Range(1 , 21);
+        
+        //Debug.Log("Player " + (_currentPlayer + 1) + "'s Turn");
+        
+        if(_mouseTrailObj != null)
+        {
+            _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
+        }
     }
 }
