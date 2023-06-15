@@ -20,6 +20,17 @@ public class PlayerController : MonoBehaviour
         _playerInputActions.ProximityMap.Enable();
 
         StartPlayerTurn();
+        
+        _mouseTrailObj = Instantiate(coinObj , Vector3.zero , Quaternion.identity , gameObject.transform);
+        SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
+        Color trailColor = GetPlayerColor(_currentPlayer);
+        trailColor.a = 0.5f;
+        trailRenderer.color = trailColor;
+        
+        if(_mouseTrailObj != null)
+        {
+            _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
+        }
     }
 
     private void Update()
@@ -37,15 +48,15 @@ public class PlayerController : MonoBehaviour
                 return;
             }
 
-            if(!_gridManager.IsCellBlocked.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
+            if(!_gridManager.IsCellBlocked.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
             {
-                Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
-                GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
+                Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y);
+                GameObject newCoinObj = Instantiate(coinObj, spawnPos, Quaternion.identity, gameObject.transform);
                 SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
                 _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
                 newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
 
-                switch(_currentPlayer)
+                switch (_currentPlayer)
                 {
                     case 0:
                         coinRenderer.color = Color.red;
@@ -61,7 +72,7 @@ public class PlayerController : MonoBehaviour
                 }
 
                 _gridManager.IsCellBlocked.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
-                Destroy(_mouseTrailObj);
+                _mouseTrailObj.SetActive(false);
                 EndPlayerTurn();
                 StartPlayerTurn();
             }
@@ -75,7 +86,6 @@ public class PlayerController : MonoBehaviour
                 Color trailColor = GetPlayerColor(_currentPlayer);
                 trailColor.a = 0.5f;
                 trailRenderer.color = trailColor;
-                _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
             }
 
             if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
@@ -87,6 +97,8 @@ public class PlayerController : MonoBehaviour
             {
                 _mouseTrailObj.transform.position = mouseWorldPos;
             }
+
+            _mouseTrailObj.SetActive(true);
         }
     }
 
