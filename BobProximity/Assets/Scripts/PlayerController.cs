@@ -74,11 +74,19 @@ public class PlayerController : MonoBehaviour
                 trailColor.a = 0.5f;
                 trailRenderer.color = trailColor;
             }
-
-            _mouseTrailObj.transform.position = mouseWorldPos;
+            
+            if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
+            {
+                Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+                _mouseTrailObj.transform.position = snapPos;
+            }
+            else
+            {
+                _mouseTrailObj.transform.position = mouseWorldPos;
+            }
         }
     }
-    
+
     private Color GetPlayerColor(int playerIndex)
     {
         switch(playerIndex)
