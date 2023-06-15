@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ab6fdb273c77144b2ec2b0d9574b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTestingMode: 1
+  isTestingMode: 0
   indexLabelTMPObj: {fileID: 8867580748804944912}
   indexLabelTextTMP: {fileID: 8409267392726840470}
 --- !u!1 &6026724843505505637
