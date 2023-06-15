@@ -38,9 +38,7 @@ public class GridManager : MonoBehaviour
             {
                 Vector2 cellWorldPos = CellToWorld(col , row);
                 GameObject cell = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
-                
                 CellSpriteRenderersData.SetValue(col , row , cell.GetComponentInChildren<SpriteRenderer>());
-                CellSpriteRenderersData.GetValue(col , row).color = (col + row) % 2  == 0 ? Color.white : Color.black;
             }
         }
     }
