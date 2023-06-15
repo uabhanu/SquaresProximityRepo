@@ -41,7 +41,24 @@ public class PlayerController : MonoBehaviour
             {
                 //Debug.Log("Not Invalid Cell : " + _gridManager.InvalidCellIndex + " as Current Cell Index : " + _cellIndexAtMousePosition);
                 Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
-                Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
+                GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
+                SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
+
+                switch(_currentPlayer)
+                {
+                    case 0:
+                        coinRenderer.color = Color.red;
+                    break;
+                    
+                    case 1:
+                        coinRenderer.color = Color.green;
+                    break;
+                    
+                    case 2:
+                        coinRenderer.color = Color.blue;
+                    break;
+                }
+                
                 _gridManager.IsCellBlocked.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
                 EndPlayerTurn();
                 StartPlayerTurn();
