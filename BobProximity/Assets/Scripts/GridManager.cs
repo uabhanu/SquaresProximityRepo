@@ -3,6 +3,7 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     private GridData<bool> _isCellBlockedData;
+    private GridData<GameObject> _coinOnTheCellData;
     private GridData<int> _playerIndexData;
     private GridData<SpriteRenderer> _cellSpriteRenderersData;
     private readonly Vector2Int _invalidCellIndex = new Vector2Int(-1 , -1);
@@ -14,6 +15,12 @@ public class GridManager : MonoBehaviour
     {
         get => _isCellBlockedData;
         set => _isCellBlockedData = value;
+    }
+    
+    public GridData<GameObject> CoinOnTheCellData
+    {
+        get => _coinOnTheCellData;
+        set => _coinOnTheCellData = value;
     }
     
     public GridData<int> PlayerIndexData
@@ -35,6 +42,7 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
+        CoinOnTheCellData = new GridData<GameObject>(GridInfo);
         IsCellBlockedData = new GridData<bool>(GridInfo);
         PlayerIndexData = new GridData<int>(GridInfo);
         GenerateGrid();
