@@ -1,6 +1,8 @@
+using Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Event = Events.Event;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,7 +25,6 @@ public class PlayerController : MonoBehaviour
         StartPlayerTurn();
 
         _mouseTrailObj = Instantiate(coinObj , Vector3.zero , Quaternion.identity , gameObject.transform);
-        SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
         UpdateTrailColor();
         
         if(_mouseTrailObj != null)
@@ -48,6 +49,8 @@ public class PlayerController : MonoBehaviour
             {
                 return;
             }
+            
+            EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayer);
 
             if(!_gridManager.IsCellBlocked.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
