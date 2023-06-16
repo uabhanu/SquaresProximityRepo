@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
             {
                 Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
                 GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
+                _gridManager.CoinOnTheCellData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , newCoinObj);
                 SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
                 _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
                 newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
@@ -67,11 +68,11 @@ public class PlayerController : MonoBehaviour
                     case 0:
                         coinRenderer.color = Color.red;
                     break;
-
+                
                     case 1:
                         coinRenderer.color = Color.green;
                     break;
-
+                
                     case 2:
                         coinRenderer.color = Color.blue;
                     break;
@@ -158,6 +159,15 @@ public class PlayerController : MonoBehaviour
                 if(isCellBlocked)
                 {
                     int playerIndexOfAdjacentCoin = _gridManager.PlayerIndexData.GetValue(x , y);
+                
+                    if(playerIndexOfAdjacentCoin != currentPlayerIndex)
+                    {
+                        _gridManager.PlayerIndexData.SetValue(currentPlayerIndex , x , y);
+                        Debug.Log($"Changed the coin on adjacent Cell ({x} , {y}) to Player {currentPlayerIndex}");
+                        
+                        UpdateCoinColor(x , y , currentPlayerIndex);
+                    }
+
                     Debug.Log($"Adjacent Cell ({x} , {y}) has a coin placed by Player {playerIndexOfAdjacentCoin}");
                 }
                 else
@@ -177,6 +187,36 @@ public class PlayerController : MonoBehaviour
         if(_mouseTrailObj != null)
         {
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
+        }
+    }
+    
+    private void UpdateCoinColor(int x , int y , int playerIndex)
+    {
+        GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
+        Debug.Log("Name of the Adjacent Coin : " + coin.name);
+
+        if(coin != null)
+        {
+            SpriteRenderer coinRenderer = coin.GetComponentInChildren<SpriteRenderer>();
+            
+            switch(playerIndex)
+            {
+                case 0:
+                    coinRenderer.color = Color.red;
+                break;
+                
+                case 1:
+                    coinRenderer.color = Color.green;
+                break;
+                
+                case 2:
+                    coinRenderer.color = Color.blue;
+                break;
+                
+                default:
+                    coinRenderer.color = Color.white;
+                break;
+            }
         }
     }
 
