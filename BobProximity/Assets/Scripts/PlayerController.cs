@@ -143,24 +143,25 @@ public class PlayerController : MonoBehaviour
         int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
         int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
         int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
-    
+
+        int currentPlayerIndex = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+        Debug.Log($"Current Cell ({_cellIndexAtMousePosition.x} , {_cellIndexAtMousePosition.y}) has a coin placed by Player {currentPlayerIndex}");
+
         for(int x = minX; x <= maxX; x++)
         {
             for(int y = minY; y <= maxY; y++)
             {
                 if(x == _cellIndexAtMousePosition.x && y == _cellIndexAtMousePosition.y) continue;
-    
+
                 bool isCellBlocked = _gridManager.IsCellBlockedData.GetValue(x , y);
-                
+
                 if(isCellBlocked)
                 {
-                    int playerIndexOfCoin = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
-                    Debug.Log("Coin Player Index : " + playerIndexOfCoin);
-                    Debug.Log($"Adjacent Cell ({x} , {y}) is blocked.");
+                    int playerIndexOfAdjacentCoin = _gridManager.PlayerIndexData.GetValue(x , y);
+                    Debug.Log($"Adjacent Cell ({x} , {y}) has a coin placed by Player {playerIndexOfAdjacentCoin}");
                 }
                 else
                 {
-                    Debug.Log("No Coin on this Cell so far : ");
                     Debug.Log($"Adjacent Cell ({x} , {y}) is empty.");
                 }
             }
