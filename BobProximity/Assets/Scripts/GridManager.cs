@@ -2,17 +2,24 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    private GridData<bool> _isCellBlocked;
+    private GridData<bool> _isCellBlockedData;
+    private GridData<int> _playerIndexData;
     private GridData<SpriteRenderer> _cellSpriteRenderersData;
     private readonly Vector2Int _invalidCellIndex = new Vector2Int(-1 , -1);
     
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private GridInfo gridInfo;
 
-    public GridData<bool> IsCellBlocked
+    public GridData<bool> IsCellBlockedData
     {
-        get => _isCellBlocked;
-        set => _isCellBlocked = value;
+        get => _isCellBlockedData;
+        set => _isCellBlockedData = value;
+    }
+    
+    public GridData<int> PlayerIndexData
+    {
+        get => _playerIndexData;
+        set => _playerIndexData = value;
     }
 
     public GridData<SpriteRenderer> CellSpriteRenderersData
@@ -28,7 +35,8 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
-        IsCellBlocked = new GridData<bool>(GridInfo);
+        IsCellBlockedData = new GridData<bool>(GridInfo);
+        PlayerIndexData = new GridData<int>(GridInfo);
         GenerateGrid();
     }
 
