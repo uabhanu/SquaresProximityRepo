@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
             
             EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayer);
             _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayer);
-            PrintAdjacentCellInfo();
+            CaptureAdjacentCoin();
 
             if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
@@ -134,13 +134,8 @@ public class PlayerController : MonoBehaviour
             default: return Color.white;
         }
     }
-
-    private void EndPlayerTurn()
-    {
-        _currentPlayer = (_currentPlayer + 1) % 3;
-    }
     
-    private void PrintAdjacentCellInfo()
+    private void CaptureAdjacentCoin()
     {
         int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
         int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
@@ -174,6 +169,11 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void EndPlayerTurn()
+    {
+        _currentPlayer = (_currentPlayer + 1) % 3;
     }
 
     private void StartPlayerTurn()
