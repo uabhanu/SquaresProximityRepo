@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
     private InputActions _playerInputActions;
+    private int[] adjacentOffsetsX = { -1 , 0 , 1 , -1 , 1 , -1 , 0 , 1 };
+    private int[] adjacentOffsetsY = { -1 , -1 , -1 , 0 , 0 , 1 , 1 , 1 };
     private int _coinValue;
     private int _currentPlayer = 0;
     private Vector2Int _cellIndexAtMousePosition;
@@ -144,35 +146,31 @@ public class PlayerController : MonoBehaviour
         int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
         int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
         int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
-
+    
         int currentPlayerIndex = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
-        Debug.Log($"Current Cell ({_cellIndexAtMousePosition.x} , {_cellIndexAtMousePosition.y}) has a coin placed by Player {currentPlayerIndex}");
-
+        //Debug.Log($"Current Cell ({_cellIndexAtMousePosition.x} , {_cellIndexAtMousePosition.y}) has a coin placed by Player {currentPlayerIndex}");
+    
         for(int x = minX; x <= maxX; x++)
         {
             for(int y = minY; y <= maxY; y++)
             {
                 if(x == _cellIndexAtMousePosition.x && y == _cellIndexAtMousePosition.y) continue;
-
+    
                 bool isCellBlocked = _gridManager.IsCellBlockedData.GetValue(x , y);
-
+    
                 if(isCellBlocked)
                 {
                     int playerIndexOfAdjacentCoin = _gridManager.PlayerIndexData.GetValue(x , y);
                 
                     if(playerIndexOfAdjacentCoin != currentPlayerIndex)
                     {
-                        _gridManager.PlayerIndexData.SetValue(currentPlayerIndex , x , y);
-                        Debug.Log($"Changed the coin on adjacent Cell ({x} , {y}) to Player {currentPlayerIndex}");
+                        _gridManager.PlayerIndexData.SetValue(x , y , currentPlayerIndex);
+                        //Debug.Log($"Changed the coin on adjacent Cell ({x} , {y}) to Player {currentPlayerIndex}");
                         
                         UpdateCoinColor(x , y , currentPlayerIndex);
                     }
-
-                    Debug.Log($"Adjacent Cell ({x} , {y}) has a coin placed by Player {playerIndexOfAdjacentCoin}");
-                }
-                else
-                {
-                    Debug.Log($"Adjacent Cell ({x} , {y}) is empty.");
+    
+                    //Debug.Log($"Adjacent Cell ({x} , {y}) has a coin placed by Player {playerIndexOfAdjacentCoin}");
                 }
             }
         }
@@ -193,7 +191,7 @@ public class PlayerController : MonoBehaviour
     private void UpdateCoinColor(int x , int y , int playerIndex)
     {
         GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
-        Debug.Log("Name of the Adjacent Coin : " + coin.name);
+        //Debug.Log("Name of the Adjacent Coin : " + coin.name);
 
         if(coin != null)
         {
