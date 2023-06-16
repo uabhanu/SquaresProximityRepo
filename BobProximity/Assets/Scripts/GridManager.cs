@@ -20,21 +20,23 @@ public class GridManager : MonoBehaviour
         get => _cellSpriteRenderersData;
         set => _cellSpriteRenderersData = value;
     }
+    
+    public GridInfo GridInfo => gridInfo;
 
     public Vector2Int InvalidCellIndex => _invalidCellIndex;
 
     private void Awake()
     {
-        CellSpriteRenderersData = new GridData<SpriteRenderer>(gridInfo);
-        IsCellBlocked = new GridData<bool>(gridInfo);
+        CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
+        IsCellBlocked = new GridData<bool>(GridInfo);
         GenerateGrid();
     }
 
     private void GenerateGrid()
     {
-        for(int col = 0; col < gridInfo.Cols; col++)
+        for(int col = 0; col < GridInfo.Cols; col++)
         {
-            for(int row = 0; row < gridInfo.Rows; row++)
+            for(int row = 0; row < GridInfo.Rows; row++)
             {
                 Vector2 cellWorldPos = CellToWorld(col , row);
                 GameObject cell = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
@@ -45,12 +47,12 @@ public class GridManager : MonoBehaviour
 
     public Vector2Int WorldToCell(Vector3 worldPosition)
     {
-        Vector2 localPosition = (worldPosition / gridInfo.CellSize - transform.position);
+        Vector2 localPosition = (worldPosition / GridInfo.CellSize - transform.position);
         
         int col = Mathf.FloorToInt(localPosition.x);
         int row = Mathf.FloorToInt(localPosition.y);
         
-        if(col < 0 || col >= gridInfo.Cols || row < 0 || row >= gridInfo.Rows)
+        if(col < 0 || col >= GridInfo.Cols || row < 0 || row >= GridInfo.Rows)
         {
             return InvalidCellIndex;
         }
@@ -60,8 +62,8 @@ public class GridManager : MonoBehaviour
 
     public Vector2 CellToWorld(int col , int row)
     {
-        var x = (col * gridInfo.CellSize) + transform.position.x;
-        var y = row * gridInfo.CellSize  + transform.position.y;
+        var x = (col * GridInfo.CellSize) + transform.position.x;
+        var y = row * GridInfo.CellSize  + transform.position.y;
         return new Vector2(x , y);
     }
 }
