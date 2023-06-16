@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    private int[] _scoreValuesArray;
-    
-    [SerializeField] private TMP_Text[] scoreLabelsArray;
+    [SerializeField] private int[] scoreValuesArray;
+    [SerializeField] private TMP_Text[] scoreValueLabelsArray;
 
     private void Start()
     {
@@ -22,8 +21,8 @@ public class ScoreManager : MonoBehaviour
     private void OnCoinPlaced(int coinValue , int playerID)
     {
         //Debug.Log("Player " + playerID + " placed the coin and " + " coin value : " + coinValue);
-        _scoreValuesArray[playerID] += coinValue;
-        scoreLabelsArray[playerID].text = _scoreValuesArray[playerID].ToString();
+        scoreValuesArray[playerID] += coinValue;
+        scoreValueLabelsArray[playerID].text = scoreValuesArray[playerID].ToString();
     }
 
     private void SubscribeToEvents()
