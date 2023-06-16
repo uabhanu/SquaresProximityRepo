@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
             }
             
             EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayer);
+            _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayer);
             PrintAdjacentCellInfo();
 
             if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
@@ -153,10 +154,13 @@ public class PlayerController : MonoBehaviour
                 
                 if(isCellBlocked)
                 {
+                    int playerIndexOfCoin = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+                    Debug.Log("Coin Player Index : " + playerIndexOfCoin);
                     Debug.Log($"Adjacent Cell ({x} , {y}) is blocked.");
                 }
                 else
                 {
+                    Debug.Log("No Coin on this Cell so far : ");
                     Debug.Log($"Adjacent Cell ({x} , {y}) is empty.");
                 }
             }
