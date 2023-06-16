@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
             EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayer);
             PrintAdjacentCellInfo();
 
-            if(!_gridManager.IsCellBlocked.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
+            if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
                 Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
                 GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
                     break;
                 }
 
-                _gridManager.IsCellBlocked.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
+                _gridManager.IsCellBlockedData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
                 _isMouseMoving = false;
                 UpdateTrailVisibility();
                 EndPlayerTurn();
@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour
             {
                 if(x == _cellIndexAtMousePosition.x && y == _cellIndexAtMousePosition.y) continue;
     
-                bool isCellBlocked = _gridManager.IsCellBlocked.GetValue(x , y);
+                bool isCellBlocked = _gridManager.IsCellBlockedData.GetValue(x , y);
                 
                 if(isCellBlocked)
                 {
