@@ -4,6 +4,7 @@ public class GridManager : MonoBehaviour
 {
     private GridData<bool> _isCellBlockedData;
     private GridData<GameObject> _coinOnTheCellData;
+    private GridData<int> _coinValueData;
     private GridData<int> _playerIndexData;
     private GridData<SpriteRenderer> _cellSpriteRenderersData;
     private readonly Vector2Int _invalidCellIndex = new Vector2Int(-1 , -1);
@@ -21,6 +22,12 @@ public class GridManager : MonoBehaviour
     {
         get => _coinOnTheCellData;
         set => _coinOnTheCellData = value;
+    }
+    
+    public GridData<int> CoinValueData
+    {
+        get => _coinValueData;
+        set => _coinValueData = value;
     }
     
     public GridData<int> PlayerIndexData
@@ -43,6 +50,7 @@ public class GridManager : MonoBehaviour
     {
         CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
         CoinOnTheCellData = new GridData<GameObject>(GridInfo);
+        CoinValueData = new GridData<int>(GridInfo);
         IsCellBlockedData = new GridData<bool>(GridInfo);
         PlayerIndexData = new GridData<int>(GridInfo);
         GenerateGrid();
