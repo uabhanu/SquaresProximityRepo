@@ -1,8 +1,8 @@
+using Event = Events.Event;
 using Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Event = Events.Event;
 
 public class PlayerController : MonoBehaviour
 {
@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
             }
             
             EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayer);
+            PrintAdjacentCellInfo();
 
             if(!_gridManager.IsCellBlocked.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
@@ -133,6 +134,33 @@ public class PlayerController : MonoBehaviour
     private void EndPlayerTurn()
     {
         _currentPlayer = (_currentPlayer + 1) % 3;
+    }
+    
+    private void PrintAdjacentCellInfo()
+    {
+        int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
+        int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
+        int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
+        int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
+    
+        for(int x = minX; x <= maxX; x++)
+        {
+            for(int y = minY; y <= maxY; y++)
+            {
+                if(x == _cellIndexAtMousePosition.x && y == _cellIndexAtMousePosition.y) continue;
+    
+                bool isCellBlocked = _gridManager.IsCellBlocked.GetValue(x , y);
+                
+                if(isCellBlocked)
+                {
+                    Debug.Log($"Adjacent Cell ({x} , {y}) is blocked.");
+                }
+                else
+                {
+                    Debug.Log($"Adjacent Cell ({x} , {y}) is empty.");
+                }
+            }
+        }
     }
 
     private void StartPlayerTurn()
