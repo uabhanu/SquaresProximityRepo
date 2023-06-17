@@ -1,5 +1,3 @@
-using Event = Events.Event;
-using Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +9,8 @@ public class PlayerController : MonoBehaviour
     private GridManager _gridManager;
     private InputActions _playerInputActions;
     private int _coinValue;
-    private int _currentPlayerIndex = 0;
+    private int _currentPlayerID = 0;
+    private ScoreManager _scoreManager;
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
@@ -21,6 +20,7 @@ public class PlayerController : MonoBehaviour
         _gridManager = FindObjectOfType<GridManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
+        _scoreManager = FindObjectOfType<ScoreManager>();
 
         StartPlayerTurn();
 
@@ -50,9 +50,9 @@ public class PlayerController : MonoBehaviour
                 return;
             }
             
-            EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayerIndex);
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
-            _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerIndex);
+            _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
+            _scoreManager.PlaceCoin(_coinValue , _currentPlayerID);
             CaptureAdjacentCoin();
 
             if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
                 _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
                 newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
 
-                switch(_currentPlayerIndex)
+                switch(_currentPlayerID)
                 {
                     case 0:
                         coinRenderer.color = Color.red;
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
         int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
         int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
 
-        int currentPlayerIndex = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+        _currentPlayerID = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
         //Debug.Log($"Current Cell ({_cellIndexAtMousePosition.x} , {_cellIndexAtMousePosition.y}) has a coin placed by Player {currentPlayerIndex}");
 
         for(int x = minX; x <= maxX; x++)
@@ -154,17 +154,17 @@ public class PlayerController : MonoBehaviour
 
                 if(isCellBlocked)
                 {
-                    int playerIndexOfAdjacentCoin = _gridManager.PlayerIndexData.GetValue(x , y);
+                    int adjacentCoinPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
                     int adjacentCoinValue = _gridManager.CoinValueData.GetValue(x , y);
 
-                    if(playerIndexOfAdjacentCoin != currentPlayerIndex && adjacentCoinValue < _coinValue)
+                    if(adjacentCoinPlayerID != _currentPlayerID && adjacentCoinValue < _coinValue)
                     {
-                        EventsManager.Invoke(Event.CoinCaptured , adjacentCoinValue , playerIndexOfAdjacentCoin);
                         //Debug.Log("Adjacent Coin Value : " + adjacentCoinValue.ToString() + " & " + "Current Coin Value : " + _coinValue);
-                        _gridManager.PlayerIndexData.SetValue(x , y , currentPlayerIndex);
+                        _gridManager.PlayerIndexData.SetValue(x , y , _currentPlayerID);
+                        _scoreManager.CaptureCoin(_currentPlayerID , adjacentCoinPlayerID , adjacentCoinValue);
                         //Debug.Log($"Changed the coin on adjacent Cell ({x} , {y}) to Player {currentPlayerIndex}");
 
-                        UpdateCoinColor(x , y , currentPlayerIndex);
+                        UpdateCoinColor(x , y , _currentPlayerID);
                     }
 
                     //Debug.Log($"Adjacent Cell ({x} , {y}) has a coin placed by Player {playerIndexOfAdjacentCoin}");
@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
 
     private void EndPlayerTurn()
     {
-        _currentPlayerIndex = (_currentPlayerIndex + 1) % 3;
+        _currentPlayerID = (_currentPlayerID + 1) % 3;
     }
 
     private void StartPlayerTurn()
@@ -225,7 +225,7 @@ public class PlayerController : MonoBehaviour
         if(_mouseTrailObj != null)
         {
             SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
-            Color trailColour = GetPlayerColor(_currentPlayerIndex);
+            Color trailColour = GetPlayerColor(_currentPlayerID);
             trailColour.a = 0.5f;
             trailRenderer.color = trailColour;
         }
