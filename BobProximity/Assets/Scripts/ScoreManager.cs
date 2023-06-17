@@ -3,13 +3,13 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
-    private int redCoinScore = 0;
-    private int greenCoinScore = 0;
-    private int blueCoinScore = 0;
+    private int _redCoinScoreValue;
+    private int _greenCoinScoreValue;
+    private int _blueCoinScoreValue;
     
-    [SerializeField] private TMP_Text blueCoinValueTMP;
-    [SerializeField] private TMP_Text greenCoinValueTMP;
-    [SerializeField] private TMP_Text redCoinValueTMP;
+    [SerializeField] private TMP_Text blueCoinScoreTMP;
+    [SerializeField] private TMP_Text greenCoinScoreTMP;
+    [SerializeField] private TMP_Text redCoinScoreTMP;
 
     private void Start()
     {
@@ -20,46 +20,46 @@ public class ScoreManager : MonoBehaviour
     {
         if(capturingPlayerID == 0)
         {
-            redCoinScore += capturedCoinValue;
+            _redCoinScoreValue += capturedCoinValue;
             
             if(capturedPlayerID == 1)
             {
-                greenCoinScore -= capturedCoinValue;
+                _greenCoinScoreValue -= capturedCoinValue;
             }
             
             else if(capturedPlayerID == 2)
             {
-                blueCoinScore -= capturedCoinValue;
+                _blueCoinScoreValue -= capturedCoinValue;
             }
         }
         
         else if(capturingPlayerID == 1)
         {
-            greenCoinScore += capturedCoinValue;
+            _greenCoinScoreValue += capturedCoinValue;
             
             if(capturedPlayerID == 0)
             {
-                redCoinScore -= capturedCoinValue;
+                _redCoinScoreValue -= capturedCoinValue;
             }
             
             else if(capturedPlayerID == 2)
             {
-                blueCoinScore -= capturedCoinValue;
+                _blueCoinScoreValue -= capturedCoinValue;
             }
         }
         
         else if(capturingPlayerID == 2)
         {
-            blueCoinScore += capturedCoinValue;
+            _blueCoinScoreValue += capturedCoinValue;
             
             if(capturedPlayerID == 0)
             {
-                redCoinScore -= capturedCoinValue;
+                _redCoinScoreValue -= capturedCoinValue;
             }
             
             else if(capturedPlayerID == 1)
             {
-                greenCoinScore -= capturedCoinValue;
+                _greenCoinScoreValue -= capturedCoinValue;
             }
         }
 
@@ -70,17 +70,17 @@ public class ScoreManager : MonoBehaviour
     {
         if(playerID == 0)
         {
-            redCoinScore += coinValue;
+            _redCoinScoreValue += coinValue;
         }
         
         else if(playerID == 1)
         {
-            greenCoinScore += coinValue;
+            _greenCoinScoreValue += coinValue;
         }
         
         else if(playerID == 2)
         {
-            blueCoinScore += coinValue;
+            _blueCoinScoreValue += coinValue;
         }
 
         UpdateScoreTexts();
@@ -88,8 +88,8 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScoreTexts()
     {
-        redCoinValueTMP.text = redCoinScore.ToString();
-        greenCoinValueTMP.text = greenCoinScore.ToString();
-        blueCoinValueTMP.text = blueCoinScore.ToString();
+        redCoinScoreTMP.text = _redCoinScoreValue.ToString();
+        greenCoinScoreTMP.text = _greenCoinScoreValue.ToString();
+        blueCoinScoreTMP.text = _blueCoinScoreValue.ToString();
     }
 }
