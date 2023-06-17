@@ -49,11 +49,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4b659184ae296346be0290b759eccaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreValuesArray: 000000000000000000000000
-  scoreValueLabelsArray:
-  - {fileID: 5885033656400697352}
-  - {fileID: 3515565108920872721}
-  - {fileID: 5107861102609430063}
+  blueCoinValueTMP: {fileID: 5107861102609430063}
+  greenCoinValueTMP: {fileID: 3515565108920872721}
+  redCoinValueTMP: {fileID: 5885033656400697352}
 --- !u!1 &1646790838566498881
 GameObject:
   m_ObjectHideFlags: 0
