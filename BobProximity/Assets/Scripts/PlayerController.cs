@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
             _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
             _scoreManager.PlaceCoin(_coinValue , _currentPlayerID);
+            BuffUpAdjacentCoin();
             CaptureAdjacentCoin();
 
             if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
@@ -134,6 +135,42 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+    private void BuffUpAdjacentCoin()
+    {
+        int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
+        int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
+        int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
+        int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
+
+        _currentPlayerID = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+
+        for(int x = minX; x <= maxX; x++)
+        {
+            for(int y = minY; y <= maxY; y++)
+            {
+                if(x == _cellIndexAtMousePosition.x && y == _cellIndexAtMousePosition.y) continue;
+
+                bool isCellBlocked = _gridManager.IsCellBlockedData.GetValue(x , y);
+
+                if(isCellBlocked)
+                {
+                    int adjacentCoinPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
+                    int adjacentCoinValue = _gridManager.CoinValueData.GetValue(x , y);
+
+                    if(adjacentCoinPlayerID == _currentPlayerID)
+                    {
+                        int newAdjacentCoinValue = adjacentCoinValue + 1;
+                        _gridManager.CoinValueData.SetValue(x , y , newAdjacentCoinValue);
+                        GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
+                        TMP_Text adjacentCoinValueText = adjacentCoinObj.GetComponentInChildren<TMP_Text>();
+                        adjacentCoinValueText.text = _gridManager.CoinValueData.GetValue(x , y).ToString();
+                        _scoreManager.BuffUpCoin(adjacentCoinPlayerID , newAdjacentCoinValue - adjacentCoinValue);
+                    }
+                }
+            }
+        }
+    }
+
     private void CaptureAdjacentCoin()
     {
         int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);

@@ -16,6 +16,26 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreTexts();
     }
     
+    public void BuffUpCoin(int buffedUpCoinPlayerID, int buffedUpCoinIncrement)
+    {
+        if(buffedUpCoinPlayerID == 0)
+        {
+            _redCoinScoreValue += buffedUpCoinIncrement;
+        }
+        
+        else if(buffedUpCoinPlayerID == 1)
+        {
+            _greenCoinScoreValue += buffedUpCoinIncrement;
+        }
+        
+        else if(buffedUpCoinPlayerID == 2)
+        {
+            _blueCoinScoreValue += buffedUpCoinIncrement;
+        }
+
+        UpdateScoreTexts();
+    }
+
     public void CaptureCoin(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
     {
         if(capturingPlayerID == 0)
