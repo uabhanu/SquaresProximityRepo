@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
+    [SerializeField] private int[] totalTwentys;
 
     private void Start()
     {
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
         _totalReceived = new int[3];
+        totalTwentys = new int[_totalReceived.Length];
 
         StartPlayerTurn();
 
@@ -49,7 +51,7 @@ public class PlayerController : MonoBehaviour
         {
             if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
-                Debug.Log("This is either an invalid cell or the cell is blocked so can't place any coin here :(");
+                //Debug.Log("This is either an invalid cell or the cell is blocked so can't place any coin here :(");
                 return;
             }
 
@@ -232,8 +234,23 @@ public class PlayerController : MonoBehaviour
     private void StartPlayerTurn()
     {
         _coinValue = Random.Range(1 , 21);
-        
+
         _totalReceived[_currentPlayerID] += _coinValue;
+
+        if(_coinValue == 20 && _currentPlayerID == 0)
+        {
+            totalTwentys[0]++;
+        }
+        
+        else if(_coinValue == 20 && _currentPlayerID == 1)
+        {
+            totalTwentys[1]++;
+        }
+        
+        else if(_coinValue == 20 && _currentPlayerID == 2)
+        {
+            totalTwentys[2]++;
+        }
         
         UpdateTrailColor();
 
