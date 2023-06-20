@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private GridManager _gridManager;
     private InputActions _playerInputActions;
     private int _coinValue;
-    private int _currentPlayerID;
+    [SerializeField] private int _currentPlayerID;
     private int[] _totalReceived;
     private int[] _totalTwentys;
     private ScoreManager _scoreManager;
@@ -255,7 +255,10 @@ public class PlayerController : MonoBehaviour
         
         for(int i = 0; i < playerNumbers.Length; i++)
         {
-            _totalReceived[i] += playerNumbers[i];
+            if(_currentPlayerID == i)
+            {
+                _totalReceived[i] += playerNumbers[i];   
+            }
         }
 
         UpdateTrailColor();
