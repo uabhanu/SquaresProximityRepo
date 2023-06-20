@@ -68,6 +68,13 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+    
+    public Vector2 CellToWorld(int col , int row)
+    {
+        var x = (col * GridInfo.CellSize) + transform.position.x;
+        var y = row * GridInfo.CellSize  + transform.position.y;
+        return new Vector2(x , y);
+    }
 
     public Vector2Int WorldToCell(Vector3 worldPosition)
     {
@@ -82,12 +89,5 @@ public class GridManager : MonoBehaviour
         }
 
         return new Vector2Int(col , row);
-    }
-
-    public Vector2 CellToWorld(int col , int row)
-    {
-        var x = (col * GridInfo.CellSize) + transform.position.x;
-        var y = row * GridInfo.CellSize  + transform.position.y;
-        return new Vector2(x , y);
     }
 }
