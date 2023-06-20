@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour
     private GridManager _gridManager;
     private InputActions _playerInputActions;
     private int _coinValue;
-    private int _currentPlayerID = 0;
+    private int _currentPlayerID;
+    private int[] _totalReceived;
     private ScoreManager _scoreManager;
     private Vector2Int _cellIndexAtMousePosition;
 
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
+        _totalReceived = new int[3];
 
         StartPlayerTurn();
 
@@ -227,6 +229,8 @@ public class PlayerController : MonoBehaviour
     private void StartPlayerTurn()
     {
         _coinValue = Random.Range(1 , 21);
+        
+        _totalReceived[_currentPlayerID] += _coinValue;
         
         UpdateTrailColor();
 
