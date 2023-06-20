@@ -234,24 +234,30 @@ public class PlayerController : MonoBehaviour
     private void StartPlayerTurn()
     {
         _coinValue = Random.Range(1 , 21);
+        
+        if(_coinValue == 20)
+        {
+            totalTwentys[_currentPlayerID]++;
+        }
+        
+        int[] playerNumbers = new int[_totalReceived.Length];
+        
+        for(int i = 0; i < playerNumbers.Length; i++)
+        {
+            playerNumbers[i] = _coinValue;
+        }
+        
+        for(int i = playerNumbers.Length - 1; i > 0; i--)
+        {
+            int j = Random.Range(0 , i + 1);
+            (playerNumbers[i] , playerNumbers[j]) = (playerNumbers[j] , playerNumbers[i]);
+        }
+        
+        for(int i = 0; i < playerNumbers.Length; i++)
+        {
+            _totalReceived[i] += playerNumbers[i];
+        }
 
-        _totalReceived[_currentPlayerID] += _coinValue;
-
-        if(_coinValue == 20 && _currentPlayerID == 0)
-        {
-            totalTwentys[0]++;
-        }
-        
-        else if(_coinValue == 20 && _currentPlayerID == 1)
-        {
-            totalTwentys[1]++;
-        }
-        
-        else if(_coinValue == 20 && _currentPlayerID == 2)
-        {
-            totalTwentys[2]++;
-        }
-        
         UpdateTrailColor();
 
         if(_mouseTrailObj != null)
@@ -259,7 +265,7 @@ public class PlayerController : MonoBehaviour
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
     }
-    
+
     private void UpdateCoinColor(int x , int y , int playerIndex)
     {
         GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
