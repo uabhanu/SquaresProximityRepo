@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
         {
             if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
+                Debug.Log("This is either an invalid cell or the cell is blocked so can't place any coin here :(");
                 return;
             }
 
