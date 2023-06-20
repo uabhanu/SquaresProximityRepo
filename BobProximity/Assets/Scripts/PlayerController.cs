@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private GridManager _gridManager;
     private InputActions _playerInputActions;
     private int _coinValue;
-    [SerializeField] private int _currentPlayerID;
+    private int _currentPlayerID;
     private int[] _totalReceived;
     private int[] _totalTwentys;
     private ScoreManager _scoreManager;
