@@ -11,11 +11,11 @@ public class PlayerController : MonoBehaviour
     private int _coinValue;
     private int _currentPlayerID;
     private int[] _totalReceived;
+    private int[] _totalTwentys;
     private ScoreManager _scoreManager;
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
-    [SerializeField] private int[] totalTwentys;
 
     private void Start()
     {
@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
         _totalReceived = new int[3];
-        totalTwentys = new int[_totalReceived.Length];
+        _totalTwentys = new int[_totalReceived.Length];
 
         StartPlayerTurn();
 
@@ -237,7 +237,7 @@ public class PlayerController : MonoBehaviour
         
         if(_coinValue == 20)
         {
-            totalTwentys[_currentPlayerID]++;
+            _totalTwentys[_currentPlayerID]++;
         }
         
         int[] playerNumbers = new int[_totalReceived.Length];
