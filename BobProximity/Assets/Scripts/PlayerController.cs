@@ -47,11 +47,11 @@ public class PlayerController : MonoBehaviour
 
         if(Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex)
+            if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
                 return;
             }
-            
+
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
             _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
             _scoreManager.PlaceCoin(_coinValue , _currentPlayerID);
