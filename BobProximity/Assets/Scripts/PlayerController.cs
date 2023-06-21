@@ -66,6 +66,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if(!_gameManager.GameStarted) return;
+        
         Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
         mouseScreenPos.z = Camera.main.nearClipPlane;
 
@@ -284,7 +286,7 @@ public class PlayerController : MonoBehaviour
         {
             if(_currentPlayerID == i)
             {
-                 TotalReceivedArray[i] += _coinValue;
+                TotalReceivedArray[i] += _coinValue;
             }
         }
 
@@ -292,7 +294,7 @@ public class PlayerController : MonoBehaviour
         {
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
-        
+
         _playerNumbersList[_currentPlayerID].RemoveAt(0);
 
         UpdateTrailColor();
