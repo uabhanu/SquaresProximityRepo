@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,18 +28,21 @@ public class PlayerController : MonoBehaviour
         _totalReceivedArray = new int[3];
         
         int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / _totalReceivedArray.Length) + 1;
+        
+        Debug.Log("Lists Capacity : " + capacity);
 
         _playerNumbersList = new List<List<int>>();
 
         for(int i = 0; i < _totalReceivedArray.Length; i++)
         {
             List<int> playerNumbers = new List<int>(capacity);
-        
+
             for(int j = 1; j <= 20; j++)
             {
                 playerNumbers.Add(j);
             }
-        
+
+            ShuffleList(playerNumbers);
             _playerNumbersList.Add(playerNumbers);
         }
 
@@ -246,6 +250,19 @@ public class PlayerController : MonoBehaviour
     {
         _currentPlayerID = (_currentPlayerID + 1) % 3;
     }
+    
+    private void ShuffleList<T>(List<T> list)
+    {
+        int n = list.Count;
+        
+        while(n > 1)
+        {
+            n--;
+            int k = Random.Range(0 , n + 1);
+            (list[k] , list[n]) = (list[n] , list[k]);
+        }
+    }
+
 
     private void StartPlayerTurn()
     {
