@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
 
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
             _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
-            _scoreManager.PlaceCoin(_coinValue , _currentPlayerID);
+            _scoreManager.CoinPlacedScore(_coinValue , _currentPlayerID);
             
 
             if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
                         GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
                         TMP_Text adjacentCoinValueText = adjacentCoinObj.GetComponentInChildren<TMP_Text>();
                         adjacentCoinValueText.text = _gridManager.CoinValueData.GetValue(x , y).ToString();
-                        _scoreManager.BuffUpCoin(adjacentCoinPlayerID , newAdjacentCoinValue - adjacentCoinValue);
+                        _scoreManager.CoinBuffedUpScore(adjacentCoinPlayerID , newAdjacentCoinValue - adjacentCoinValue);
                     }
                 }
             }
@@ -233,7 +233,7 @@ public class PlayerController : MonoBehaviour
                     {
                         //Debug.Log("Adjacent Coin Value : " + adjacentCoinValue.ToString() + " & " + "Current Coin Value : " + _coinValue);
                         _gridManager.PlayerIndexData.SetValue(x , y , _currentPlayerID);
-                        _scoreManager.CaptureCoin(_currentPlayerID , adjacentCoinPlayerID , adjacentCoinValue);
+                        _scoreManager.CoinCapturedScore(_currentPlayerID , adjacentCoinPlayerID , adjacentCoinValue);
                         //Debug.Log($"Changed the coin on adjacent Cell ({x} , {y}) to Player {currentPlayerIndex}");
 
                         UpdateCoinColor(x , y , _currentPlayerID);

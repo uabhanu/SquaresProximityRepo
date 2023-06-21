@@ -6,17 +6,19 @@ public class ScoreManager : MonoBehaviour
     private int _redCoinScoreValue;
     private int _greenCoinScoreValue;
     private int _blueCoinScoreValue;
-    
+
+    [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private TMP_Text blueCoinScoreTMP;
     [SerializeField] private TMP_Text greenCoinScoreTMP;
     [SerializeField] private TMP_Text redCoinScoreTMP;
 
     private void Start()
     {
+        gameOverPanelsObj.SetActive(false);
         UpdateScoreTexts();
     }
     
-    public void BuffUpCoin(int buffedUpCoinPlayerID, int buffedUpCoinIncrement)
+    public void CoinBuffedUpScore(int buffedUpCoinPlayerID, int buffedUpCoinIncrement)
     {
         if(buffedUpCoinPlayerID == 0)
         {
@@ -36,7 +38,7 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreTexts();
     }
 
-    public void CaptureCoin(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
+    public void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
     {
         if(capturingPlayerID == 0)
         {
@@ -86,7 +88,7 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreTexts();
     }
 
-    public void PlaceCoin(int coinValue , int playerID)
+    public void CoinPlacedScore(int coinValue , int playerID)
     {
         if(playerID == 0)
         {
