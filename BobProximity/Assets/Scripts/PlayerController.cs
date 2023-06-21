@@ -270,8 +270,8 @@ public class PlayerController : MonoBehaviour
 
         for(int i = playerNumbers.Length - 1; i > 0; i--)
         {
-            int j = Random.Range(0, i + 1);
-            (playerNumbers[i], playerNumbers[j]) = (playerNumbers[j], playerNumbers[i]);
+            int j = Random.Range(0 , i + 1);
+            (playerNumbers[i] , playerNumbers[j]) = (playerNumbers[j] , playerNumbers[i]);
         }
 
         for(int i = 0; i < playerNumbers.Length; i++)
