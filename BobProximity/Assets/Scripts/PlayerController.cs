@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
+    [SerializeField] private int maxTwenties;
 
     private void Start()
     {
@@ -234,30 +235,39 @@ public class PlayerController : MonoBehaviour
     private void StartPlayerTurn()
     {
         _coinValue = Random.Range(1 , 21);
-        
+
         if(_coinValue == 20)
         {
+            if(_totalTwentys[_currentPlayerID] >= maxTwenties)
+            {
+                _coinValue = 0;
+                _coinValue = Random.Range(1 , 21);
+                //Debug.Log("Maximum twenties reached for Player " + _currentPlayerID);
+                return;
+            }
+
             _totalTwentys[_currentPlayerID]++;
+            //Debug.Log("Total Twenties for Player " + _currentPlayerID + ": " + _totalTwentys[_currentPlayerID]);
         }
-        
+
         int[] playerNumbers = new int[_totalReceived.Length];
-        
+
         for(int i = 0; i < playerNumbers.Length; i++)
         {
             playerNumbers[i] = _coinValue;
         }
-        
+
         for(int i = playerNumbers.Length - 1; i > 0; i--)
         {
-            int j = Random.Range(0 , i + 1);
-            (playerNumbers[i] , playerNumbers[j]) = (playerNumbers[j] , playerNumbers[i]);
+            int j = Random.Range(0, i + 1);
+            (playerNumbers[i], playerNumbers[j]) = (playerNumbers[j], playerNumbers[i]);
         }
-        
+
         for(int i = 0; i < playerNumbers.Length; i++)
         {
             if(_currentPlayerID == i)
             {
-                _totalReceived[i] += playerNumbers[i];   
+                _totalReceived[i] += playerNumbers[i];
             }
         }
 

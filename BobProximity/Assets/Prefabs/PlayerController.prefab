@@ -44,5 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1719f1cceb6f5f843a9d14e3f7f1a777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _totalReceived: 
+  _totalTwentys: 
   coinObj: {fileID: 4578332380355879588, guid: a9395e2cc0376484f9984ad964da4539, type: 3}
-  coinValueLabelTMP: {fileID: 0}
+  maxTwenties: 1
