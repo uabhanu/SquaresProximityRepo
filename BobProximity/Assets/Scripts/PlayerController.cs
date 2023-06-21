@@ -235,13 +235,24 @@ public class PlayerController : MonoBehaviour
     private void StartPlayerTurn()
     {
         _coinValue = Random.Range(1 , 21);
+        
+        if(_mouseTrailObj != null)
+        {
+            _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
+        }
 
         if(_coinValue == 20)
         {
             if(_totalTwentys[_currentPlayerID] >= maxTwenties)
             {
                 _coinValue = 0;
-                _coinValue = Random.Range(1 , 21);
+                _coinValue = Random.Range(1 , 20);
+                
+                if(_mouseTrailObj != null)
+                {
+                    _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
+                }
+                
                 //Debug.Log("Maximum twenties reached for Player " + _currentPlayerID);
                 return;
             }
@@ -272,11 +283,6 @@ public class PlayerController : MonoBehaviour
         }
 
         UpdateTrailColor();
-
-        if(_mouseTrailObj != null)
-        {
-            _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
-        }
     }
 
     private void UpdateCoinColor(int x , int y , int playerIndex)
