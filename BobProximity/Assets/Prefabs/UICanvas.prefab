@@ -185,9 +185,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverPanelsObj: {fileID: 3538405260517282470}
-  blueCoinScoreTMP: {fileID: 5107861102609430063}
-  greenCoinScoreTMP: {fileID: 3515565108920872721}
-  redCoinScoreTMP: {fileID: 5885033656400697352}
+  coinScoreTexts:
+  - {fileID: 5885033656400697352}
+  - {fileID: 3515565108920872721}
+  - {fileID: 5107861102609430063}
 --- !u!1 &1306599151596033312
 GameObject:
   m_ObjectHideFlags: 0
