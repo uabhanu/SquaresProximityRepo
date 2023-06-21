@@ -6,23 +6,18 @@ namespace Events
     {
         #region Actions
         
-        protected static event Action<int , int> CoinCapturedAction;
-        protected static event Action<int , int> CoinPlacedAction;
+        protected static event Action GameOverAction;
 
         #endregion
 
         #region Subscribe Functions
 		
-        public static void SubscribeToEvent(Event gameEvent , Action<int , int> actionFunction)
+        public static void SubscribeToEvent(Event gameEvent , Action actionFunction)
         {
             switch(gameEvent)
             {
-                case Event.CoinCaptured:
-                    CoinCapturedAction += actionFunction;
-                break;
-                
-                case Event.CoinPlaced:
-                    CoinPlacedAction += actionFunction;
+                case Event.GameOver:
+                    GameOverAction += actionFunction;
                 break;
             }
         }
@@ -31,16 +26,12 @@ namespace Events
         
         #region Unsubscribe Functions
 
-        public static void UnsubscribeFromEvent(Event gameEvent , Action<int , int> actionFunction)
+        public static void UnsubscribeFromEvent(Event gameEvent , Action actionFunction)
         {
             switch(gameEvent)
             {
-                case Event.CoinCaptured:
-                    CoinCapturedAction -= actionFunction;
-                break;
-                
-                case Event.CoinPlaced:
-                    CoinPlacedAction -= actionFunction;
+                case Event.GameOver:
+                    GameOverAction -= actionFunction;
                 break;
             }
         }
@@ -49,16 +40,12 @@ namespace Events
         
         #region Invoke Functions
 
-        public static void Invoke(Event gameEvent , int coinValue , int currentPlayer)
+        public static void Invoke(Event gameEvent)
         {
             switch(gameEvent)
             {
-                case Event.CoinCaptured:
-                    CoinCapturedAction?.Invoke(coinValue , currentPlayer);    
-                break;
-                
-                case Event.CoinPlaced:
-                    CoinPlacedAction?.Invoke(coinValue , currentPlayer);    
+                case Event.GameOver:
+                    GameOverAction?.Invoke();
                 break;
             }
         }
