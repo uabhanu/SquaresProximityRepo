@@ -5,32 +5,32 @@ public class ScoreManager : MonoBehaviour
 {
     private int[] _coinScoreValues;
 
-    [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private TMP_Text[] coinScoreTexts;
+
+    public int[] CoinScoreValues => _coinScoreValues;
 
     private void Start()
     {
-        gameOverPanelsObj.SetActive(false);
         _coinScoreValues = new int[3];
         UpdateScoreTexts();
     }
     
     public void CoinBuffedUpScore(int buffedUpCoinPlayerID , int buffedUpCoinIncrement)
     {
-        _coinScoreValues[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
+        CoinScoreValues[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
         UpdateScoreTexts();
     }
 
     public void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
     {
-        _coinScoreValues[capturingPlayerID] += capturedCoinValue;
-        _coinScoreValues[capturedPlayerID] -= capturedCoinValue;
+        CoinScoreValues[capturingPlayerID] += capturedCoinValue;
+        CoinScoreValues[capturedPlayerID] -= capturedCoinValue;
         UpdateScoreTexts();
     }
 
     public void CoinPlacedScore(int coinValue , int playerID)
     {
-        _coinScoreValues[playerID] += coinValue;
+        CoinScoreValues[playerID] += coinValue;
         UpdateScoreTexts();
     }
 
@@ -38,7 +38,7 @@ public class ScoreManager : MonoBehaviour
     {
         for(int i = 0; i < coinScoreTexts.Length; i++)
         {
-            coinScoreTexts[i].text = _coinScoreValues[i].ToString();
+            coinScoreTexts[i].text = CoinScoreValues[i].ToString();
         }
     }
 }

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Event = Events.Event;
+using Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,6 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private bool _isMouseMoving;
+    private GameManager _gameManager;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
     private InputActions _playerInputActions;
@@ -18,21 +21,24 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject coinObj;
 
+    public int[] TotalReceivedArray => _totalReceivedArray;
+
     private void Start()
     {
+        _gameManager = FindObjectOfType<GameManager>();
         _gridManager = FindObjectOfType<GridManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
         _totalReceivedArray = new int[3];
         
-        int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / _totalReceivedArray.Length) + 1;
+        int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / TotalReceivedArray.Length) + 1;
         
         //Debug.Log("Lists Capacity : " + capacity);
 
         _playerNumbersList = new List<List<int>>();
 
-        for(int i = 0; i < _totalReceivedArray.Length; i++)
+        for(int i = 0; i < TotalReceivedArray.Length; i++)
         {
             List<int> playerNumbers = new List<int>(capacity);
 
@@ -60,6 +66,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if(!_gameManager.IsActiveInput) return;
+        
         Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
         mouseScreenPos.z = Camera.main.nearClipPlane;
 
@@ -74,6 +82,14 @@ public class PlayerController : MonoBehaviour
                 return;
             }
 
+            _gameManager.TotalCells--;
+
+            if(_gameManager.TotalCells == 0)
+            {
+                EventsManager.Invoke(Event.GameOver);
+                _gameManager.IsActiveInput = false;
+            }
+            
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
             _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
             _scoreManager.CoinPlacedScore(_coinValue , _currentPlayerID);
@@ -265,28 +281,22 @@ public class PlayerController : MonoBehaviour
 
     private void StartPlayerTurn()
     {
-        if(_currentPlayerID >= _playerNumbersList.Count || _currentPlayerID < 0 || _playerNumbersList[_currentPlayerID].Count == 0)
-        {
-            _coinValue = 1;
-        }
-        else
-        {
-            _coinValue = _playerNumbersList[_currentPlayerID][0];
-            _playerNumbersList[_currentPlayerID].RemoveAt(0);
-        }
-        
-        for(int i = 0; i < _totalReceivedArray.Length; i++)
+        _coinValue = _playerNumbersList[_currentPlayerID][0];
+
+        for(int i = 0; i < TotalReceivedArray.Length; i++)
         {
             if(_currentPlayerID == i)
             {
-                 _totalReceivedArray[i] += _coinValue;
+                 TotalReceivedArray[i] += _coinValue;
             }
         }
 
-        if (_mouseTrailObj != null)
+        if(_mouseTrailObj != null)
         {
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
+        
+        _playerNumbersList[_currentPlayerID].RemoveAt(0);
 
         UpdateTrailColor();
     }
