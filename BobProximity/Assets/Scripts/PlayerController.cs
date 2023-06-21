@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,13 +11,12 @@ public class PlayerController : MonoBehaviour
     private InputActions _playerInputActions;
     private int _coinValue;
     private int _currentPlayerID;
-    private int[] _totalReceived;
-    private int[] _totalTwentys;
+    private List<List<int>> _playerNumbersList;
+    private int[] _totalReceivedArray;
     private ScoreManager _scoreManager;
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
-    [SerializeField] private int maxTwenties;
 
     private void Start()
     {
@@ -24,8 +24,23 @@ public class PlayerController : MonoBehaviour
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
-        _totalReceived = new int[3];
-        _totalTwentys = new int[_totalReceived.Length];
+        _totalReceivedArray = new int[3];
+        
+        int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / _totalReceivedArray.Length) + 1;
+
+        _playerNumbersList = new List<List<int>>();
+
+        for(int i = 0; i < _totalReceivedArray.Length; i++)
+        {
+            List<int> playerNumbers = new List<int>(capacity);
+        
+            for(int j = 1; j <= 20; j++)
+            {
+                playerNumbers.Add(j);
+            }
+        
+            _playerNumbersList.Add(playerNumbers);
+        }
 
         StartPlayerTurn();
 
@@ -234,52 +249,27 @@ public class PlayerController : MonoBehaviour
 
     private void StartPlayerTurn()
     {
-        _coinValue = Random.Range(1 , 21);
+        if(_currentPlayerID >= _playerNumbersList.Count || _currentPlayerID < 0 || _playerNumbersList[_currentPlayerID].Count == 0)
+        {
+            _coinValue = 1;
+        }
+        else
+        {
+            _coinValue = _playerNumbersList[_currentPlayerID][0];
+            _playerNumbersList[_currentPlayerID].RemoveAt(0);
+        }
         
-        if(_mouseTrailObj != null)
-        {
-            _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
-        }
-
-        if(_coinValue == 20)
-        {
-            if(_totalTwentys[_currentPlayerID] >= maxTwenties)
-            {
-                _coinValue = 0;
-                _coinValue = Random.Range(1 , 20);
-                
-                if(_mouseTrailObj != null)
-                {
-                    _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
-                }
-                
-                //Debug.Log("Maximum twenties reached for Player " + _currentPlayerID);
-                return;
-            }
-
-            _totalTwentys[_currentPlayerID]++;
-            //Debug.Log("Total Twenties for Player " + _currentPlayerID + ": " + _totalTwentys[_currentPlayerID]);
-        }
-
-        int[] playerNumbers = new int[_totalReceived.Length];
-
-        for(int i = 0; i < playerNumbers.Length; i++)
-        {
-            playerNumbers[i] = _coinValue;
-        }
-
-        for(int i = playerNumbers.Length - 1; i > 0; i--)
-        {
-            int j = Random.Range(0 , i + 1);
-            (playerNumbers[i] , playerNumbers[j]) = (playerNumbers[j] , playerNumbers[i]);
-        }
-
-        for(int i = 0; i < playerNumbers.Length; i++)
+        for(int i = 0; i < _totalReceivedArray.Length; i++)
         {
             if(_currentPlayerID == i)
             {
-                _totalReceived[i] += playerNumbers[i];
+                 _totalReceivedArray[i] += _coinValue;
             }
+        }
+
+        if (_mouseTrailObj != null)
+        {
+            _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
 
         UpdateTrailColor();
