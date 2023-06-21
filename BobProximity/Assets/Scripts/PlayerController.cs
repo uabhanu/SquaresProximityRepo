@@ -66,8 +66,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(!_gameManager.IsActiveInput) return;
-        
         Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
         mouseScreenPos.z = Camera.main.nearClipPlane;
 
@@ -87,7 +85,6 @@ public class PlayerController : MonoBehaviour
             if(_gameManager.TotalCells == 0)
             {
                 EventsManager.Invoke(Event.GameOver);
-                _gameManager.IsActiveInput = false;
             }
             
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);

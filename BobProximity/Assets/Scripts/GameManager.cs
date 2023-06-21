@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private bool _isActiveInput;
     private GridManager _gridManager;
     private int _totalCells;
     private PlayerController _playerController;
@@ -15,12 +14,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private TMP_Text[] totalReceivedTexts;
     [SerializeField] private GameObject[] winsPanelObjs;
-
-    public bool IsActiveInput
-    {
-        get => _isActiveInput;
-        set => _isActiveInput = value;
-    }
     
     public int TotalCells
     {
@@ -30,7 +23,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        IsActiveInput = true;
         gameOverPanelsObj.SetActive(false);
         _gridManager = FindObjectOfType<GridManager>();
         _playerController = FindObjectOfType<PlayerController>();
@@ -69,7 +61,6 @@ public class GameManager : MonoBehaviour
 
     private void OnGameOver()
     {
-        IsActiveInput = false;
         int highestScorePlayer = GetHighestScorePlayer();
         string playerName = "Player " + highestScorePlayer;
         Debug.Log(playerName + " wins with a score of " + _scoreManager.CoinScoreValues[highestScorePlayer]);
