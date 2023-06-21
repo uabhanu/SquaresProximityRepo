@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,7 +28,7 @@ public class PlayerController : MonoBehaviour
         
         int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / _totalReceivedArray.Length) + 1;
         
-        Debug.Log("Lists Capacity : " + capacity);
+        //Debug.Log("Lists Capacity : " + capacity);
 
         _playerNumbersList = new List<List<int>>();
 
@@ -37,9 +36,9 @@ public class PlayerController : MonoBehaviour
         {
             List<int> playerNumbers = new List<int>(capacity);
 
-            for(int j = 1; j <= 20; j++)
+            for(int j = 1; j <= capacity; j++)
             {
-                playerNumbers.Add(j);
+                playerNumbers.Add(j % 20 + 1);
             }
 
             ShuffleList(playerNumbers);
