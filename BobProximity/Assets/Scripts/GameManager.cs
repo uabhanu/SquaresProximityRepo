@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
         set => _totalCells = value;
     }
 
+    public TMP_InputField[] PlayerNameInputTMPs => playerNameInputTMPs;
+
     private void Start()
     {
         _gridManager = FindObjectOfType<GridManager>();
@@ -110,10 +112,10 @@ public class GameManager : MonoBehaviour
 
     public void EnterButton()
     {
-        for(int i = 0; i < playerNameInputTMPs.Length; i++)
+        for(int i = 0; i < PlayerNameInputTMPs.Length; i++)
         {
-            _playerNamesReceived[i] = playerNameInputTMPs[i].text;
-            playerNameLabelTMPs[i].text = playerNameInputTMPs[i].text;
+            _playerNamesReceived[i] = PlayerNameInputTMPs[i].text;
+            playerNameLabelTMPs[i].text = PlayerNameInputTMPs[i].text;
             
             if(!string.IsNullOrEmpty(_playerNamesReceived[0]) && !string.IsNullOrEmpty(_playerNamesReceived[1]) && !string.IsNullOrEmpty(_playerNamesReceived[2]))
             {

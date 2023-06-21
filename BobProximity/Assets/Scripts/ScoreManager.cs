@@ -4,6 +4,7 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     private int[] _coinScoreValues;
+    private GameManager _gameManager;
 
     [SerializeField] private TMP_Text[] coinScoreTexts;
 
@@ -12,6 +13,7 @@ public class ScoreManager : MonoBehaviour
     private void Start()
     {
         _coinScoreValues = new int[3];
+        _gameManager = FindObjectOfType<GameManager>();
         UpdateScoreTexts();
     }
     
@@ -38,7 +40,7 @@ public class ScoreManager : MonoBehaviour
     {
         for(int i = 0; i < coinScoreTexts.Length; i++)
         {
-            coinScoreTexts[i].text = CoinScoreValues[i].ToString();
+            coinScoreTexts[i].text = _gameManager.PlayerNameInputTMPs[i].text + " : " + CoinScoreValues[i];
         }
     }
 }
