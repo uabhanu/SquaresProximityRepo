@@ -6,7 +6,6 @@ namespace Events
     {
         #region Actions
         
-        protected static event Action CoinPlacedAction;
         protected static event Action GameOverAction;
 
         #endregion
@@ -17,10 +16,6 @@ namespace Events
         {
             switch(gameEvent)
             {
-                case Event.CoinPlaced:
-                    CoinPlacedAction += actionFunction;
-                break;
-                
                 case Event.GameOver:
                     GameOverAction += actionFunction;
                 break;
@@ -35,10 +30,6 @@ namespace Events
         {
             switch(gameEvent)
             {
-                case Event.CoinPlaced:
-                    CoinPlacedAction -= actionFunction;
-                break;
-                
                 case Event.GameOver:
                     GameOverAction -= actionFunction;
                 break;
@@ -53,10 +44,6 @@ namespace Events
         {
             switch(gameEvent)
             {
-                case Event.CoinPlaced:
-                    CoinPlacedAction?.Invoke();
-                break;
-                
                 case Event.GameOver:
                     GameOverAction?.Invoke();
                 break;
