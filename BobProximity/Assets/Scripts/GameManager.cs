@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private const int TotalNumberOfPlayers = 3;
     private PlayerController _playerController;
     private ScoreManager _scoreManager;
-    private readonly string _filePath = "D:\\data.json";
+    private readonly string _filePath = "data.json";
     private string[] _playerNamesReceivedArray;
     
     [SerializeField] private GameObject gameOverPanelsObj;
@@ -162,6 +162,16 @@ public class GameManager : MonoBehaviour
                 playerInputPanelObj.SetActive(false);
                 inGameUIPanelsObj.SetActive(true);
             }
+        }
+    }
+
+    public void ResetButton()
+    {
+        JsonDataManager.DeleteFile(_filePath);
+
+        for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
+        {
+            PlayerNameTMPInputFields[i].text = "";
         }
     }
 
