@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private const int TotalNumberOfPlayers = 3;
     private PlayerController _playerController;
     private ScoreManager _scoreManager;
-    private readonly string _filePath = "D:\\player_wins.json";
+    private readonly string _filePath = "D:\\data.json";
     private string[] _playerNamesReceivedArray;
     
     [SerializeField] private GameObject gameOverPanelsObj;
@@ -113,10 +113,13 @@ public class GameManager : MonoBehaviour
     public void LoadData()
     {
         GameDataWrapper gameData = JsonDataManager.LoadData<GameDataWrapper>(_filePath);
-        
-        for(int i = 0; i < gameData.PlayerNames.Length; i++)
+
+        if(gameData != null)
         {
-            playerNameTMPInputFields[i].text = gameData.PlayerNames[i];
+            for(int i = 0; i < gameData.PlayerNames.Length; i++)
+            {
+                playerNameTMPInputFields[i].text = gameData.PlayerNames[i];
+            }   
         }
     }
 

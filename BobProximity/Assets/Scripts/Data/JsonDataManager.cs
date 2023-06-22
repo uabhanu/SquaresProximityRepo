@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using UnityEngine;
@@ -19,14 +21,26 @@ namespace Data
 
         public static T LoadData<T>(string filePath)
         {
+            if(!File.Exists(filePath))
+            {
+                return default;
+            }
+
             var serializer = new DataContractJsonSerializer(typeof(T));
-        
-            using(var stream = File.Open(filePath , FileMode.Open))
+
+            using var stream = File.Open(filePath , FileMode.Open);
+            
+            try
             {
                 return (T)serializer.ReadObject(stream);
             }
+            catch(SerializationException ex)
+            {
+                Console.WriteLine("Error deserializing data: " + ex.Message);
+                return default;
+            }
         }
-
+        
         public static string SerializeData<T>(T data)
         {
             var serializer = new DataContractJsonSerializer(typeof(T));
