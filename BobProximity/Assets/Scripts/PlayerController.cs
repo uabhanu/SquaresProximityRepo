@@ -68,6 +68,11 @@ public class PlayerController : MonoBehaviour
     {
         if(!_gameManager.GameStarted) return;
         
+        if(_gameManager.TotalCells == 0)
+        {
+            EventsManager.Invoke(Event.GameOver);
+        }
+        
         Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
         mouseScreenPos.z = Camera.main.nearClipPlane;
 
@@ -81,16 +86,10 @@ public class PlayerController : MonoBehaviour
                 //Debug.Log("This is either an invalid cell or the cell is blocked so can't place any coin here :(");
                 return;
             }
-
-            _gameManager.TotalCells--;
-
-            if(_gameManager.TotalCells == 0)
-            {
-                EventsManager.Invoke(Event.GameOver);
-            }
             
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
             _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
+            _gameManager.TotalCells--;
             _scoreManager.CoinPlacedScore(_coinValue , _currentPlayerID);
             
 
