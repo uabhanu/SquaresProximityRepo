@@ -1,4 +1,3 @@
-using Data;
 using Event = Events.Event;
 using Events;
 using TMPro;
@@ -14,7 +13,6 @@ public class GameManager : MonoBehaviour
     private const int TotalNumberOfPlayers = 3;
     private PlayerController _playerController;
     private ScoreManager _scoreManager;
-    private readonly string _filePath = "data.json";
     private string[] _playerNamesReceivedArray;
     
     [SerializeField] private GameObject gameOverPanelsObj;
@@ -104,29 +102,23 @@ public class GameManager : MonoBehaviour
         winsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!!";
         SaveData();
     }
-    
-    public void LoadData()
-    {
-        GameDataWrapper gameData = JsonDataManager.LoadData<GameDataWrapper>(_filePath);
 
-        if(gameData != null)
+    private void LoadData()
+    {
+        for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
         {
-            for(int i = 0; i < gameData.PlayerNames.Length; i++)
-            {
-                playerNameTMPInputFields[i].text = gameData.PlayerNames[i];
-            }   
+            PlayerNameTMPInputFields[i].text = PlayerPrefs.GetString("Player " + i + " Name");
         }
     }
 
     private void SaveData()
     {
-        GameDataWrapper gameData = new GameDataWrapper
+        for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
         {
-            PlayerNames = _playerNamesReceivedArray,
-            PlayerWins = _playerTotalWinsArray
-        };
+            PlayerPrefs.SetString("Player " + i + " Name" , PlayerNameTMPInputFields[i].text);
+        }
 
-        JsonDataManager.SaveData(gameData , _filePath);
+        PlayerPrefs.Save();
     }
 
     private void SubscribeToEvents()
@@ -162,17 +154,11 @@ public class GameManager : MonoBehaviour
 
     public void ResetButton()
     {
-        JsonDataManager.DeleteFile(_filePath);
+        PlayerPrefs.DeleteAll();
 
         for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
         {
             PlayerNameTMPInputFields[i].text = "";
         }
-    }
-
-    public class GameDataWrapper
-    {
-        public int[] PlayerWins { get; set; }
-        public string[] PlayerNames { get; set; }
     }
 }
