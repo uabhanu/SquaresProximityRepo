@@ -9,26 +9,28 @@ namespace Data
 {
     public static class JsonDataManager
     {
-        public static void SaveData<T>(T data , string filePath)
+        public static void SaveData<T>(T data , string relativeFilePath)
         {
+            string absoluteFilePath = Path.Combine(Application.dataPath , relativeFilePath);
             var serializer = new DataContractJsonSerializer(typeof(T));
-
-            using(var stream = File.Open(filePath , FileMode.Create))
-            {
-                serializer.WriteObject(stream , data);
-            }
+            using var stream = File.Open(absoluteFilePath , FileMode.Create);
+            serializer.WriteObject(stream , data);
+            Console.WriteLine("Data saved successfully.");
         }
 
-        public static T LoadData<T>(string filePath)
+        public static T LoadData<T>(string relativeFilePath)
         {
-            if(!File.Exists(filePath))
+            string absoluteFilePath = Path.Combine(Application.dataPath , relativeFilePath);
+
+            if(!File.Exists(absoluteFilePath))
             {
+                Console.WriteLine("File does not exist.");
                 return default;
             }
 
             var serializer = new DataContractJsonSerializer(typeof(T));
 
-            using var stream = File.Open(filePath , FileMode.Open);
+            using var stream = File.Open(absoluteFilePath , FileMode.Open);
             
             try
             {
@@ -40,7 +42,7 @@ namespace Data
                 return default;
             }
         }
-        
+
         public static string SerializeData<T>(T data)
         {
             var serializer = new DataContractJsonSerializer(typeof(T));
@@ -62,15 +64,18 @@ namespace Data
             }
         }
         
-        public static void DeleteFile(string filePath)
+        public static void DeleteFile(string relativeFilePath)
         {
-            if(File.Exists(filePath))
+            string absoluteFilePath = Path.Combine(Application.dataPath , relativeFilePath);
+
+            if(File.Exists(absoluteFilePath))
             {
-                File.Delete(filePath);
+                File.Delete(absoluteFilePath);
+                Debug.Log("File deleted successfully.");
             }
             else
             {
-                Debug.LogError("File not found Bhanu :( : " + filePath);
+                Debug.LogWarning("File not found Bhanu :( " + absoluteFilePath);
             }
         }
     }
