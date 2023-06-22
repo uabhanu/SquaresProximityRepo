@@ -295,7 +295,10 @@ public class PlayerController : MonoBehaviour
             _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
         }
 
-        _playerNumbersList[_currentPlayerID].RemoveAt(0);
+        if(_playerNumbersList.Count > 1)
+        {
+            _playerNumbersList[_currentPlayerID].RemoveAt(0);   
+        }
 
         UpdateTrailColor();
     }

@@ -6,7 +6,7 @@ public class ScoreManager : MonoBehaviour
     private int[] _coinScoreValues;
     private GameManager _gameManager;
 
-    [SerializeField] private TMP_Text[] coinScoreTexts;
+    [SerializeField] private TMP_Text[] coinScoreTMPTexts;
 
     public int[] CoinScoreValues => _coinScoreValues;
 
@@ -38,9 +38,9 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScoreTexts()
     {
-        for(int i = 0; i < coinScoreTexts.Length; i++)
+        for(int i = 0; i < coinScoreTMPTexts.Length; i++)
         {
-            coinScoreTexts[i].text = _gameManager.PlayerNameInputTMPs[i].text + " : " + CoinScoreValues[i];
+            coinScoreTMPTexts[i].text = _gameManager.PlayerNameTMPInputFields[i].text + " : " + CoinScoreValues[i];
         }
     }
 }

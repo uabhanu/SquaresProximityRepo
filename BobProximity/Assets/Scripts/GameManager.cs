@@ -17,9 +17,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject playerInputPanelObj;
     [SerializeField] private GameObject[] winsPanelObjs;
-    [SerializeField] private TMP_InputField[] playerNameInputTMPs;
-    [SerializeField] private TMP_Text[] playerNameLabelTMPs;
-    [SerializeField] private TMP_Text[] totalReceivedTexts;
+    [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
+    [SerializeField] private TMP_Text[] playerNameLabelTMPTexts;
+    [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
+    [SerializeField] private TMP_Text[] winsLabelsTMPTexts;
 
     public bool GameStarted
     {
@@ -33,7 +34,7 @@ public class GameManager : MonoBehaviour
         set => _totalCells = value;
     }
 
-    public TMP_InputField[] PlayerNameInputTMPs => playerNameInputTMPs;
+    public TMP_InputField[] PlayerNameTMPInputFields => playerNameTMPInputFields;
 
     private void Start()
     {
@@ -87,9 +88,10 @@ public class GameManager : MonoBehaviour
         Debug.Log(playerName + " wins with a score of " + _scoreManager.CoinScoreValues[highestScorePlayer]);
         gameOverPanelsObj.SetActive(true);
         
-        for(int i = 0; i < totalReceivedTexts.Length; i++)
+        for(int i = 0; i < totalReceivedTMPTexts.Length; i++)
         {
-            totalReceivedTexts[i].text = _playerController.TotalReceivedArray[i].ToString();
+            totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
+            //winsLabelsTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " Wins";
         }
         
         winsPanelObjs[highestScorePlayer].SetActive(true);
@@ -112,11 +114,11 @@ public class GameManager : MonoBehaviour
 
     public void EnterButton()
     {
-        for(int i = 0; i < PlayerNameInputTMPs.Length; i++)
+        for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
         {
-            _playerNamesReceived[i] = PlayerNameInputTMPs[i].text;
-            playerNameLabelTMPs[i].text = PlayerNameInputTMPs[i].text;
-            
+            _playerNamesReceived[i] = PlayerNameTMPInputFields[i].text;
+            playerNameLabelTMPTexts[i].text = PlayerNameTMPInputFields[i].text;
+
             if(!string.IsNullOrEmpty(_playerNamesReceived[0]) && !string.IsNullOrEmpty(_playerNamesReceived[1]) && !string.IsNullOrEmpty(_playerNamesReceived[2]))
             {
                 _gameStarted = true;
