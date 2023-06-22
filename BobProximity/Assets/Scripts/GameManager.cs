@@ -1,3 +1,4 @@
+using Data;
 using Event = Events.Event;
 using Events;
 using TMPro;
@@ -8,10 +9,13 @@ public class GameManager : MonoBehaviour
 {
     private bool _gameStarted;
     private GridManager _gridManager;
+    private int[] _playerTotalWinsArray;
     private int _totalCells;
+    private const int TotalNumberOfPlayers = 3;
     private PlayerController _playerController;
     private ScoreManager _scoreManager;
-    private string[] _playerNamesReceived;
+    private readonly string _filePath = "D:\\player_wins.json";
+    private string[] _playerNamesReceivedArray;
     
     [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private GameObject inGameUIPanelsObj;
@@ -46,7 +50,8 @@ public class GameManager : MonoBehaviour
         inGameUIPanelsObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
 
-        _playerNamesReceived = new string[3];
+        _playerNamesReceivedArray = new string[TotalNumberOfPlayers];
+        _playerTotalWinsArray = new int[TotalNumberOfPlayers];
         
         TotalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
 
@@ -94,11 +99,25 @@ public class GameManager : MonoBehaviour
         }
         
         winsPanelObjs[highestScorePlayer].SetActive(true);
+        _playerTotalWinsArray[highestScorePlayer]++;
+        SaveData();
+
 
         for(int i = 0; i < winsPanelObjs.Length; i++)
         {
             winsLabelsTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " wins!!!";
         }
+    }
+
+    private void SaveData()
+    {
+        GameDataWrapper gameData = new GameDataWrapper
+        {
+            PlayerNames = _playerNamesReceivedArray,
+            PlayerWins = _playerTotalWinsArray
+        };
+
+        JsonDataManager.SaveData(gameData , _filePath);
     }
 
     private void SubscribeToEvents()
@@ -120,15 +139,21 @@ public class GameManager : MonoBehaviour
     {
         for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
         {
-            _playerNamesReceived[i] = PlayerNameTMPInputFields[i].text;
+            _playerNamesReceivedArray[i] = PlayerNameTMPInputFields[i].text;
             playerNameLabelTMPTexts[i].text = PlayerNameTMPInputFields[i].text;
 
-            if(!string.IsNullOrEmpty(_playerNamesReceived[0]) && !string.IsNullOrEmpty(_playerNamesReceived[1]) && !string.IsNullOrEmpty(_playerNamesReceived[2]))
+            if(!string.IsNullOrEmpty(_playerNamesReceivedArray[0]) && !string.IsNullOrEmpty(_playerNamesReceivedArray[1]) && !string.IsNullOrEmpty(_playerNamesReceivedArray[2]))
             {
                 _gameStarted = true;
                 playerInputPanelObj.SetActive(false);
                 inGameUIPanelsObj.SetActive(true);
             }
         }
+    }
+
+    public class GameDataWrapper
+    {
+        public int[] PlayerWins { get; set; }
+        public string[] PlayerNames { get; set; }
     }
 }
