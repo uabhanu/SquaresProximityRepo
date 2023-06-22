@@ -91,10 +91,14 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < totalReceivedTMPTexts.Length; i++)
         {
             totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
-            //winsLabelsTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " Wins";
         }
         
         winsPanelObjs[highestScorePlayer].SetActive(true);
+
+        for(int i = 0; i < winsPanelObjs.Length; i++)
+        {
+            winsLabelsTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " wins!!!";
+        }
     }
 
     private void SubscribeToEvents()
