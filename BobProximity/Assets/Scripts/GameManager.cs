@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        LoadData();
         _gridManager = FindObjectOfType<GridManager>();
         _playerController = FindObjectOfType<PlayerController>();
         _scoreManager = FindObjectOfType<ScoreManager>();
@@ -106,6 +107,16 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < winsPanelObjs.Length; i++)
         {
             winsLabelsTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " wins!!!";
+        }
+    }
+    
+    public void LoadData()
+    {
+        GameDataWrapper gameData = JsonDataManager.LoadData<GameDataWrapper>(_filePath);
+        
+        for(int i = 0; i < gameData.PlayerNames.Length; i++)
+        {
+            playerNameTMPInputFields[i].text = gameData.PlayerNames[i];
         }
     }
 
