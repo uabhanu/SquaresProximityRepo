@@ -101,13 +101,8 @@ public class GameManager : MonoBehaviour
         
         winsPanelObjs[highestScorePlayer].SetActive(true);
         _playerTotalWinsArray[highestScorePlayer]++;
+        winsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!!";
         SaveData();
-
-
-        for(int i = 0; i < winsPanelObjs.Length; i++)
-        {
-            winsLabelsTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " wins!!!";
-        }
     }
     
     public void LoadData()
