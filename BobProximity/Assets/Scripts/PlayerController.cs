@@ -345,7 +345,6 @@ public class PlayerController : MonoBehaviour
             TMP_Text trailText = _mouseTrailObj.GetComponentInChildren<TMP_Text>();
 
             Color playerColor = GetPlayerColor(_currentPlayerID);
-            playerColor.a = 0.5f;
 
             trailRenderer.color = playerColor;
 
