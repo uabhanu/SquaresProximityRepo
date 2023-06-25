@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
         _scoreManager = FindObjectOfType<ScoreManager>();
         _totalReceivedArray = new int[3];
         
-        int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / TotalReceivedArray.Length) + 1;
+        int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / 3) + 3;
         
         //Debug.Log("Lists Capacity : " + capacity);
 
