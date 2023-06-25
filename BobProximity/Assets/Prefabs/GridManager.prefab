@@ -47,5 +47,5 @@ MonoBehaviour:
   cellPrefab: {fileID: 4578332380355879588, guid: d2192b7241422c0489cda2d786bcd30f, type: 3}
   gridInfo:
     Rows: 8
-    Cols: 10
+    Cols: 12
     CellSize: 1
