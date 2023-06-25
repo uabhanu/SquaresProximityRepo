@@ -1,3 +1,4 @@
+using System.Collections;
 using Event = Events.Event;
 using Events;
 using TMPro;
@@ -14,7 +15,8 @@ public class GameManager : MonoBehaviour
     private PlayerController _playerController;
     private ScoreManager _scoreManager;
     private string[] _playerNamesReceivedArray;
-    
+
+    [SerializeField] private float panelVisibilityTimer;
     [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject leaderboardPanelObj;
@@ -67,6 +69,24 @@ public class GameManager : MonoBehaviour
         SubscribeToEvents();
     }
 
+    private IEnumerator PanelsVisibilityCoroutine()
+    {
+        yield return new WaitForSeconds(panelVisibilityTimer);
+        
+        int highestScorePlayer = GetHighestScorePlayer();
+        string playerName = "Player " + highestScorePlayer;
+        Debug.Log(playerName + " wins with a score of " + _scoreManager.CoinScoreValues[highestScorePlayer]);
+        
+        _playerTotalWinsArray[highestScorePlayer]++;
+        Debug.Log("Player Who Won : " + _playerTotalWinsArray[highestScorePlayer]);
+        playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = "Total Wins : " + _playerTotalWinsArray[highestScorePlayer];
+        winsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!!";
+        
+        gameOverPanelsObj.SetActive(true);
+        totalReceivedPanelObj.SetActive(true);
+        winsPanelObjs[highestScorePlayer].SetActive(true);
+    }
+
     private void OnDestroy()
     {
         UnsubscribeFromEvents();
@@ -92,22 +112,14 @@ public class GameManager : MonoBehaviour
     private void OnGameOver()
     {
         GameStarted = false;
-        int highestScorePlayer = GetHighestScorePlayer();
-        string playerName = "Player " + highestScorePlayer;
-        Debug.Log(playerName + " wins with a score of " + _scoreManager.CoinScoreValues[highestScorePlayer]);
-        gameOverPanelsObj.SetActive(true);
-        
+
         for(int i = 0; i < totalReceivedTMPTexts.Length; i++)
         {
             totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
         }
         
-        winsPanelObjs[highestScorePlayer].SetActive(true);
-        _playerTotalWinsArray[highestScorePlayer]++;
-        Debug.Log("Player Who Won : " + _playerTotalWinsArray[highestScorePlayer]);
-        playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = "Total Wins : " + _playerTotalWinsArray[highestScorePlayer];
-        winsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!!";
         SaveData();
+        StartCoroutine(PanelsVisibilityCoroutine());
     }
 
     private void LoadData()
