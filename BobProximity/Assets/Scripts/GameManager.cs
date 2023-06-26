@@ -95,7 +95,6 @@ public class GameManager : MonoBehaviour
     {
         continueButtonObj.SetActive(true);
         GameStarted = false;
-        SaveData();
     }
 
     private void LoadData()
@@ -113,10 +112,6 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
         {
             PlayerPrefs.SetString("Player " + i + " Name" , PlayerNameTMPInputFields[i].text);
-        }
-
-        for(int i = 0; i < _playerTotalWinsArray.Length; i++)
-        {
             PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playerTotalWinsArray[i]);
         }
 
@@ -148,7 +143,7 @@ public class GameManager : MonoBehaviour
         Debug.Log(playerName + " wins with a score of " + _scoreManager.CoinScoreValues[highestScorePlayer]);
         
         _playerTotalWinsArray[highestScorePlayer]++;
-        Debug.Log("Player Who Won : " + _playerTotalWinsArray[highestScorePlayer]);
+        Debug.Log("Player " + highestScorePlayer + " total wins : " + _playerTotalWinsArray[highestScorePlayer]);
         playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = "Total Wins : " + _playerTotalWinsArray[highestScorePlayer];
         winsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!!";
         
@@ -160,6 +155,8 @@ public class GameManager : MonoBehaviour
         {
             totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
         }
+        
+        SaveData();
     }
     
     public void EnterButton()
@@ -185,7 +182,6 @@ public class GameManager : MonoBehaviour
 
     public void LeaderboardButton()
     {
-        LoadData();
         leaderboardPanelObj.SetActive(true);
         playerInputPanelObj.SetActive(false);
     }
