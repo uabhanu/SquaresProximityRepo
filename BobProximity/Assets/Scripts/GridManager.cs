@@ -8,9 +8,12 @@ public class GridManager : MonoBehaviour
     private GridData<int> _playerIndexData;
     private GridData<SpriteRenderer> _cellSpriteRenderersData;
     private readonly Vector2Int _invalidCellIndex = new Vector2Int(-1 , -1);
-    
+
+    [SerializeField] private bool isTestingMode;
     [SerializeField] private GameObject cellPrefab;
-    [SerializeField] private GridInfo gridInfo;
+    [HideInInspector] [SerializeField] private GridInfo gridInfo;
+    [SerializeField] private int columns;
+    [SerializeField] private int rows;
 
     public GridData<bool> IsCellBlockedData
     {
@@ -48,6 +51,18 @@ public class GridManager : MonoBehaviour
 
     private void Awake()
     {
+
+        if(isTestingMode)
+        {
+            GridInfo.Cols = 12;
+            GridInfo.Rows = 1;
+        }
+        else
+        {
+            GridInfo.Cols = columns;
+            GridInfo.Rows = rows;
+        }
+        
         CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
         CoinOnTheCellData = new GridData<GameObject>(GridInfo);
         CoinValueData = new GridData<int>(GridInfo);
