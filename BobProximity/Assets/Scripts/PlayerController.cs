@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        _currentPlayerID = Random.Range(0 , 3);
         _gameManager = FindObjectOfType<GameManager>();
         _gridManager = FindObjectOfType<GridManager>();
         _playerInputActions = new InputActions();
