@@ -1,7 +1,6 @@
 using Event = Events.Event;
 using Events;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,6 +11,7 @@ public class GameManager : MonoBehaviour
     private GridManager _gridManager;
     private int[] _playerTotalWinsArray;
     private int _totalCells;
+    private MainMenuManager _mainMenuManager;
     private PlayerController _playerController;
     private ScoreManager _scoreManager;
     private string[] _playerNamesReceivedArray;
@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
     [SerializeField] private GameObject[] totalReceivedPanelObjs;
     [SerializeField] private GameObject[] winsPanelObjs;
-    [SerializeField] private int totalNumberOfPlayers;
     [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
     [SerializeField] private TMP_Text[] playerNameLabelTMPTexts;
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
@@ -46,17 +45,12 @@ public class GameManager : MonoBehaviour
         get => _totalCells;
         set => _totalCells = value;
     }
-    
-    public int TotalNumberOfPlayers
-    {
-        get => totalNumberOfPlayers;
-        set => totalNumberOfPlayers = value;
-    }
 
     public TMP_InputField[] PlayerNameTMPInputFields => playerNameTMPInputFields;
 
     private void Start()
     {
+        _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _gridManager = FindObjectOfType<GridManager>();
         _playerController = FindObjectOfType<PlayerController>();
         _scoreManager = FindObjectOfType<ScoreManager>();
@@ -67,12 +61,12 @@ public class GameManager : MonoBehaviour
         leaderboardPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
 
-        _playerNamesReceivedArray = new string[TotalNumberOfPlayers];
-        _playerTotalWinsArray = new int[TotalNumberOfPlayers];
-        
-        if(TotalNumberOfPlayers == 2)
+        _playerNamesReceivedArray = new string[_mainMenuManager.TotalNumberOfPlayers];
+        _playerTotalWinsArray = new int[_mainMenuManager.TotalNumberOfPlayers];
+
+        if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
-            PlayerNameTMPInputFields[TotalNumberOfPlayers].gameObject.SetActive(false);
+            PlayerNameTMPInputFields[_mainMenuManager.TotalNumberOfPlayers].gameObject.SetActive(false);
         }
         
         TotalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
@@ -116,7 +110,7 @@ public class GameManager : MonoBehaviour
 
     private void LoadData()
     {
-        for(int i = 0; i < TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
             PlayerNameTMPInputFields[i].text = PlayerPrefs.GetString("Player " + i + " Name");
             _playerTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
@@ -126,7 +120,7 @@ public class GameManager : MonoBehaviour
 
     private void SaveData()
     {
-        for(int i = 0; i < TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
             PlayerPrefs.SetString("Player " + i + " Name" , PlayerNameTMPInputFields[i].text);
             PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playerTotalWinsArray[i]);
@@ -165,15 +159,15 @@ public class GameManager : MonoBehaviour
         gameOverPanelsObj.SetActive(true);
         winsPanelObjs[highestScorePlayer].SetActive(true);
 
-        if(TotalNumberOfPlayers == 2)
+        if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
-            totalReceivedPanelObjs[TotalNumberOfPlayers].SetActive(false);
+            totalReceivedPanelObjs[_mainMenuManager.TotalNumberOfPlayers].SetActive(false);
             totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
             
-            winsPanelObjs[TotalNumberOfPlayers].SetActive(false);
+            winsPanelObjs[_mainMenuManager.TotalNumberOfPlayers].SetActive(false);
         }
 
-        for(int i = 0; i < TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
             totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
         }
@@ -185,13 +179,13 @@ public class GameManager : MonoBehaviour
     {
         bool allNamesFilled = true;
 
-        if(TotalNumberOfPlayers == 2)
+        if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
-            inGameUIPlayerNamesDisplayPanelObjs[TotalNumberOfPlayers].SetActive(false);
+            inGameUIPlayerNamesDisplayPanelObjs[_mainMenuManager.TotalNumberOfPlayers].SetActive(false);
             inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 545;
         }
         
-        for(int i = 0; i < TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
             _playerNamesReceivedArray[i] = PlayerNameTMPInputFields[i].text;
             playerNameLabelTMPTexts[i].text = PlayerNameTMPInputFields[i].text;
@@ -220,9 +214,9 @@ public class GameManager : MonoBehaviour
     {
         leaderboardPanelObj.SetActive(true);
         
-        if(TotalNumberOfPlayers == 2)
+        if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
-            leaderboardWinsPanelObjs[TotalNumberOfPlayers].SetActive(false);
+            leaderboardWinsPanelObjs[_mainMenuManager.TotalNumberOfPlayers].SetActive(false);
             totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
         }
         
