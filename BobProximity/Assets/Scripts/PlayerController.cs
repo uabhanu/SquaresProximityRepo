@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private InputActions _playerInputActions;
     private int _coinValue;
     private int _currentPlayerID;
+    private List<int> _playersRemaining;
     private List<List<int>> _playerNumbersList;
     private int[] _totalReceivedArray;
     private ScoreManager _scoreManager;
@@ -25,19 +26,25 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _currentPlayerID = Random.Range(0 , 3);
         _gameManager = FindObjectOfType<GameManager>();
         _gridManager = FindObjectOfType<GridManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
-        _totalReceivedArray = new int[3];
+        _totalReceivedArray = new int[_gameManager.TotalNumberOfPlayers];
         
         int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / 3) + 3;
         
         //Debug.Log("Lists Capacity : " + capacity);
-
+        
         _playerNumbersList = new List<List<int>>();
+        
+        _playersRemaining = new List<int>();
+
+        for(int i = 0; i < _gameManager.TotalNumberOfPlayers; i++)
+        {
+            _playersRemaining.Add(i);
+        }
 
         for(int i = 0; i < TotalReceivedArray.Length; i++)
         {
@@ -265,6 +272,16 @@ public class PlayerController : MonoBehaviour
         _currentPlayerID = (_currentPlayerID + 1) % 3;
     }
     
+    private void ResetPlayersRemaining()
+    {
+        _playersRemaining = new List<int>();
+        
+        for(int i = 0; i < _gameManager.TotalNumberOfPlayers; i++)
+        {
+            _playersRemaining.Add(i);
+        }
+    }
+    
     private void ShuffleList<T>(List<T> list)
     {
         int n = list.Count;
@@ -280,7 +297,13 @@ public class PlayerController : MonoBehaviour
 
     private void StartPlayerTurn()
     {
+        int remainingPlayersCount = _playersRemaining.Count;
+        int randomIndex = Random.Range(0 , remainingPlayersCount);
+        _currentPlayerID = _playersRemaining[randomIndex];
+        
         _coinValue = _playerNumbersList[_currentPlayerID][0];
+        
+        _playersRemaining.RemoveAt(randomIndex);
 
         for(int i = 0; i < TotalReceivedArray.Length; i++)
         {
@@ -298,6 +321,11 @@ public class PlayerController : MonoBehaviour
         if(_playerNumbersList.Count > 1)
         {
             _playerNumbersList[_currentPlayerID].RemoveAt(0);   
+        }
+        
+        if (_playersRemaining.Count == 0)
+        {
+            ResetPlayersRemaining();
         }
 
         UpdateTrailColor();
