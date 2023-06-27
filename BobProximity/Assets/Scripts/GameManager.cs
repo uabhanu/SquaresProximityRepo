@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
 {
     private bool _gameStarted;
     private GridManager _gridManager;
-    private readonly int _totalTotalNumberOfPlayers = 3;
     private int[] _playerTotalWinsArray;
     private int _totalCells;
     private PlayerController _playerController;
@@ -20,8 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject leaderboardPanelObj;
     [SerializeField] private GameObject playerInputPanelObj;
-    [SerializeField] private GameObject totalReceivedPanelObj;
     [SerializeField] private GameObject[] winsPanelObjs;
+    [SerializeField] private int totalNumberOfPlayers;
     [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
     [SerializeField] private TMP_Text[] playerNameLabelTMPTexts;
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
@@ -39,10 +38,14 @@ public class GameManager : MonoBehaviour
         get => _totalCells;
         set => _totalCells = value;
     }
+    
+    public int TotalNumberOfPlayers
+    {
+        get => totalNumberOfPlayers;
+        set => totalNumberOfPlayers = value;
+    }
 
     public TMP_InputField[] PlayerNameTMPInputFields => playerNameTMPInputFields;
-
-    public int TotalNumberOfPlayers => _totalTotalNumberOfPlayers;
 
     private void Start()
     {
@@ -55,7 +58,6 @@ public class GameManager : MonoBehaviour
         inGameUIPanelsObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
-        totalReceivedPanelObj.SetActive(false);
 
         _playerNamesReceivedArray = new string[TotalNumberOfPlayers];
         _playerTotalWinsArray = new int[TotalNumberOfPlayers];
@@ -148,7 +150,6 @@ public class GameManager : MonoBehaviour
         winsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!!";
         
         gameOverPanelsObj.SetActive(true);
-        totalReceivedPanelObj.SetActive(true);
         winsPanelObjs[highestScorePlayer].SetActive(true);
 
         for(int i = 0; i < TotalNumberOfPlayers; i++)
