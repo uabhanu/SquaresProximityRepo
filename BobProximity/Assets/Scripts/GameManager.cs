@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
     [SerializeField] private GameObject leaderboardPanelObj;
+    [SerializeField] private GameObject pauseButtonObj;
+    [SerializeField] private GameObject pauseMenuPanelObj;
     [SerializeField] private GameObject playerInputPanelObj;
     [SerializeField] private GameObject totalReceivedPanelObj;
     [SerializeField] private GameObject totalWinsPanelObj;
@@ -59,6 +61,7 @@ public class GameManager : MonoBehaviour
         gameOverPanelsObj.SetActive(false);
         inGameUIPanelsObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
+        pauseMenuPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
 
         _playerNamesReceivedArray = new string[_mainMenuManager.TotalNumberOfPlayers];
@@ -105,6 +108,7 @@ public class GameManager : MonoBehaviour
     private void OnGameOver()
     {
         continueButtonObj.SetActive(true);
+        pauseMenuPanelObj.SetActive(false);
         GameStarted = false;
     }
 
@@ -204,12 +208,7 @@ public class GameManager : MonoBehaviour
             playerInputPanelObj.SetActive(false);
         }
     }
-
-    public void OkButton()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
+    
     public void LeaderboardButton()
     {
         leaderboardPanelObj.SetActive(true);
@@ -223,9 +222,38 @@ public class GameManager : MonoBehaviour
         playerInputPanelObj.SetActive(false);
     }
 
+    public void OkButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void PauseButton()
+    {
+        GameStarted = false;
+        pauseButtonObj.SetActive(false);
+        pauseMenuPanelObj.SetActive(true);
+    }
+
+    public void QuitButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+
     public void ResetButton()
     {
         PlayerPrefs.DeleteAll();
         LoadData();
+    }
+
+    public void RestartButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ResumeButton()
+    {
+        GameStarted = true;
+        pauseButtonObj.SetActive(true);
+        pauseMenuPanelObj.SetActive(false);
     }
 }
