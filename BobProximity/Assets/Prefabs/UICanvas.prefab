@@ -2388,11 +2388,11 @@ MonoBehaviour:
   inGameUIPanelsObj: {fileID: 363162966536441467}
   leaderboardPanelObj: {fileID: 638149817491610029}
   playerInputPanelObj: {fileID: 6880717777950863187}
-  totalReceivedPanelObj: {fileID: 5088950927552000208}
   winsPanelObjs:
   - {fileID: 1306599151596033312}
   - {fileID: 8418558298801778891}
   - {fileID: 8890262800759797634}
+  totalNumberOfPlayers: 3
   playerNameTMPInputFields:
   - {fileID: 5110851220399508464}
   - {fileID: 6378831753500823874}
@@ -2759,6 +2759,7 @@ RectTransform:
   - {fileID: 6832156038680774103}
   - {fileID: 3697211020819630112}
   - {fileID: 5347842495611932181}
+  - {fileID: 2619120922220943504}
   m_Father: {fileID: 8397798982979555225}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3530,7 +3531,7 @@ RectTransform:
   - {fileID: 2989704419944809444}
   - {fileID: 7842080577053720934}
   - {fileID: 8738813374328120768}
-  m_Father: {fileID: 8397798982979555225}
+  m_Father: {fileID: 6602847919799947727}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3874,7 +3875,6 @@ RectTransform:
   - {fileID: 6041078981228341781}
   - {fileID: 2340393002152699588}
   - {fileID: 3896410596739204333}
-  - {fileID: 2619120922220943504}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
