@@ -3,6 +3,7 @@ using Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject leaderboardPanelObj;
     [SerializeField] private GameObject playerInputPanelObj;
+    [SerializeField] private GameObject totalWinsPanelObj;
     [SerializeField] private GameObject[] inGameUIPlayerNamePanelObjs;
     [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
     [SerializeField] private GameObject[] totalReceivedPanelObjs;
@@ -215,6 +217,7 @@ public class GameManager : MonoBehaviour
         if(TotalNumberOfPlayers == 2)
         {
             leaderboardWinsPanelObjs[TotalNumberOfPlayers].SetActive(false);
+            totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
         }
         
         playerInputPanelObj.SetActive(false);
