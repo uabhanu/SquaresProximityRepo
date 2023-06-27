@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
     private void OnGameOver()
     {
         continueButtonObj.SetActive(true);
+        pauseButtonObj.SetActive(false);
         pauseMenuPanelObj.SetActive(false);
         GameStarted = false;
     }
