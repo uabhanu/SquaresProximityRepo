@@ -14,9 +14,10 @@ public class PlayerController : MonoBehaviour
     private InputActions _playerInputActions;
     private int _coinValue;
     private int _currentPlayerID;
+    private int[] _totalReceivedArray;
     private List<int> _playersRemaining;
     private List<List<int>> _playerNumbersList;
-    private int[] _totalReceivedArray;
+    private MainMenuManager _mainMenuManager;
     private ScoreManager _scoreManager;
     private Vector2Int _cellIndexAtMousePosition;
 
@@ -28,10 +29,11 @@ public class PlayerController : MonoBehaviour
     {
         _gameManager = FindObjectOfType<GameManager>();
         _gridManager = FindObjectOfType<GridManager>();
+        _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
-        _totalReceivedArray = new int[_gameManager.TotalNumberOfPlayers];
+        _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
         int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / 3) + 3;
         
@@ -41,12 +43,12 @@ public class PlayerController : MonoBehaviour
         
         _playersRemaining = new List<int>();
 
-        for(int i = 0; i < _gameManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
             _playersRemaining.Add(i);
         }
 
-        for(int i = 0; i < _gameManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
             List<int> playerNumbers = new List<int>(capacity);
 
@@ -276,7 +278,7 @@ public class PlayerController : MonoBehaviour
     {
         _playersRemaining.Clear();
 
-        for(int i = 0; i < _gameManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
             _playersRemaining.Add(i);
         }
