@@ -1,6 +1,7 @@
 using Event = Events.Event;
 using Events;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,10 +19,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject continueButtonObj;
     [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private GameObject inGameUIPanelsObj;
+    [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
     [SerializeField] private GameObject leaderboardPanelObj;
     [SerializeField] private GameObject playerInputPanelObj;
+    [SerializeField] private GameObject totalReceivedPanelObj;
     [SerializeField] private GameObject totalWinsPanelObj;
-    [SerializeField] private GameObject[] inGameUIPlayerNamePanelObjs;
+    [SerializeField] private GameObject[] inGameUIPlayerNamesDisplayPanelObjs;
     [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
     [SerializeField] private GameObject[] totalReceivedPanelObjs;
     [SerializeField] private GameObject[] winsPanelObjs;
@@ -165,6 +168,8 @@ public class GameManager : MonoBehaviour
         if(TotalNumberOfPlayers == 2)
         {
             totalReceivedPanelObjs[TotalNumberOfPlayers].SetActive(false);
+            totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
+            
             winsPanelObjs[TotalNumberOfPlayers].SetActive(false);
         }
 
@@ -182,7 +187,8 @@ public class GameManager : MonoBehaviour
 
         if(TotalNumberOfPlayers == 2)
         {
-            inGameUIPlayerNamePanelObjs[TotalNumberOfPlayers].SetActive(false);
+            inGameUIPlayerNamesDisplayPanelObjs[TotalNumberOfPlayers].SetActive(false);
+            inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 545;
         }
         
         for(int i = 0; i < TotalNumberOfPlayers; i++)
