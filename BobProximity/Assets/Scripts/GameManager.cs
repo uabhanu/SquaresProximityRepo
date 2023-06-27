@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     private bool _gameStarted;
     private GridManager _gridManager;
-    private const int TotalNumberOfPlayers = 3;
+    private readonly int _totalTotalNumberOfPlayers = 3;
     private int[] _playerTotalWinsArray;
     private int _totalCells;
     private PlayerController _playerController;
@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     }
 
     public TMP_InputField[] PlayerNameTMPInputFields => playerNameTMPInputFields;
+
+    public int TotalNumberOfPlayers => _totalTotalNumberOfPlayers;
 
     private void Start()
     {
