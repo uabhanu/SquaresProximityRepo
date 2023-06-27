@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
 
     private void LoadData()
     {
-        for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
+        for(int i = 0; i < TotalNumberOfPlayers; i++)
         {
             PlayerNameTMPInputFields[i].text = PlayerPrefs.GetString("Player " + i + " Name");
             _playerTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
 
     private void SaveData()
     {
-        for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
+        for(int i = 0; i < TotalNumberOfPlayers; i++)
         {
             PlayerPrefs.SetString("Player " + i + " Name" , PlayerNameTMPInputFields[i].text);
             PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playerTotalWinsArray[i]);
@@ -163,12 +163,12 @@ public class GameManager : MonoBehaviour
     
     public void EnterButton()
     {
-        for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
+        for(int i = 0; i < TotalNumberOfPlayers; i++)
         {
             _playerNamesReceivedArray[i] = PlayerNameTMPInputFields[i].text;
             playerNameLabelTMPTexts[i].text = PlayerNameTMPInputFields[i].text;
 
-            if(!string.IsNullOrEmpty(_playerNamesReceivedArray[0]) && !string.IsNullOrEmpty(_playerNamesReceivedArray[1]) && !string.IsNullOrEmpty(_playerNamesReceivedArray[2]))
+            if(!string.IsNullOrEmpty(_playerNamesReceivedArray[i]))
             {
                 _gameStarted = true;
                 inGameUIPanelsObj.SetActive(true);
