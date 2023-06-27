@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject leaderboardPanelObj;
     [SerializeField] private GameObject playerInputPanelObj;
+    [SerializeField] private GameObject[] inGameUIPlayerNamePanelObjs;
+    [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
+    [SerializeField] private GameObject[] totalReceivedPanelObjs;
     [SerializeField] private GameObject[] winsPanelObjs;
     [SerializeField] private int totalNumberOfPlayers;
     [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
@@ -157,6 +160,12 @@ public class GameManager : MonoBehaviour
         gameOverPanelsObj.SetActive(true);
         winsPanelObjs[highestScorePlayer].SetActive(true);
 
+        if(TotalNumberOfPlayers == 2)
+        {
+            totalReceivedPanelObjs[TotalNumberOfPlayers].SetActive(false);
+            winsPanelObjs[TotalNumberOfPlayers].SetActive(false);
+        }
+
         for(int i = 0; i < TotalNumberOfPlayers; i++)
         {
             totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
@@ -168,6 +177,11 @@ public class GameManager : MonoBehaviour
     public void EnterButton()
     {
         bool allNamesFilled = true;
+
+        if(TotalNumberOfPlayers == 2)
+        {
+            inGameUIPlayerNamePanelObjs[TotalNumberOfPlayers].SetActive(false);
+        }
         
         for(int i = 0; i < TotalNumberOfPlayers; i++)
         {
@@ -197,6 +211,12 @@ public class GameManager : MonoBehaviour
     public void LeaderboardButton()
     {
         leaderboardPanelObj.SetActive(true);
+        
+        if(TotalNumberOfPlayers == 2)
+        {
+            leaderboardWinsPanelObjs[TotalNumberOfPlayers].SetActive(false);
+        }
+        
         playerInputPanelObj.SetActive(false);
     }
 
