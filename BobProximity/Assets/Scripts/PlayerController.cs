@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
         _totalReceivedArray = new int[_gameManager.TotalNumberOfPlayers];
-        
+
         int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / 3) + 3;
         
         //Debug.Log("Lists Capacity : " + capacity);
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
             _playersRemaining.Add(i);
         }
 
-        for(int i = 0; i < TotalReceivedArray.Length; i++)
+        for(int i = 0; i < _gameManager.TotalNumberOfPlayers; i++)
         {
             List<int> playerNumbers = new List<int>(capacity);
 
@@ -274,14 +274,14 @@ public class PlayerController : MonoBehaviour
     
     private void ResetPlayersRemaining()
     {
-        _playersRemaining = new List<int>();
-        
+        _playersRemaining.Clear();
+
         for(int i = 0; i < _gameManager.TotalNumberOfPlayers; i++)
         {
             _playersRemaining.Add(i);
         }
     }
-    
+
     private void ShuffleList<T>(List<T> list)
     {
         int n = list.Count;
