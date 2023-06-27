@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     private bool _gameStarted;
     private GridManager _gridManager;
-    private readonly int _totalTotalNumberOfPlayers = 2;
+    private readonly int _totalTotalNumberOfPlayers = 3;
     private int[] _playerTotalWinsArray;
     private int _totalCells;
     private PlayerController _playerController;
@@ -141,11 +141,9 @@ public class GameManager : MonoBehaviour
         continueButtonObj.SetActive(false);
         
         int highestScorePlayer = GetHighestScorePlayer();
-        string playerName = "Player " + highestScorePlayer;
-        Debug.Log(playerName + " wins with a score of " + _scoreManager.CoinScoreValues[highestScorePlayer]);
-        
+
         _playerTotalWinsArray[highestScorePlayer]++;
-        Debug.Log("Player " + highestScorePlayer + " total wins : " + _playerTotalWinsArray[highestScorePlayer]);
+        //Debug.Log("Player " + highestScorePlayer + " total wins : " + _playerTotalWinsArray[highestScorePlayer]);
         playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = "Total Wins : " + _playerTotalWinsArray[highestScorePlayer];
         winsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!!";
         
@@ -199,10 +197,6 @@ public class GameManager : MonoBehaviour
     public void ResetButton()
     {
         PlayerPrefs.DeleteAll();
-
-        for(int i = 0; i < PlayerNameTMPInputFields.Length; i++)
-        {
-            PlayerNameTMPInputFields[i].text = "";
-        }
+        LoadData();
     }
 }
