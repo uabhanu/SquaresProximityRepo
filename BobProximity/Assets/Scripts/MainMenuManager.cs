@@ -1,10 +1,11 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    private static MainMenuManager _instance;
+    
     private int _totalNumberOfPlayers;
 
     [SerializeField] private Slider numberOfPlayersSelectionSlider;
@@ -17,7 +18,15 @@ public class MainMenuManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if(_instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     public void ConfirmButton()
