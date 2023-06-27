@@ -62,6 +62,11 @@ public class GameManager : MonoBehaviour
         _playerNamesReceivedArray = new string[TotalNumberOfPlayers];
         _playerTotalWinsArray = new int[TotalNumberOfPlayers];
         
+        if(TotalNumberOfPlayers == 2)
+        {
+            PlayerNameTMPInputFields[TotalNumberOfPlayers].gameObject.SetActive(false);
+        }
+        
         TotalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
 
         for(int i = 0; i < winsPanelObjs.Length; i++)
