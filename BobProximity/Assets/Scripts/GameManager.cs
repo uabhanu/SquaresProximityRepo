@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     private bool _gameStarted;
     private GridManager _gridManager;
-    private readonly int _totalTotalNumberOfPlayers = 3;
+    private readonly int _totalTotalNumberOfPlayers = 2;
     private int[] _playerTotalWinsArray;
     private int _totalCells;
     private PlayerController _playerController;
@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour
         totalReceivedPanelObj.SetActive(true);
         winsPanelObjs[highestScorePlayer].SetActive(true);
 
-        for(int i = 0; i < totalReceivedTMPTexts.Length; i++)
+        for(int i = 0; i < TotalNumberOfPlayers; i++)
         {
             totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
         }
