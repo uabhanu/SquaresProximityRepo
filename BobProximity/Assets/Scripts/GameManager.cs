@@ -163,17 +163,25 @@ public class GameManager : MonoBehaviour
     
     public void EnterButton()
     {
+        bool allNamesFilled = true;
+        
         for(int i = 0; i < TotalNumberOfPlayers; i++)
         {
             _playerNamesReceivedArray[i] = PlayerNameTMPInputFields[i].text;
             playerNameLabelTMPTexts[i].text = PlayerNameTMPInputFields[i].text;
 
-            if(!string.IsNullOrEmpty(_playerNamesReceivedArray[i]))
+            if(string.IsNullOrEmpty(_playerNamesReceivedArray[i]))
             {
-                _gameStarted = true;
-                inGameUIPanelsObj.SetActive(true);
-                playerInputPanelObj.SetActive(false);
+                allNamesFilled = false;
+                break;
             }
+        }
+
+        if(allNamesFilled)
+        {
+            _gameStarted = true;
+            inGameUIPanelsObj.SetActive(true);
+            playerInputPanelObj.SetActive(false);
         }
     }
 
