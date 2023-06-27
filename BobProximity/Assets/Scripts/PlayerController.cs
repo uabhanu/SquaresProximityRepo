@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Event = Events.Event;
 using Events;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,7 +35,8 @@ public class PlayerController : MonoBehaviour
         _scoreManager = FindObjectOfType<ScoreManager>();
         _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
-        int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / 3) + 3;
+        //int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / _mainMenuManager.TotalNumberOfPlayers) + _mainMenuManager.TotalNumberOfPlayers;
+        int capacity = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         
         //Debug.Log("Lists Capacity : " + capacity);
         
@@ -271,7 +272,7 @@ public class PlayerController : MonoBehaviour
 
     private void EndPlayerTurn()
     {
-        _currentPlayerID = (_currentPlayerID + 1) % 3;
+        _currentPlayerID = (_currentPlayerID + 1) % _mainMenuManager.TotalNumberOfPlayers;
     }
     
     private void ResetPlayersRemaining()
