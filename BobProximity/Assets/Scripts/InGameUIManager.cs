@@ -7,11 +7,14 @@ using UnityEngine.UI;
 
 public class InGameUIManager : MonoBehaviour
 {
+    private bool _isGameTied;
+    
     private MainMenuManager _mainMenuManager;
     private PlayerController _playerController;
 
     [SerializeField] private GameObject continueButtonObj;
     [SerializeField] private GameObject gameOverPanelsObj;
+    [SerializeField] private GameObject gameTiedPanelObj;
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
     [SerializeField] private GameObject leaderboardPanelObj;
@@ -39,6 +42,7 @@ public class InGameUIManager : MonoBehaviour
 
         continueButtonObj.SetActive(false);
         gameOverPanelsObj.SetActive(false);
+        gameTiedPanelObj.SetActive(false);
         inGameUIPanelsObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
         pauseMenuPanelObj.SetActive(false);
@@ -100,7 +104,15 @@ public class InGameUIManager : MonoBehaviour
         EventsManager.Invoke(Event.PlayerWins , highestScorePlayer);
 
         gameOverPanelsObj.SetActive(true);
-        winsPanelObjs[highestScorePlayer].SetActive(true);
+
+        if(!_isGameTied)
+        {
+            winsPanelObjs[highestScorePlayer].SetActive(true);   
+        }
+        else
+        {
+            gameTiedPanelObj.SetActive(true);
+        }
 
         if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
@@ -118,8 +130,6 @@ public class InGameUIManager : MonoBehaviour
 
     public void EnterButton()
     {
-        EventsManager.Invoke(Event.GameStarted);
-        
         bool allNamesFilled = true;
 
         if(_mainMenuManager.TotalNumberOfPlayers == 2)
@@ -195,14 +205,21 @@ public class InGameUIManager : MonoBehaviour
         pauseButtonObj.SetActive(false);
         pauseMenuPanelObj.SetActive(false);
     }
+
+    private void OnGameTied()
+    {
+        _isGameTied = true;
+    }
     
     private void SubscribeToEvents()
     {
-        EventsManager.SubscribeToEvent(Events.Event.GameOver , OnGameOver);
+        EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
+        EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
     }
 
     private void UnsubscribeFromEvents()
     {
-        EventsManager.UnsubscribeFromEvent(Events.Event.GameOver , OnGameOver);
+        EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
+        EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
     }
 }
