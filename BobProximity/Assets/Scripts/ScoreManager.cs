@@ -1,3 +1,4 @@
+using Event = Events.Event;
 using Events;
 using UnityEngine;
 using TMPro;
@@ -52,8 +53,22 @@ public class ScoreManager : MonoBehaviour
             coinScoreTMPTexts[i].text = _playerNames[i] + " : " + CoinScoreValues[i];
         }
     }
+
+    private void OnGameOver()
+    {
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers - 1; i++)
+        {
+            for(int j = i + 1; j < _mainMenuManager.TotalNumberOfPlayers; j++)
+            {
+                if(CoinScoreValues[i] == CoinScoreValues[j])
+                {
+                    EventsManager.Invoke(Event.GameTied);
+                }
+            }
+        }
+    }
     
-    public void OnPlayerNamesUpdated(int playerID , string playerName)
+    private void OnPlayerNamesUpdated(int playerID , string playerName)
     {
         _playerNames[playerID] = playerName;
         UpdateScoreTexts();
@@ -61,11 +76,13 @@ public class ScoreManager : MonoBehaviour
 
     private void SubscribeToEvents()
     {
+        EventsManager.SubscribeToEvent(Events.Event.GameOver , OnGameOver);
         EventsManager.SubscribeToEvent(Events.Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
     }
 
     private void UnsubscribeFromEvents()
     {
+        EventsManager.UnsubscribeFromEvent(Events.Event.GameOver , OnGameOver);
         EventsManager.UnsubscribeFromEvent(Events.Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
     }
 }
