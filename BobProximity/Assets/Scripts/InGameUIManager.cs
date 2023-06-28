@@ -10,7 +10,8 @@ public class InGameUIManager : MonoBehaviour
     private GameManager _gameManager;
     private MainMenuManager _mainMenuManager;
     private PlayerController _playerController;
-    
+    private ScoreManager _scoreManager;
+
     [SerializeField] private GameObject continueButtonObj;
     [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private GameObject inGameUIPanelsObj;
@@ -44,6 +45,7 @@ public class InGameUIManager : MonoBehaviour
         _gameManager = FindObjectOfType<GameManager>();
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _playerController = FindObjectOfType<PlayerController>();
+        _scoreManager = FindObjectOfType<ScoreManager>();
         
         continueButtonObj.SetActive(false);
         gameOverPanelsObj.SetActive(false);
@@ -85,6 +87,12 @@ public class InGameUIManager : MonoBehaviour
     private void UnsubscribeFromEvents()
     {
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
+    }
+    
+    private void UpdatePlayerName(int playerID)
+    {
+        string playerName = PlayerNameTMPInputFields[playerID].text;
+        _scoreManager.SetPlayerName(playerID , playerName);
     }
     
     public void BackButton()
@@ -137,6 +145,8 @@ public class InGameUIManager : MonoBehaviour
         {
             _gameManager.PlayerNamesReceivedArray[i] = PlayerNameTMPInputFields[i].text;
             playerNameLabelTMPTexts[i].text = PlayerNameTMPInputFields[i].text;
+            
+            UpdatePlayerName(i);
 
             if(string.IsNullOrEmpty(_gameManager.PlayerNamesReceivedArray[i]))
             {
