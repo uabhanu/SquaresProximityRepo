@@ -6,6 +6,7 @@ namespace Events
     {
         #region Actions
         
+        protected static event Action<int[]> GameDataLoadedAction;
         protected static event Action GameDataResetAction;
         protected static event Action GameOverAction;
         protected static event Action GamePausedAction;
@@ -64,6 +65,10 @@ namespace Events
         {
             switch(gameEvent)
             {
+                case Event.GameDataLoaded:
+                    GameDataLoadedAction += actionFunction;
+                break;
+                
                 case Event.PlayerTotalReceived:
                     PlayerTotalReceivedAction += actionFunction;
                 break;
@@ -128,6 +133,10 @@ namespace Events
         {
             switch(gameEvent)
             {
+                case Event.GameDataLoaded:
+                    GameDataLoadedAction -= actionFunction;
+                break;
+                
                 case Event.PlayerTotalReceived:
                     PlayerTotalReceivedAction -= actionFunction;
                 break;
@@ -188,12 +197,16 @@ namespace Events
             }
         }
         
-        public static void Invoke(Event gameEvent , int[] playerTotalReceivedArray)
+        public static void Invoke(Event gameEvent , int[] valueArray)
         {
             switch(gameEvent)
             {
+                case Event.GameDataLoaded:
+                    GameDataLoadedAction?.Invoke(valueArray);
+                break;
+                
                 case Event.PlayerTotalReceived:
-                    PlayerTotalReceivedAction?.Invoke(playerTotalReceivedArray);
+                    PlayerTotalReceivedAction?.Invoke(valueArray);
                 break;
             }
         }
