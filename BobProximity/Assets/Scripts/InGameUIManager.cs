@@ -9,6 +9,7 @@ public class InGameUIManager : MonoBehaviour
 {
     private bool _isGameTied;
     private int[] _totalReceivedArray;
+    private string[] _playerNamesArray;
     
     private MainMenuManager _mainMenuManager;
 
@@ -32,10 +33,6 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
 
-    public TMP_InputField[] PlayerNameTMPInputFields => playerNameTMPInputFields;
-
-    public TMP_Text[] PlayerTotalWinsLabelsTMPTexts => playerTotalWinsLabelsTMPTexts;
-
     private void Start()
     {
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
@@ -48,11 +45,12 @@ public class InGameUIManager : MonoBehaviour
         pauseMenuPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
 
+        _playerNamesArray = new string[_mainMenuManager.TotalNumberOfPlayers];
         _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
         if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
-            PlayerNameTMPInputFields[_mainMenuManager.TotalNumberOfPlayers].gameObject.SetActive(false);
+            playerNameTMPInputFields[_mainMenuManager.TotalNumberOfPlayers].gameObject.SetActive(false);
         }
 
         for(int i = 0; i < winsPanelObjs.Length; i++)
@@ -60,6 +58,7 @@ public class InGameUIManager : MonoBehaviour
             winsPanelObjs[i].SetActive(false);
         }
 
+        LoadData();
         SubscribeToEvents();
     }
 
@@ -84,10 +83,29 @@ public class InGameUIManager : MonoBehaviour
 
         return highestScorePlayer;
     }
-
-    private void UpdatePlayerName(int playerID)
+    
+    private void LoadData()
     {
-        string playerName = PlayerNameTMPInputFields[playerID].text;
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        {
+            _playerNamesArray[i] = PlayerPrefs.GetString("Player " + i + " Name");
+            playerNameTMPInputFields[i].text = _playerNamesArray[i];
+        }
+    }
+
+    private void SaveData()
+    {
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        {
+            PlayerPrefs.SetString("Player " + i + " Name" , _playerNamesArray[i]);
+        }
+
+        PlayerPrefs.Save();
+    }
+
+    private void UpdateInGamePlayerNames(int playerID)
+    {
+        string playerName = playerNameTMPInputFields[playerID].text;
         EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
     }
 
@@ -109,7 +127,7 @@ public class InGameUIManager : MonoBehaviour
 
         if(!_isGameTied)
         {
-            playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!";
+            playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = playerNameTMPInputFields[highestScorePlayer].text + " Wins!!!";
             playerWinsLabelsTMPTexts[highestScorePlayer].text = playerTotalWinsLabelsTMPTexts[highestScorePlayer].text;
             winsPanelObjs[highestScorePlayer].SetActive(true);
         }
@@ -128,7 +146,8 @@ public class InGameUIManager : MonoBehaviour
 
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
+            playerNameTMPInputFields[i].text = _playerNamesArray[i];
+            totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
         }
     }
 
@@ -144,9 +163,11 @@ public class InGameUIManager : MonoBehaviour
 
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            UpdatePlayerName(i);
+            _playerNamesArray[i] = playerNameTMPInputFields[i].text;
 
-            if(string.IsNullOrEmpty(PlayerNameTMPInputFields[i].text))
+            UpdateInGamePlayerNames(i);
+
+            if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
             {
                 allNamesFilled = false;
                 break;
@@ -189,6 +210,11 @@ public class InGameUIManager : MonoBehaviour
     public void ResetButton()
     {
         EventsManager.Invoke(Event.GameDataReset);
+        
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        {
+            playerNameTMPInputFields[i].text = "";
+        }
     }
 
     public void RestartButton()
@@ -203,8 +229,17 @@ public class InGameUIManager : MonoBehaviour
         pauseMenuPanelObj.SetActive(false);
     }
 
+    private void OnGameDataLoaded(int[] totalWinsArray)
+    {
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        {
+            playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins : " + totalWinsArray[i];
+        }
+    }
+
     private void OnGameOver()
     {
+        SaveData();
         continueButtonObj.SetActive(true);
         pauseButtonObj.SetActive(false);
         pauseMenuPanelObj.SetActive(false);
@@ -222,6 +257,7 @@ public class InGameUIManager : MonoBehaviour
     
     private void SubscribeToEvents()
     {
+        EventsManager.SubscribeToEvent(Event.GameDataLoaded , OnGameDataLoaded);
         EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
         EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
         EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , OnTotalReceived);
@@ -229,6 +265,7 @@ public class InGameUIManager : MonoBehaviour
 
     private void UnsubscribeFromEvents()
     {
+        EventsManager.UnsubscribeFromEvent(Event.GameDataLoaded , OnGameDataLoaded);
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
         EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
         EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , OnTotalReceived);
