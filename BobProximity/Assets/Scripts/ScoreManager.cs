@@ -14,7 +14,7 @@ public class ScoreManager : MonoBehaviour
     private void Start()
     {
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
-        _coinScoreValues = new int[_mainMenuManager.TotalNumberOfPlayers]; //TODO Change this to the Number of Players
+        _coinScoreValues = new int[_mainMenuManager.TotalNumberOfPlayers];
         _inGameUIManager = FindObjectOfType<InGameUIManager>();
         UpdateScoreTexts();
     }
