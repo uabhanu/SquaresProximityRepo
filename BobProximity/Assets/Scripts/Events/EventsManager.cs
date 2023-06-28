@@ -7,6 +7,7 @@ namespace Events
         #region Actions
         
         protected static event Action GameOverAction;
+        protected static event Action<int , string> PlayerNamesUpdatedAction;
 
         #endregion
 
@@ -18,6 +19,16 @@ namespace Events
             {
                 case Event.GameOver:
                     GameOverAction += actionFunction;
+                break;
+            }
+        }
+        
+        public static void SubscribeToEvent(Event gameEvent , Action<int , string> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerNamesUpdated:
+                    PlayerNamesUpdatedAction += actionFunction;
                 break;
             }
         }
@@ -35,6 +46,16 @@ namespace Events
                 break;
             }
         }
+        
+        public static void UnsubscribeFromEvent(Event gameEvent , Action<int , string> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerNamesUpdated:
+                    PlayerNamesUpdatedAction -= actionFunction;
+                break;
+            }
+        }
 
         #endregion
         
@@ -46,6 +67,15 @@ namespace Events
             {
                 case Event.GameOver:
                     GameOverAction?.Invoke();
+                break;
+            }
+        }
+        public static void Invoke(Event gameEvent , int playerID , string playerName)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerNamesUpdated:
+                    PlayerNamesUpdatedAction?.Invoke(playerID , playerName);
                 break;
             }
         }
