@@ -23,8 +23,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject coinObj;
 
-    public int[] TotalReceivedArray => _totalReceivedArray;
-
     private void Start()
     {
         _gameManager = FindObjectOfType<GameManager>();
@@ -34,8 +32,7 @@ public class PlayerController : MonoBehaviour
         _playerInputActions.ProximityMap.Enable();
         _scoreManager = FindObjectOfType<ScoreManager>();
         _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
-
-        //int capacity = ((_gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows) / _mainMenuManager.TotalNumberOfPlayers) + _mainMenuManager.TotalNumberOfPlayers;
+        
         int capacity = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         
         //Debug.Log("Lists Capacity : " + capacity);
@@ -82,6 +79,7 @@ public class PlayerController : MonoBehaviour
         if(_gameManager.TotalCells == 0)
         {
             EventsManager.Invoke(Event.GameOver);
+            EventsManager.Invoke(Event.PlayerTotalReceived , _totalReceivedArray);
         }
         
         Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
@@ -308,11 +306,11 @@ public class PlayerController : MonoBehaviour
         
         _playersRemaining.RemoveAt(randomIndex);
 
-        for(int i = 0; i < TotalReceivedArray.Length; i++)
+        for(int i = 0; i < _totalReceivedArray.Length; i++)
         {
             if(_currentPlayerID == i)
             {
-                TotalReceivedArray[i] += _coinValue;
+                _totalReceivedArray[i] += _coinValue;
             }
         }
 
