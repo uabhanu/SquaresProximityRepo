@@ -6,8 +6,7 @@ public class GameManager : MonoBehaviour
 {
     private bool _gameStarted;
     private bool _isGameTied;
-     private GridManager _gridManager;
-    private InGameUIManager _inGameUIManager;
+    private GridManager _gridManager;
     private int[] _playerTotalWinsArray;
     private int _totalCells;
     private MainMenuManager _mainMenuManager;
@@ -24,19 +23,12 @@ public class GameManager : MonoBehaviour
         set => _totalCells = value;
     }
 
-    public int[] PlayerTotalWinsArray
-    {
-        get => _playerTotalWinsArray;
-        set => _playerTotalWinsArray = value;
-    }
-
     private void Start()
     {
-        _inGameUIManager = FindObjectOfType<InGameUIManager>();
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
          _gridManager = FindObjectOfType<GridManager>();
          
-        PlayerTotalWinsArray = new int[_mainMenuManager.TotalNumberOfPlayers];
+         _playerTotalWinsArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
         TotalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
 
@@ -49,22 +41,20 @@ public class GameManager : MonoBehaviour
         UnsubscribeFromEvents();
     }
 
-    public void LoadData()
+    private void LoadData()
     {
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            _inGameUIManager.PlayerNameTMPInputFields[i].text = PlayerPrefs.GetString("Player " + i + " Name");
-            PlayerTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
-            _inGameUIManager.PlayerTotalWinsLabelsTMPTexts[i].text = _inGameUIManager.PlayerNameTMPInputFields[i].text + " Total Wins : " + PlayerTotalWinsArray[i];
+            _playerTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
+            EventsManager.Invoke(Event.GameDataLoaded , _playerTotalWinsArray);
         }
     }
 
-    public void SaveData()
+    private void SaveData()
     {
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            PlayerPrefs.SetString("Player " + i + " Name" , _inGameUIManager.PlayerNameTMPInputFields[i].text);
-            PlayerPrefs.SetInt("Player " + i + " Total Wins" , PlayerTotalWinsArray[i]);
+            PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playerTotalWinsArray[i]);
         }
 
         PlayerPrefs.Save();
