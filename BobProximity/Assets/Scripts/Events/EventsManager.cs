@@ -13,6 +13,7 @@ namespace Events
         protected static event Action GameStartedAction;
         protected static event Action GameTiedAction;
         protected static event Action<int , string> PlayerNamesUpdatedAction;
+        protected static event Action<int[]> PlayerTotalReceivedAction;
         protected static event Action<int> PlayerWinsAction;
 
         #endregion
@@ -55,6 +56,16 @@ namespace Events
             {
                 case Event.PlayerWins:
                     PlayerWinsAction += actionFunction;
+                break;
+            }
+        }
+        
+        public static void SubscribeToEvent(Event gameEvent , Action<int[]> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerTotalReceived:
+                    PlayerTotalReceivedAction += actionFunction;
                 break;
             }
         }
@@ -113,6 +124,16 @@ namespace Events
             }
         }
         
+        public static void UnsubscribeFromEvent(Event gameEvent , Action<int[]> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerTotalReceived:
+                    PlayerTotalReceivedAction -= actionFunction;
+                break;
+            }
+        }
+        
         public static void UnsubscribeFromEvent(Event gameEvent , Action<int , string> actionFunction)
         {
             switch(gameEvent)
@@ -163,6 +184,16 @@ namespace Events
             {
                 case Event.PlayerWins:
                     PlayerWinsAction?.Invoke(highestScorePlayerID);
+                break;
+            }
+        }
+        
+        public static void Invoke(Event gameEvent , int[] playerTotalReceivedArray)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerTotalReceived:
+                    PlayerTotalReceivedAction?.Invoke(playerTotalReceivedArray);
                 break;
             }
         }

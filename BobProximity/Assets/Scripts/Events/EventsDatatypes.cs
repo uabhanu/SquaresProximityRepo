@@ -9,6 +9,7 @@ namespace Events
         GameStarted,
         GameTied,
         PlayerNamesUpdated,
+        PlayerTotalReceived,
         PlayerWins
     }
 }
