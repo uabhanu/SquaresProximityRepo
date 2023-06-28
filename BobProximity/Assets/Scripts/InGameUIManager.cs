@@ -1,3 +1,4 @@
+using Event = Events.Event;
 using Events;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,6 @@ using UnityEngine.UI;
 
 public class InGameUIManager : MonoBehaviour
 {
-    private GameManager _gameManager;
     private MainMenuManager _mainMenuManager;
     private PlayerController _playerController;
 
@@ -25,10 +25,8 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject[] totalReceivedPanelObjs;
     [SerializeField] private GameObject[] winsPanelObjs;
     [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
-    [SerializeField] private TMP_Text[] playerNameLabelTMPTexts;
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
-    [SerializeField] private TMP_Text[] winsLabelsTMPTexts;
 
     public TMP_InputField[] PlayerNameTMPInputFields => playerNameTMPInputFields;
 
@@ -36,7 +34,6 @@ public class InGameUIManager : MonoBehaviour
 
     private void Start()
     {
-        _gameManager = FindObjectOfType<GameManager>();
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _playerController = FindObjectOfType<PlayerController>();
 
@@ -47,12 +44,12 @@ public class InGameUIManager : MonoBehaviour
         pauseMenuPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
 
-        if (_mainMenuManager.TotalNumberOfPlayers == 2)
+        if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
             PlayerNameTMPInputFields[_mainMenuManager.TotalNumberOfPlayers].gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < winsPanelObjs.Length; i++)
+        for(int i = 0; i < winsPanelObjs.Length; i++)
         {
             winsPanelObjs[i].SetActive(false);
         }
@@ -64,11 +61,28 @@ public class InGameUIManager : MonoBehaviour
     {
         UnsubscribeFromEvents();
     }
+    
+    private int GetHighestScorePlayer()
+    {
+        int highestScore = int.MinValue;
+        int highestScorePlayer = -1;
+
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        {
+            if(_playerController.TotalReceivedArray[i] > highestScore)
+            {
+                highestScore = _playerController.TotalReceivedArray[i];
+                highestScorePlayer = i;
+            }
+        }
+
+        return highestScorePlayer;
+    }
 
     private void UpdatePlayerName(int playerID)
     {
         string playerName = PlayerNameTMPInputFields[playerID].text;
-        EventsManager.Invoke(Events.Event.PlayerNamesUpdated , playerID , playerName);
+        EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
     }
 
     public void BackButton()
@@ -81,12 +95,9 @@ public class InGameUIManager : MonoBehaviour
     {
         continueButtonObj.SetActive(false);
 
-        int highestScorePlayer = _gameManager.GetHighestScorePlayer();
+        int highestScorePlayer = GetHighestScorePlayer();
 
-        _gameManager.PlayerTotalWinsArray[highestScorePlayer]++;
-        //Debug.Log("Player " + highestScorePlayer + " total wins : " + _playerTotalWinsArray[highestScorePlayer]);
-        PlayerTotalWinsLabelsTMPTexts[highestScorePlayer].text = "Total Wins : " + _gameManager.PlayerTotalWinsArray[highestScorePlayer];
-        winsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!!";
+        EventsManager.Invoke(Event.PlayerWins , highestScorePlayer);
 
         gameOverPanelsObj.SetActive(true);
         winsPanelObjs[highestScorePlayer].SetActive(true);
@@ -103,12 +114,12 @@ public class InGameUIManager : MonoBehaviour
         {
             totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
         }
-
-        _gameManager.SaveData();
     }
 
     public void EnterButton()
     {
+        EventsManager.Invoke(Event.GameStarted);
+        
         bool allNamesFilled = true;
 
         if(_mainMenuManager.TotalNumberOfPlayers == 2)
@@ -119,12 +130,9 @@ public class InGameUIManager : MonoBehaviour
 
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            _gameManager.PlayerNamesReceivedArray[i] = PlayerNameTMPInputFields[i].text;
-            playerNameLabelTMPTexts[i].text = PlayerNameTMPInputFields[i].text;
-
             UpdatePlayerName(i);
 
-            if(string.IsNullOrEmpty(_gameManager.PlayerNamesReceivedArray[i]))
+            if(string.IsNullOrEmpty(PlayerNameTMPInputFields[i].text))
             {
                 allNamesFilled = false;
                 break;
@@ -133,7 +141,7 @@ public class InGameUIManager : MonoBehaviour
 
         if(allNamesFilled)
         {
-            _gameManager.GameStarted = true;
+            EventsManager.Invoke(Event.GameStarted);
             inGameUIPanelsObj.SetActive(true);
             playerInputPanelObj.SetActive(false);
         }
@@ -159,15 +167,14 @@ public class InGameUIManager : MonoBehaviour
 
     public void PauseButton()
     {
-        _gameManager.GameStarted = false;
+        EventsManager.Invoke(Event.GamePaused);
         pauseButtonObj.SetActive(false);
         pauseMenuPanelObj.SetActive(true);
     }
 
     public void ResetButton()
     {
-        PlayerPrefs.DeleteAll();
-        _gameManager.LoadData();
+        EventsManager.Invoke(Event.GameDataReset);
     }
 
     public void RestartButton()
@@ -177,11 +184,11 @@ public class InGameUIManager : MonoBehaviour
 
     public void ResumeButton()
     {
-        _gameManager.GameStarted = true;
+        EventsManager.Invoke(Event.GameResumed);
         pauseButtonObj.SetActive(true);
         pauseMenuPanelObj.SetActive(false);
     }
-    
+
     private void OnGameOver()
     {
         continueButtonObj.SetActive(true);
