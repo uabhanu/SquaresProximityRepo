@@ -30,6 +30,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
+    [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
 
     public TMP_InputField[] PlayerNameTMPInputFields => playerNameTMPInputFields;
 
@@ -107,7 +108,9 @@ public class InGameUIManager : MonoBehaviour
 
         if(!_isGameTied)
         {
-            winsPanelObjs[highestScorePlayer].SetActive(true);   
+            playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = PlayerNameTMPInputFields[highestScorePlayer].text + " Wins!!!";
+            playerWinsLabelsTMPTexts[highestScorePlayer].text = playerTotalWinsLabelsTMPTexts[highestScorePlayer].text;
+            winsPanelObjs[highestScorePlayer].SetActive(true);
         }
         else
         {
