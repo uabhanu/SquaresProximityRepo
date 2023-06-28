@@ -5,12 +5,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private bool _gameStarted;
+    private bool _isGameTied;
      private GridManager _gridManager;
     private InGameUIManager _inGameUIManager;
     private int[] _playerTotalWinsArray;
     private int _totalCells;
     private MainMenuManager _mainMenuManager;
-    private string[] _playerNamesReceivedArray;
 
     public bool GameStarted
     {
@@ -30,19 +30,12 @@ public class GameManager : MonoBehaviour
         set => _playerTotalWinsArray = value;
     }
 
-    public string[] PlayerNamesReceivedArray
-    {
-        get => _playerNamesReceivedArray;
-        set => _playerNamesReceivedArray = value;
-    }
-
     private void Start()
     {
         _inGameUIManager = FindObjectOfType<InGameUIManager>();
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
          _gridManager = FindObjectOfType<GridManager>();
-
-         PlayerNamesReceivedArray = new string[_mainMenuManager.TotalNumberOfPlayers];
+         
         PlayerTotalWinsArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
         TotalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
@@ -103,8 +96,15 @@ public class GameManager : MonoBehaviour
         GameStarted = true;
     }
 
+    private void OnGameTied()
+    {
+        _isGameTied = true;
+    }
+
     private void OnPlayerWins(int highestScorePlayer)
     {
+        if(_isGameTied) return;
+        
         _playerTotalWinsArray[highestScorePlayer]++;
         SaveData();
     }
@@ -116,6 +116,7 @@ public class GameManager : MonoBehaviour
         EventsManager.SubscribeToEvent(Event.GamePaused , OnGamePaused);
         EventsManager.SubscribeToEvent(Event.GameResumed , OnGameResumed);
         EventsManager.SubscribeToEvent(Event.GameStarted , OnGameStarted);
+        EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
         EventsManager.SubscribeToEvent(Event.PlayerWins , OnPlayerWins);
     }
     
@@ -126,6 +127,7 @@ public class GameManager : MonoBehaviour
         EventsManager.UnsubscribeFromEvent(Event.GamePaused , OnGamePaused);
         EventsManager.UnsubscribeFromEvent(Event.GameResumed , OnGameResumed);
         EventsManager.UnsubscribeFromEvent(Event.GameStarted , OnGameStarted);
+        EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
         EventsManager.UnsubscribeFromEvent(Event.PlayerWins , OnPlayerWins);
     }
 }
