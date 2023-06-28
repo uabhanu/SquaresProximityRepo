@@ -7,6 +7,7 @@ namespace Events
         GamePaused,
         GameResumed,
         GameStarted,
+        GameTied,
         PlayerNamesUpdated,
         PlayerWins
     }

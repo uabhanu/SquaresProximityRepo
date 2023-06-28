@@ -11,6 +11,7 @@ namespace Events
         protected static event Action GamePausedAction;
         protected static event Action GameResumedAction;
         protected static event Action GameStartedAction;
+        protected static event Action GameTiedAction;
         protected static event Action<int , string> PlayerNamesUpdatedAction;
         protected static event Action<int> PlayerWinsAction;
 
@@ -40,6 +41,10 @@ namespace Events
                 
                 case Event.GameStarted:
                     GameStartedAction += actionFunction;
+                break;
+                
+                case Event.GameTied:
+                    GameTiedAction += actionFunction;
                 break;
             }
         }
@@ -91,6 +96,10 @@ namespace Events
                 case Event.GameStarted:
                     GameStartedAction -= actionFunction;
                 break;
+                
+                case Event.GameTied:
+                    GameTiedAction -= actionFunction;
+                break;
             }
         }
         
@@ -140,6 +149,10 @@ namespace Events
                 
                 case Event.GameStarted:
                     GameStartedAction?.Invoke();
+                break;
+                
+                case Event.GameTied:
+                    GameTiedAction?.Invoke();
                 break;
             }
         }
