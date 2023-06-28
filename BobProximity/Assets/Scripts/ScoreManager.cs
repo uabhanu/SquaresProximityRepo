@@ -5,7 +5,7 @@ public class ScoreManager : MonoBehaviour
 {
     private int[] _coinScoreValues;
     private MainMenuManager _mainMenuManager;
-    private InGameUIManager _inGameUIManager;
+    private string[] _playerNames;
 
     [SerializeField] private TMP_Text[] coinScoreTMPTexts;
 
@@ -15,7 +15,7 @@ public class ScoreManager : MonoBehaviour
     {
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _coinScoreValues = new int[_mainMenuManager.TotalNumberOfPlayers];
-        _inGameUIManager = FindObjectOfType<InGameUIManager>();
+        _playerNames = new string[_mainMenuManager.TotalNumberOfPlayers];
         UpdateScoreTexts();
     }
     
@@ -38,11 +38,17 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreTexts();
     }
 
+    public void SetPlayerName(int playerID , string playerName)
+    {
+        _playerNames[playerID] = playerName;
+        UpdateScoreTexts();
+    }
+
     private void UpdateScoreTexts()
     {
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            coinScoreTMPTexts[i].text = _inGameUIManager.PlayerNameTMPInputFields[i].text + " : " + CoinScoreValues[i];
+            coinScoreTMPTexts[i].text = _playerNames[i] + " : " + CoinScoreValues[i];
         }
     }
 }
