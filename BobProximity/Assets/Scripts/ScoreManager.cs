@@ -14,7 +14,7 @@ public class ScoreManager : MonoBehaviour
     private void Start()
     {
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
-        _coinScoreValues = new int[3]; //TODO Change this to the Number of Players
+        _coinScoreValues = new int[_mainMenuManager.TotalNumberOfPlayers]; //TODO Change this to the Number of Players
         _inGameUIManager = FindObjectOfType<InGameUIManager>();
         UpdateScoreTexts();
     }
@@ -40,7 +40,7 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScoreTexts()
     {
-        for(int i = 0; i < coinScoreTMPTexts.Length; i++)
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
             coinScoreTMPTexts[i].text = _inGameUIManager.PlayerNameTMPInputFields[i].text + " : " + CoinScoreValues[i];
         }
