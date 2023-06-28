@@ -8,9 +8,9 @@ using UnityEngine.UI;
 public class InGameUIManager : MonoBehaviour
 {
     private bool _isGameTied;
+    private int[] _totalReceivedArray;
     
     private MainMenuManager _mainMenuManager;
-    private PlayerController _playerController;
 
     [SerializeField] private GameObject continueButtonObj;
     [SerializeField] private GameObject gameOverPanelsObj;
@@ -39,7 +39,6 @@ public class InGameUIManager : MonoBehaviour
     private void Start()
     {
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
-        _playerController = FindObjectOfType<PlayerController>();
 
         continueButtonObj.SetActive(false);
         gameOverPanelsObj.SetActive(false);
@@ -48,6 +47,8 @@ public class InGameUIManager : MonoBehaviour
         leaderboardPanelObj.SetActive(false);
         pauseMenuPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
+
+        _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
         if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
@@ -74,9 +75,9 @@ public class InGameUIManager : MonoBehaviour
 
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            if(_playerController.TotalReceivedArray[i] > highestScore)
+            if(_totalReceivedArray[i] > highestScore)
             {
-                highestScore = _playerController.TotalReceivedArray[i];
+                highestScore = _totalReceivedArray[i];
                 highestScorePlayer = i;
             }
         }
@@ -127,7 +128,7 @@ public class InGameUIManager : MonoBehaviour
 
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _playerController.TotalReceivedArray[i];
+            totalReceivedTMPTexts[i].text = PlayerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
         }
     }
 
@@ -213,16 +214,23 @@ public class InGameUIManager : MonoBehaviour
     {
         _isGameTied = true;
     }
+
+    private void OnTotalReceived(int[] totalReceivedArray)
+    {
+        _totalReceivedArray = totalReceivedArray;
+    }
     
     private void SubscribeToEvents()
     {
         EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
         EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
+        EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , OnTotalReceived);
     }
 
     private void UnsubscribeFromEvents()
     {
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
         EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
+        EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , OnTotalReceived);
     }
 }
