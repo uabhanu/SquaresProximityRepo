@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     private int[] _playerTotalWinsArray;
     private int _totalCells;
     private MainMenuManager _mainMenuManager;
-    private ScoreManager _scoreManager;
     private string[] _playerNamesReceivedArray;
 
     public bool GameStarted
@@ -42,9 +41,8 @@ public class GameManager : MonoBehaviour
         _inGameUIManager = FindObjectOfType<InGameUIManager>();
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
          _gridManager = FindObjectOfType<GridManager>();
-         _scoreManager = FindObjectOfType<ScoreManager>();
 
-        PlayerNamesReceivedArray = new string[_mainMenuManager.TotalNumberOfPlayers];
+         PlayerNamesReceivedArray = new string[_mainMenuManager.TotalNumberOfPlayers];
         PlayerTotalWinsArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
         TotalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
@@ -56,28 +54,6 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         UnsubscribeFromEvents();
-    }
-    
-    public int GetHighestScorePlayer()
-    {
-        int highestScore = int.MinValue;
-        int highestScorePlayer = -1;
-
-        for(int i = 0; i < _scoreManager.CoinScoreValues.Length; i++)
-        {
-            if(_scoreManager.CoinScoreValues[i] > highestScore)
-            {
-                highestScore = _scoreManager.CoinScoreValues[i];
-                highestScorePlayer = i;
-            }
-        }
-
-        return highestScorePlayer;
-    }
-
-    private void OnGameOver()
-    {
-        GameStarted = false;
     }
 
     public void LoadData()
@@ -101,13 +77,55 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    private void OnGameDataReset()
+    {
+        PlayerPrefs.DeleteAll();
+        LoadData();
+    }
+    
+    private void OnGameOver()
+    {
+        GameStarted = false;
+    }
+
+    private void OnGamePaused()
+    {
+        GameStarted = false;
+    }
+    
+    private void OnGameResumed()
+    {
+        GameStarted = true;
+    }
+
+    private void OnGameStarted()
+    {
+        GameStarted = true;
+    }
+
+    private void OnPlayerWins(int highestScorePlayer)
+    {
+        _playerTotalWinsArray[highestScorePlayer]++;
+        SaveData();
+    }
+
     private void SubscribeToEvents()
     {
+        EventsManager.SubscribeToEvent(Event.GameDataReset , OnGameDataReset);
         EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
+        EventsManager.SubscribeToEvent(Event.GamePaused , OnGamePaused);
+        EventsManager.SubscribeToEvent(Event.GameResumed , OnGameResumed);
+        EventsManager.SubscribeToEvent(Event.GameStarted , OnGameStarted);
+        EventsManager.SubscribeToEvent(Event.PlayerWins , OnPlayerWins);
     }
     
     private void UnsubscribeFromEvents()
     {
+        EventsManager.UnsubscribeFromEvent(Event.GameDataReset , OnGameDataReset);
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
+        EventsManager.UnsubscribeFromEvent(Event.GamePaused , OnGamePaused);
+        EventsManager.UnsubscribeFromEvent(Event.GameResumed , OnGameResumed);
+        EventsManager.UnsubscribeFromEvent(Event.GameStarted , OnGameStarted);
+        EventsManager.UnsubscribeFromEvent(Event.PlayerWins , OnPlayerWins);
     }
 }
