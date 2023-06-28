@@ -6,8 +6,13 @@ namespace Events
     {
         #region Actions
         
+        protected static event Action GameDataResetAction;
         protected static event Action GameOverAction;
+        protected static event Action GamePausedAction;
+        protected static event Action GameResumedAction;
+        protected static event Action GameStartedAction;
         protected static event Action<int , string> PlayerNamesUpdatedAction;
+        protected static event Action<int> PlayerWinsAction;
 
         #endregion
 
@@ -17,8 +22,34 @@ namespace Events
         {
             switch(gameEvent)
             {
+                case Event.GameDataReset:
+                    GameDataResetAction += actionFunction;
+                break;
+                
                 case Event.GameOver:
                     GameOverAction += actionFunction;
+                break;
+                
+                case Event.GamePaused:
+                    GamePausedAction += actionFunction;
+                break;
+                
+                case Event.GameResumed:
+                    GameResumedAction += actionFunction;
+                break;
+                
+                case Event.GameStarted:
+                    GameStartedAction += actionFunction;
+                break;
+            }
+        }
+        
+        public static void SubscribeToEvent(Event gameEvent , Action<int> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerWins:
+                    PlayerWinsAction += actionFunction;
                 break;
             }
         }
@@ -41,8 +72,34 @@ namespace Events
         {
             switch(gameEvent)
             {
+                case Event.GameDataReset:
+                    GameDataResetAction -= actionFunction;
+                break;
+                
                 case Event.GameOver:
                     GameOverAction -= actionFunction;
+                break;
+                
+                case Event.GamePaused:
+                    GamePausedAction -= actionFunction;
+                break;
+                
+                case Event.GameResumed:
+                    GameResumedAction -= actionFunction;
+                break;
+                
+                case Event.GameStarted:
+                    GameStartedAction -= actionFunction;
+                break;
+            }
+        }
+        
+        public static void UnsubscribeFromEvent(Event gameEvent , Action<int> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerWins:
+                    PlayerWinsAction -= actionFunction;
                 break;
             }
         }
@@ -65,11 +122,38 @@ namespace Events
         {
             switch(gameEvent)
             {
+                case Event.GameDataReset:
+                    GameDataResetAction?.Invoke();
+                break;
+                
                 case Event.GameOver:
                     GameOverAction?.Invoke();
                 break;
+                
+                case Event.GamePaused:
+                    GamePausedAction?.Invoke();
+                break;
+                
+                case Event.GameResumed:
+                    GameResumedAction?.Invoke();
+                break;
+                
+                case Event.GameStarted:
+                    GameStartedAction?.Invoke();
+                break;
             }
         }
+        
+        public static void Invoke(Event gameEvent , int highestScorePlayerID)
+        {
+            switch(gameEvent)
+            {
+                case Event.PlayerWins:
+                    PlayerWinsAction?.Invoke(highestScorePlayerID);
+                break;
+            }
+        }
+        
         public static void Invoke(Event gameEvent , int playerID , string playerName)
         {
             switch(gameEvent)

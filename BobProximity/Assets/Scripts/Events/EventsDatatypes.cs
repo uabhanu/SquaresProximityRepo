@@ -2,7 +2,12 @@ namespace Events
 {
     public enum Event
     {
+        GameDataReset,
         GameOver,
-        PlayerNamesUpdated
+        GamePaused,
+        GameResumed,
+        GameStarted,
+        PlayerNamesUpdated,
+        PlayerWins
     }
 }
