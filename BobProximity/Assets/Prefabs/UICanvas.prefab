@@ -388,8 +388,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: LeaderboardButton
         m_Mode: 1
         m_Arguments:
@@ -852,8 +852,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: RestartButton
         m_Mode: 1
         m_Arguments:
@@ -1603,8 +1603,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: OkButton
         m_Mode: 1
         m_Arguments:
@@ -2489,8 +2489,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: PauseButton
         m_Mode: 1
         m_Arguments:
@@ -2809,101 +2809,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &3051897809164257353
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2976511912630084512}
-  - component: {fileID: 579570301985245270}
-  m_Layer: 5
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2976511912630084512
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3051897809164257353}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8397798982979555225}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &579570301985245270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3051897809164257353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c735a2fba3b78814abdd0a1ade4c6289, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  continueButtonObj: {fileID: 6993070605496638589}
-  gameOverPanelsObj: {fileID: 3538405260517282470}
-  inGameUIPanelsObj: {fileID: 363162966536441467}
-  inGameUIPlayerNamesDisplayPanelObj: {fileID: 988183984593403324}
-  leaderboardPanelObj: {fileID: 638149817491610029}
-  pauseButtonObj: {fileID: 2592394847128350894}
-  pauseMenuPanelObj: {fileID: 7673147588908371428}
-  playerInputPanelObj: {fileID: 6880717777950863187}
-  totalReceivedPanelObj: {fileID: 5088950927552000208}
-  totalWinsPanelObj: {fileID: 6292542094583664615}
-  inGameUIPlayerNamesDisplayPanelObjs:
-  - {fileID: 4631074189440793851}
-  - {fileID: 8148804636915812939}
-  - {fileID: 8746694786834332462}
-  leaderboardWinsPanelObjs:
-  - {fileID: 26356787009953550}
-  - {fileID: 4984457844188950166}
-  - {fileID: 1725758520271735812}
-  totalReceivedPanelObjs:
-  - {fileID: 6533599990285272056}
-  - {fileID: 5960480348190511947}
-  - {fileID: 7415194536550314767}
-  winsPanelObjs:
-  - {fileID: 1306599151596033312}
-  - {fileID: 8418558298801778891}
-  - {fileID: 8890262800759797634}
-  playerNameTMPInputFields:
-  - {fileID: 5110851220399508464}
-  - {fileID: 6378831753500823874}
-  - {fileID: 5065678277369122788}
-  playerNameLabelTMPTexts:
-  - {fileID: 2561551179081926638}
-  - {fileID: 4921818586766482093}
-  - {fileID: 1596449877754723051}
-  totalReceivedTMPTexts:
-  - {fileID: 754869620334700599}
-  - {fileID: 764343153362655338}
-  - {fileID: 2025560557014431703}
-  playerTotalWinsLabelsTMPTexts:
-  - {fileID: 7619779351771203559}
-  - {fileID: 4032442013570825073}
-  - {fileID: 4659560165097464069}
-  winsLabelsTMPTexts:
-  - {fileID: 7012457841348404593}
-  - {fileID: 6354599125397305656}
-  - {fileID: 4553965960158965144}
 --- !u!1 &3299529407321363483
 GameObject:
   m_ObjectHideFlags: 0
@@ -3381,8 +3286,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: ResumeButton
         m_Mode: 1
         m_Arguments:
@@ -3862,8 +3767,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: EnterButton
         m_Mode: 1
         m_Arguments:
@@ -4636,6 +4541,7 @@ GameObject:
   - component: {fileID: 673653977703616678}
   - component: {fileID: 2220018289204479963}
   - component: {fileID: 5043273919206652763}
+  - component: {fileID: 8527379706435513361}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: Untagged
@@ -4659,7 +4565,6 @@ RectTransform:
   - {fileID: 6602847919799947727}
   - {fileID: 2544244032261747769}
   - {fileID: 6041078981228341781}
-  - {fileID: 2976511912630084512}
   - {fileID: 2340393002152699588}
   - {fileID: 3896410596739204333}
   - {fileID: 4493550256786413252}
@@ -4734,6 +4639,64 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8527379706435513361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6044010295568214694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8941e8874b3524fa57ac2b7c73445a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  continueButtonObj: {fileID: 6993070605496638589}
+  gameOverPanelsObj: {fileID: 3538405260517282470}
+  inGameUIPanelsObj: {fileID: 363162966536441467}
+  inGameUIPlayerNamesDisplayPanelObj: {fileID: 988183984593403324}
+  leaderboardPanelObj: {fileID: 638149817491610029}
+  pauseButtonObj: {fileID: 2592394847128350894}
+  pauseMenuPanelObj: {fileID: 7673147588908371428}
+  playerInputPanelObj: {fileID: 6880717777950863187}
+  totalReceivedPanelObj: {fileID: 5088950927552000208}
+  totalWinsPanelObj: {fileID: 6292542094583664615}
+  inGameUIPlayerNamesDisplayPanelObjs:
+  - {fileID: 4631074189440793851}
+  - {fileID: 8148804636915812939}
+  - {fileID: 8746694786834332462}
+  leaderboardWinsPanelObjs:
+  - {fileID: 26356787009953550}
+  - {fileID: 4984457844188950166}
+  - {fileID: 1725758520271735812}
+  totalReceivedPanelObjs:
+  - {fileID: 6533599990285272056}
+  - {fileID: 5960480348190511947}
+  - {fileID: 7415194536550314767}
+  winsPanelObjs:
+  - {fileID: 1306599151596033312}
+  - {fileID: 8418558298801778891}
+  - {fileID: 8890262800759797634}
+  playerNameTMPInputFields:
+  - {fileID: 5110851220399508464}
+  - {fileID: 6378831753500823874}
+  - {fileID: 5065678277369122788}
+  playerNameLabelTMPTexts:
+  - {fileID: 2561551179081926638}
+  - {fileID: 4921818586766482093}
+  - {fileID: 1596449877754723051}
+  totalReceivedTMPTexts:
+  - {fileID: 754869620334700599}
+  - {fileID: 764343153362655338}
+  - {fileID: 2025560557014431703}
+  playerTotalWinsLabelsTMPTexts:
+  - {fileID: 7619779351771203559}
+  - {fileID: 4032442013570825073}
+  - {fileID: 4659560165097464069}
+  winsLabelsTMPTexts:
+  - {fileID: 7012457841348404593}
+  - {fileID: 6354599125397305656}
+  - {fileID: 4553965960158965144}
 --- !u!1 &6056266090565472135
 GameObject:
   m_ObjectHideFlags: 0
@@ -5223,8 +5186,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: ResetButton
         m_Mode: 1
         m_Arguments:
@@ -5303,9 +5266,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7748996105397167753}
-  - {fileID: 3520407064982456645}
   - {fileID: 2932456315071348591}
+  - {fileID: 3520407064982456645}
+  - {fileID: 7748996105397167753}
   m_Father: {fileID: 3896410596739204333}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6015,8 +5978,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: ContinueButton
         m_Mode: 1
         m_Arguments:
@@ -6284,8 +6247,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 579570301985245270}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: BackButton
         m_Mode: 1
         m_Arguments:
