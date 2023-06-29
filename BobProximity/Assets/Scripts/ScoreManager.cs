@@ -27,22 +27,16 @@ public class ScoreManager : MonoBehaviour
         UnsubscribeFromEvents();
     }
 
-    public void CoinBuffedUpScore(int buffedUpCoinPlayerID , int buffedUpCoinIncrement)
+    private void CoinBuffedUpScore(int buffedUpCoinPlayerID , int buffedUpCoinIncrement)
     {
         CoinScoreValues[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
         UpdateScoreTexts();
     }
 
-    public void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
+    private void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
     {
         CoinScoreValues[capturingPlayerID] += capturedCoinValue;
         CoinScoreValues[capturedPlayerID] -= capturedCoinValue;
-        UpdateScoreTexts();
-    }
-
-    public void CoinPlacedScore(int coinValue , int playerID)
-    {
-        CoinScoreValues[playerID] += coinValue;
         UpdateScoreTexts();
     }
 
@@ -52,6 +46,22 @@ public class ScoreManager : MonoBehaviour
         {
             coinScoreTMPTexts[i].text = _playerNames[i] + " : " + CoinScoreValues[i];
         }
+    }
+
+    private void OnCoinBuffedUp(int playerID , int coinValue)
+    {
+        CoinBuffedUpScore(playerID , coinValue);
+    }
+
+    private void OnCoinCaptured(int currentPlayerID , int adjacentPlayerID , int adjacentPlayerCoinValue)
+    {
+        CoinCapturedScore(currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
+    }
+
+    private void OnCoinPlaced(int coinValue , int playerID)
+    {
+        CoinScoreValues[playerID] += coinValue;
+        UpdateScoreTexts();
     }
 
     private void OnGameOver()
@@ -76,13 +86,18 @@ public class ScoreManager : MonoBehaviour
 
     private void SubscribeToEvents()
     {
-        EventsManager.SubscribeToEvent(Events.Event.GameOver , OnGameOver);
-        EventsManager.SubscribeToEvent(Events.Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
+        EventsManager.SubscribeToEvent(Event.CoinBuffedUp , OnCoinBuffedUp);
+        EventsManager.SubscribeToEvent(Event.CoinCaptured , OnCoinCaptured);
+        EventsManager.SubscribeToEvent(Event.CoinPlaced , OnCoinPlaced);
+        EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
+        EventsManager.SubscribeToEvent(Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
     }
 
     private void UnsubscribeFromEvents()
     {
-        EventsManager.UnsubscribeFromEvent(Events.Event.GameOver , OnGameOver);
-        EventsManager.UnsubscribeFromEvent(Events.Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
+        EventsManager.UnsubscribeFromEvent(Event.CoinBuffedUp , OnCoinBuffedUp);
+        EventsManager.UnsubscribeFromEvent(Event.CoinCaptured , OnCoinCaptured);
+        EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
+        EventsManager.UnsubscribeFromEvent(Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
     }
 }
