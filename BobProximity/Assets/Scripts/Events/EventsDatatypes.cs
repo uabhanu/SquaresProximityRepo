@@ -2,6 +2,9 @@ namespace Events
 {
     public enum Event
     {
+        CoinBuffedUp,
+        CoinCaptured,
+        CoinPlaced,
         GameDataLoaded,
         GameDataReset,
         GameOver,

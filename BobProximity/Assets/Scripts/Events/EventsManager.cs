@@ -6,6 +6,9 @@ namespace Events
     {
         #region Actions
         
+        protected static event Action<int , int> CoinBuffedUpAction;
+        protected static event Action<int , int , int> CoinCapturedAction;
+        protected static event Action<int , int> CoinPlacedAction;
         protected static event Action<int[]> GameDataLoadedAction;
         protected static event Action GameDataResetAction;
         protected static event Action GameOverAction;
@@ -75,12 +78,36 @@ namespace Events
             }
         }
         
+        public static void SubscribeToEvent(Event gameEvent , Action<int , int> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.CoinBuffedUp:
+                    CoinBuffedUpAction += actionFunction;
+                break;
+                
+                case Event.CoinPlaced:
+                    CoinPlacedAction += actionFunction;
+                break;
+            }
+        }
+        
         public static void SubscribeToEvent(Event gameEvent , Action<int , string> actionFunction)
         {
             switch(gameEvent)
             {
                 case Event.PlayerNamesUpdated:
                     PlayerNamesUpdatedAction += actionFunction;
+                break;
+            }
+        }
+        
+        public static void SubscribeToEvent(Event gameEvent , Action<int , int , int> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.CoinCaptured:
+                    CoinCapturedAction += actionFunction;
                 break;
             }
         }
@@ -143,12 +170,36 @@ namespace Events
             }
         }
         
+        public static void UnsubscribeFromEvent(Event gameEvent , Action<int , int> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.CoinBuffedUp:
+                    CoinBuffedUpAction -= actionFunction;
+                break;
+                
+                case Event.CoinPlaced:
+                    CoinPlacedAction -= actionFunction;
+                break;
+            }
+        }
+        
         public static void UnsubscribeFromEvent(Event gameEvent , Action<int , string> actionFunction)
         {
             switch(gameEvent)
             {
                 case Event.PlayerNamesUpdated:
                     PlayerNamesUpdatedAction -= actionFunction;
+                break;
+            }
+        }
+        
+        public static void UnsubscribeFromEvent(Event gameEvent , Action<int , int , int> actionFunction)
+        {
+            switch(gameEvent)
+            {
+                case Event.CoinCaptured:
+                    CoinCapturedAction -= actionFunction;
                 break;
             }
         }
@@ -211,12 +262,36 @@ namespace Events
             }
         }
         
+        public static void Invoke(Event gameEvent , int coinValue , int playerID)
+        {
+            switch(gameEvent)
+            {
+                case Event.CoinBuffedUp:
+                    CoinBuffedUpAction?.Invoke(playerID , coinValue); //TODO Improve this signature
+                break;
+                
+                case Event.CoinPlaced:
+                    CoinPlacedAction?.Invoke(coinValue , playerID);
+                break;
+            }
+        }
+        
         public static void Invoke(Event gameEvent , int playerID , string playerName)
         {
             switch(gameEvent)
             {
                 case Event.PlayerNamesUpdated:
                     PlayerNamesUpdatedAction?.Invoke(playerID , playerName);
+                break;
+            }
+        }
+        
+        public static void Invoke(Event gameEvent , int currentPlayerID , int adjacentPlayerID , int adjacentPlayerCoinValue)
+        {
+            switch(gameEvent)
+            {
+                case Event.CoinCaptured:
+                    CoinCapturedAction?.Invoke(currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
                 break;
             }
         }
