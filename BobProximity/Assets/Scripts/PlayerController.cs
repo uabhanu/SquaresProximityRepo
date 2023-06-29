@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
     private List<int> _playersRemaining;
     private List<List<int>> _playerNumbersList;
     private MainMenuManager _mainMenuManager;
-    private ScoreManager _scoreManager;
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
@@ -30,7 +29,6 @@ public class PlayerController : MonoBehaviour
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
-        _scoreManager = FindObjectOfType<ScoreManager>();
         _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
         
         int capacity = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
@@ -99,8 +97,8 @@ public class PlayerController : MonoBehaviour
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
             _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
             _gameManager.TotalCells--;
-            _scoreManager.CoinPlacedScore(_coinValue , _currentPlayerID);
-            
+            EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayerID);
+
 
             if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
             {
@@ -212,17 +210,17 @@ public class PlayerController : MonoBehaviour
 
                 if(isCellBlocked)
                 {
-                    int adjacentCoinPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
+                    int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
                     int adjacentCoinValue = _gridManager.CoinValueData.GetValue(x , y);
 
-                    if(adjacentCoinPlayerID == _currentPlayerID)
+                    if(adjacentPlayerID == _currentPlayerID)
                     {
                         int newAdjacentCoinValue = adjacentCoinValue + 1;
                         _gridManager.CoinValueData.SetValue(x , y , newAdjacentCoinValue);
                         GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
                         TMP_Text adjacentCoinValueText = adjacentCoinObj.GetComponentInChildren<TMP_Text>();
                         adjacentCoinValueText.text = _gridManager.CoinValueData.GetValue(x , y).ToString();
-                        _scoreManager.CoinBuffedUpScore(adjacentCoinPlayerID , newAdjacentCoinValue - adjacentCoinValue);
+                        EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue); //TODO Improve this signature
                     }
                 }
             }
@@ -249,14 +247,14 @@ public class PlayerController : MonoBehaviour
 
                 if(isCellBlocked)
                 {
-                    int adjacentCoinPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
-                    int adjacentCoinValue = _gridManager.CoinValueData.GetValue(x , y);
+                    int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
+                    int adjacentPlayerCoinValue = _gridManager.CoinValueData.GetValue(x , y);
 
-                    if(adjacentCoinPlayerID != _currentPlayerID && adjacentCoinValue < _coinValue)
+                    if(adjacentPlayerID != _currentPlayerID && adjacentPlayerCoinValue < _coinValue)
                     {
                         //Debug.Log("Adjacent Coin Value : " + adjacentCoinValue.ToString() + " & " + "Current Coin Value : " + _coinValue);
                         _gridManager.PlayerIndexData.SetValue(x , y , _currentPlayerID);
-                        _scoreManager.CoinCapturedScore(_currentPlayerID , adjacentCoinPlayerID , adjacentCoinValue);
+                        EventsManager.Invoke(Event.CoinCaptured , _currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
                         //Debug.Log($"Changed the coin on adjacent Cell ({x} , {y}) to Player {currentPlayerIndex}");
 
                         UpdateCoinColor(x , y , _currentPlayerID);
