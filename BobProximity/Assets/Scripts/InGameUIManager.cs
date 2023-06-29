@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class InGameUIManager : MonoBehaviour
 {
-    private bool _isGameTied;
     private int[] _totalReceivedArray;
     private string[] _playerNamesArray;
     
@@ -66,24 +65,7 @@ public class InGameUIManager : MonoBehaviour
     {
         UnsubscribeFromEvents();
     }
-    
-    private int GetHighestScorePlayer()
-    {
-        int highestScore = int.MinValue;
-        int highestScorePlayer = -1;
 
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
-        {
-            if(_totalReceivedArray[i] > highestScore)
-            {
-                highestScore = _totalReceivedArray[i];
-                highestScorePlayer = i;
-            }
-        }
-
-        return highestScorePlayer;
-    }
-    
     private void LoadData()
     {
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
@@ -118,23 +100,7 @@ public class InGameUIManager : MonoBehaviour
     public void ContinueButton()
     {
         continueButtonObj.SetActive(false);
-
-        int highestScorePlayer = GetHighestScorePlayer();
-
-        EventsManager.Invoke(Event.PlayerWins , highestScorePlayer);
-
         gameOverPanelsObj.SetActive(true);
-
-        if(!_isGameTied)
-        {
-            playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = playerNameTMPInputFields[highestScorePlayer].text + " Wins!!!";
-            playerWinsLabelsTMPTexts[highestScorePlayer].text = playerTotalWinsLabelsTMPTexts[highestScorePlayer].text;
-            winsPanelObjs[highestScorePlayer].SetActive(true);
-        }
-        else
-        {
-            gameTiedPanelObj.SetActive(true);
-        }
 
         if(_mainMenuManager.TotalNumberOfPlayers == 2)
         {
@@ -247,7 +213,14 @@ public class InGameUIManager : MonoBehaviour
 
     private void OnGameTied()
     {
-        _isGameTied = true;
+        gameTiedPanelObj.SetActive(true);
+    }
+
+    private void OnPlayerWins(int highestScorePlayer)
+    {
+        playerTotalWinsLabelsTMPTexts[highestScorePlayer].text = playerNameTMPInputFields[highestScorePlayer].text + " Wins!!!";
+        playerWinsLabelsTMPTexts[highestScorePlayer].text = playerTotalWinsLabelsTMPTexts[highestScorePlayer].text;
+        winsPanelObjs[highestScorePlayer].SetActive(true);
     }
 
     private void OnTotalReceived(int[] totalReceivedArray)
@@ -260,6 +233,7 @@ public class InGameUIManager : MonoBehaviour
         EventsManager.SubscribeToEvent(Event.GameDataLoaded , OnGameDataLoaded);
         EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
         EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
+        EventsManager.SubscribeToEvent(Event.PlayerWins , OnPlayerWins);
         EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , OnTotalReceived);
     }
 
@@ -268,6 +242,7 @@ public class InGameUIManager : MonoBehaviour
         EventsManager.UnsubscribeFromEvent(Event.GameDataLoaded , OnGameDataLoaded);
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
         EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
+        EventsManager.UnsubscribeFromEvent(Event.PlayerWins , OnPlayerWins);
         EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , OnTotalReceived);
     }
 }

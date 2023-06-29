@@ -11,8 +11,6 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] private TMP_Text[] coinScoreTMPTexts;
 
-    public int[] CoinScoreValues => _coinScoreValues;
-
     private void Start()
     {
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
@@ -29,22 +27,39 @@ public class ScoreManager : MonoBehaviour
 
     private void CoinBuffedUpScore(int buffedUpCoinPlayerID , int buffedUpCoinIncrement)
     {
-        CoinScoreValues[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
+        _coinScoreValues[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
         UpdateScoreTexts();
     }
 
     private void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
     {
-        CoinScoreValues[capturingPlayerID] += capturedCoinValue;
-        CoinScoreValues[capturedPlayerID] -= capturedCoinValue;
+        _coinScoreValues[capturingPlayerID] += capturedCoinValue;
+        _coinScoreValues[capturedPlayerID] -= capturedCoinValue;
         UpdateScoreTexts();
+    }
+    
+    private int GetHighestScorePlayer()
+    {
+        int highestScore = int.MinValue;
+        int highestScorePlayer = -1;
+
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        {
+            if(_coinScoreValues[i] > highestScore)
+            {
+                highestScore = _coinScoreValues[i];
+                highestScorePlayer = i;
+            }
+        }
+
+        return highestScorePlayer;
     }
 
     private void UpdateScoreTexts()
     {
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            coinScoreTMPTexts[i].text = _playerNames[i] + " : " + CoinScoreValues[i];
+            coinScoreTMPTexts[i].text = _playerNames[i] + " : " + _coinScoreValues[i];
         }
     }
 
@@ -60,7 +75,7 @@ public class ScoreManager : MonoBehaviour
 
     private void OnCoinPlaced(int coinValue , int playerID)
     {
-        CoinScoreValues[playerID] += coinValue;
+        _coinScoreValues[playerID] += coinValue;
         UpdateScoreTexts();
     }
 
@@ -70,9 +85,14 @@ public class ScoreManager : MonoBehaviour
         {
             for(int j = i + 1; j < _mainMenuManager.TotalNumberOfPlayers; j++)
             {
-                if(CoinScoreValues[i] == CoinScoreValues[j])
+                if(_coinScoreValues[i] == _coinScoreValues[j])
                 {
                     EventsManager.Invoke(Event.GameTied);
+                }
+                else
+                {
+                    int highestScorePlayer = GetHighestScorePlayer();
+                    EventsManager.Invoke(Event.PlayerWins , highestScorePlayer);
                 }
             }
         }
