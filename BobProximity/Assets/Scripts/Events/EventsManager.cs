@@ -6,19 +6,20 @@ namespace Events
     {
         #region Actions
         
-        protected static event Action<int , int> CoinBuffedUpAction;
-        protected static event Action<int , int , int> CoinCapturedAction;
-        protected static event Action<int , int> CoinPlacedAction;
-        protected static event Action<int[]> GameDataLoadedAction;
         protected static event Action GameDataResetAction;
         protected static event Action GameOverAction;
         protected static event Action GamePausedAction;
         protected static event Action GameResumedAction;
         protected static event Action GameStartedAction;
         protected static event Action GameTiedAction;
-        protected static event Action<int , string> PlayerNamesUpdatedAction;
-        protected static event Action<int[]> PlayerTotalReceivedAction;
+        protected static event Action<int> NumberOfPlayersSelectedAction;
         protected static event Action<int> PlayerWinsAction;
+        protected static event Action<int[]> GameDataLoadedAction;
+        protected static event Action<int[]> PlayerTotalReceivedAction;
+        protected static event Action<int , int> CoinBuffedUpAction;
+        protected static event Action<int , int> CoinPlacedAction;
+        protected static event Action<int , string> PlayerNamesUpdatedAction;
+        protected static event Action<int , int , int> CoinCapturedAction;
 
         #endregion
 
@@ -58,6 +59,10 @@ namespace Events
         {
             switch(gameEvent)
             {
+                case Event.NumberOfPlayersSelected:
+                    NumberOfPlayersSelectedAction += actionFunction;
+                break;
+                
                 case Event.PlayerWins:
                     PlayerWinsAction += actionFunction;
                 break;
@@ -150,6 +155,10 @@ namespace Events
         {
             switch(gameEvent)
             {
+                case Event.NumberOfPlayersSelected:
+                    NumberOfPlayersSelectedAction -= actionFunction;
+                break;
+                
                 case Event.PlayerWins:
                     PlayerWinsAction -= actionFunction;
                 break;
@@ -238,12 +247,16 @@ namespace Events
             }
         }
         
-        public static void Invoke(Event gameEvent , int highestScorePlayerID)
+        public static void Invoke(Event gameEvent , int value)
         {
             switch(gameEvent)
             {
+                case Event.NumberOfPlayersSelected:
+                    NumberOfPlayersSelectedAction?.Invoke(value);
+                break;
+                
                 case Event.PlayerWins:
-                    PlayerWinsAction?.Invoke(highestScorePlayerID);
+                    PlayerWinsAction?.Invoke(value);
                 break;
             }
         }
