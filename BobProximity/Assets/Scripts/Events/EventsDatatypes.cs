@@ -12,7 +12,6 @@ namespace Events
         GameResumed,
         GameStarted,
         GameTied,
-        NumberOfPlayersSelected,
         PlayerNamesUpdated,
         PlayerTotalReceived,
         PlayerWins
