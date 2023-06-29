@@ -5,6 +5,7 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
+    private int _numberOfPlayers;
     private int[] _coinScoreValues;
     private MainMenuManager _mainMenuManager;
     private string[] _playerNames;
@@ -97,6 +98,12 @@ public class ScoreManager : MonoBehaviour
             }
         }
     }
+
+    private void OnNumberOfPlayersSelected(int numberOfPlayers)
+    {
+        _numberOfPlayers = numberOfPlayers;
+        Debug.Log("Number Of Players : " + _numberOfPlayers);
+    }
     
     private void OnPlayerNamesUpdated(int playerID , string playerName)
     {
@@ -110,6 +117,7 @@ public class ScoreManager : MonoBehaviour
         EventsManager.SubscribeToEvent(Event.CoinCaptured , OnCoinCaptured);
         EventsManager.SubscribeToEvent(Event.CoinPlaced , OnCoinPlaced);
         EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
+        EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
         EventsManager.SubscribeToEvent(Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
     }
 
@@ -117,7 +125,9 @@ public class ScoreManager : MonoBehaviour
     {
         EventsManager.UnsubscribeFromEvent(Event.CoinBuffedUp , OnCoinBuffedUp);
         EventsManager.UnsubscribeFromEvent(Event.CoinCaptured , OnCoinCaptured);
+        EventsManager.UnsubscribeFromEvent(Event.CoinPlaced , OnCoinPlaced);
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
+        EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
         EventsManager.UnsubscribeFromEvent(Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
     }
 }

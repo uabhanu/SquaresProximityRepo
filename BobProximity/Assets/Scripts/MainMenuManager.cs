@@ -1,6 +1,8 @@
+using Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Event = Events.Event;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -33,7 +35,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if(numberOfPlayersSelectionSlider.value == 0 || numberOfPlayersSelectionSlider.value == 1)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); 
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 
@@ -42,11 +44,13 @@ public class MainMenuManager : MonoBehaviour
         if(numberOfPlayersSelectionSlider.value == 0)
         {
             TotalNumberOfPlayers = 2;
+            EventsManager.Invoke(Event.NumberOfPlayersSelected , _totalNumberOfPlayers);
         }
         
         else if(numberOfPlayersSelectionSlider.value == 1)
         {
             TotalNumberOfPlayers = 3;
+            EventsManager.Invoke(Event.NumberOfPlayersSelected , _totalNumberOfPlayers);
         }   
     }
 }
