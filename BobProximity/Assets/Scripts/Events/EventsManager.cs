@@ -280,7 +280,7 @@ namespace Events
             switch(gameEvent)
             {
                 case Event.CoinBuffedUp:
-                    CoinBuffedUpAction?.Invoke(playerID , coinValue); //TODO Improve this signature
+                    CoinBuffedUpAction?.Invoke(coinValue , playerID);  //ToDo Improve this signature
                 break;
                 
                 case Event.CoinPlaced:
