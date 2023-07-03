@@ -88,8 +88,8 @@ public class ScoreManager : MonoBehaviour
                 }
                 else
                 {
-                    int highestScorePlayer = GetHighestScorePlayer();
-                    EventsManager.Invoke(Event.PlayerWins , highestScorePlayer);
+                    int highestScorePlayerID = GetHighestScorePlayer();
+                    EventsManager.Invoke(Event.PlayerWins , highestScorePlayerID);
                 }
             }
         }
