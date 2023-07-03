@@ -7,16 +7,12 @@ public class ScoreManager : MonoBehaviour
 {
     private int _numberOfPlayers;
     private int[] _coinScoreValues;
-    private MainMenuManager _mainMenuManager;
     private string[] _playerNames;
 
     [SerializeField] private TMP_Text[] coinScoreTMPTexts;
 
     private void Start()
     {
-        _mainMenuManager = FindObjectOfType<MainMenuManager>();
-        _coinScoreValues = new int[_mainMenuManager.TotalNumberOfPlayers];
-        _playerNames = new string[_mainMenuManager.TotalNumberOfPlayers];
         SubscribeToEvents();
         UpdateScoreTexts();
     }
@@ -44,7 +40,7 @@ public class ScoreManager : MonoBehaviour
         int highestScore = int.MinValue;
         int highestScorePlayer = -1;
 
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             if(_coinScoreValues[i] > highestScore)
             {
@@ -58,7 +54,7 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScoreTexts()
     {
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             coinScoreTMPTexts[i].text = _playerNames[i] + " : " + _coinScoreValues[i];
         }
@@ -82,9 +78,9 @@ public class ScoreManager : MonoBehaviour
 
     private void OnGameOver()
     {
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers - 1; i++)
+        for(int i = 0; i < _numberOfPlayers - 1; i++)
         {
-            for(int j = i + 1; j < _mainMenuManager.TotalNumberOfPlayers; j++)
+            for(int j = i + 1; j < _numberOfPlayers; j++)
             {
                 if(_coinScoreValues[i] == _coinScoreValues[j])
                 {
@@ -102,7 +98,8 @@ public class ScoreManager : MonoBehaviour
     private void OnNumberOfPlayersSelected(int numberOfPlayers)
     {
         _numberOfPlayers = numberOfPlayers;
-        Debug.Log("Number Of Players : " + _numberOfPlayers);
+        _coinScoreValues = new int[_numberOfPlayers];
+        _playerNames = new string[_numberOfPlayers];
     }
     
     private void OnPlayerNamesUpdated(int playerID , string playerName)
