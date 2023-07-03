@@ -8,8 +8,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    private bool _isGameStarted;
     private bool _isMouseMoving;
-    private GameManager _gameManager;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
     private InputActions _playerInputActions;
@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _gameManager = FindObjectOfType<GameManager>();
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
@@ -54,7 +53,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(!_gameManager.GameStarted) return;
+        if(!_isGameStarted) return;
         
         if(_totalCells == 0)
         {
@@ -383,9 +382,15 @@ public class PlayerController : MonoBehaviour
     {
         _mouseTrailObj.SetActive(_isMouseMoving);
     }
+
+    private void OnGameOver()
+    {
+        _isGameStarted = false;
+    }
     
     private void OnGameStarted()
     {
+        _isGameStarted = true;
         _gridManager = FindObjectOfType<GridManager>();
         _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         
@@ -419,11 +424,13 @@ public class PlayerController : MonoBehaviour
     
     private void SubscribeToEvents()
     {
+        EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
         EventsManager.SubscribeToEvent(Event.GameStarted , OnGameStarted);
     }
     
     private void UnsubscribeFromEvents()
     {
+        EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
         EventsManager.UnsubscribeFromEvent(Event.GameStarted , OnGameStarted);
     }
 }
