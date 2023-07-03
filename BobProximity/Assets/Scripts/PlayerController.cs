@@ -1,5 +1,6 @@
 using Event = Events.Event;
 using Events;
+using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -27,41 +28,12 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _gameManager = FindObjectOfType<GameManager>();
-        _gridManager = FindObjectOfType<GridManager>();
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
-        _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
-        
-        //ToDo This is required but getting index out of bounds after the last cell occupied so investigate
-        _playersListsCapacity = _totalCells / _mainMenuManager.TotalNumberOfPlayers;
-        
+
         //Debug.Log("Lists Capacity : " + capacity);
-        
-        _playerNumbersList = new List<List<int>>();
-        
-        _playersRemaining = new List<int>();
-
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
-        {
-            _playersRemaining.Add(i);
-        }
-
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
-        {
-            List<int> playerNumbers = new List<int>(_playersListsCapacity);
-
-            for(int j = 1; j <= _playersListsCapacity; j++)
-            {
-                playerNumbers.Add(j % 20 + 1);
-            }
-
-            ShuffleList(playerNumbers);
-            _playerNumbersList.Add(playerNumbers);
-        }
-
-        StartPlayerTurn();
 
         _mouseTrailObj = Instantiate(coinObj , Vector3.zero , Quaternion.identity , gameObject.transform);
         UpdateTrailColor();
@@ -72,13 +44,19 @@ public class PlayerController : MonoBehaviour
         }
 
         UpdateTrailVisibility();
+        SubscribeToEvents();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromEvents();
     }
 
     private void Update()
     {
         if(!_gameManager.GameStarted) return;
         
-        if(_gameManager.TotalCells == 0)
+        if(_totalCells == 0)
         {
             EventsManager.Invoke(Event.GameOver);
             EventsManager.Invoke(Event.PlayerTotalReceived , _totalReceivedArray);
@@ -100,7 +78,7 @@ public class PlayerController : MonoBehaviour
             
             _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
             _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
-            _gameManager.TotalCells--;
+            _totalCells--;
             EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayerID);
 
 
@@ -404,5 +382,48 @@ public class PlayerController : MonoBehaviour
     private void UpdateTrailVisibility()
     {
         _mouseTrailObj.SetActive(_isMouseMoving);
+    }
+    
+    private void OnGameStarted()
+    {
+        _gridManager = FindObjectOfType<GridManager>();
+        _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
+        
+        //ToDo This is required but getting index out of bounds after the last cell occupied so investigate
+        _playersListsCapacity = _totalCells / _mainMenuManager.TotalNumberOfPlayers;
+        
+        _playerNumbersList = new List<List<int>>();
+        
+        _playersRemaining = new List<int>();
+
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        {
+            _playersRemaining.Add(i);
+        }
+
+        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        {
+            List<int> playerNumbers = new List<int>(_playersListsCapacity);
+
+            for(int j = 1; j <= _playersListsCapacity; j++)
+            {
+                playerNumbers.Add(j % 20 + 1);
+            }
+
+            ShuffleList(playerNumbers);
+            _playerNumbersList.Add(playerNumbers);
+        }
+        
+        StartPlayerTurn();
+    }
+    
+    private void SubscribeToEvents()
+    {
+        EventsManager.SubscribeToEvent(Event.GameStarted , OnGameStarted);
+    }
+    
+    private void UnsubscribeFromEvents()
+    {
+        EventsManager.UnsubscribeFromEvent(Event.GameStarted , OnGameStarted);
     }
 }
