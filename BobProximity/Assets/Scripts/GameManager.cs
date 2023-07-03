@@ -4,16 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private bool _gameStarted;
     private bool _isGameTied;
     private int[] _playerTotalWinsArray;
     private MainMenuManager _mainMenuManager;
-
-    public bool GameStarted
-    {
-        get => _gameStarted;
-        set => _gameStarted = value;
-    }
 
     private void Start()
     {
@@ -54,17 +47,6 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.DeleteAll();
         LoadData();
     }
-    
-    private void OnGameOver()
-    {
-        GameStarted = false;
-    }
-    
-
-    private void OnGameStarted()
-    {
-        GameStarted = true;
-    }
 
     private void OnGameTied()
     {
@@ -82,8 +64,6 @@ public class GameManager : MonoBehaviour
     private void SubscribeToEvents()
     {
         EventsManager.SubscribeToEvent(Event.GameDataReset , OnGameDataReset);
-        EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
-        EventsManager.SubscribeToEvent(Event.GameStarted , OnGameStarted);
         EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
         EventsManager.SubscribeToEvent(Event.PlayerWins , OnPlayerWins);
     }
@@ -91,8 +71,6 @@ public class GameManager : MonoBehaviour
     private void UnsubscribeFromEvents()
     {
         EventsManager.UnsubscribeFromEvent(Event.GameDataReset , OnGameDataReset);
-        EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
-        EventsManager.UnsubscribeFromEvent(Event.GameStarted , OnGameStarted);
         EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
         EventsManager.UnsubscribeFromEvent(Event.PlayerWins , OnPlayerWins);
     }
