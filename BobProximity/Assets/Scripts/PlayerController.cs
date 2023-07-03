@@ -15,24 +15,20 @@ public class PlayerController : MonoBehaviour
     private InputActions _playerInputActions;
     private int _coinValue;
     private int _currentPlayerID;
+    private int _numberOfPlayers;
     private int _playersListsCapacity;
     private int _totalCells;
     private int[] _totalReceivedArray;
     private List<int> _playersRemaining;
     private List<List<int>> _playerNumbersList;
-    private MainMenuManager _mainMenuManager;
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
 
     private void Start()
     {
-        _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
-        _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
-
-        //Debug.Log("Lists Capacity : " + capacity);
 
         _mouseTrailObj = Instantiate(coinObj , Vector3.zero , Quaternion.identity , gameObject.transform);
         UpdateTrailColor();
@@ -249,14 +245,14 @@ public class PlayerController : MonoBehaviour
 
     private void EndPlayerTurn()
     {
-        _currentPlayerID = (_currentPlayerID + 1) % _mainMenuManager.TotalNumberOfPlayers;
+        _currentPlayerID = (_currentPlayerID + 1) % _numberOfPlayers;
     }
     
     private void ResetPlayersRemaining()
     {
         _playersRemaining.Clear();
 
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             _playersRemaining.Add(i);
         }
@@ -391,22 +387,23 @@ public class PlayerController : MonoBehaviour
     private void OnGameStarted()
     {
         _isGameStarted = true;
+        
         _gridManager = FindObjectOfType<GridManager>();
         _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
-        
+
         //ToDo This is required but getting index out of bounds after the last cell occupied so investigate
-        _playersListsCapacity = _totalCells / _mainMenuManager.TotalNumberOfPlayers;
+        _playersListsCapacity = _totalCells / _numberOfPlayers;
         
         _playerNumbersList = new List<List<int>>();
         
         _playersRemaining = new List<int>();
 
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             _playersRemaining.Add(i);
         }
 
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             List<int> playerNumbers = new List<int>(_playersListsCapacity);
 
@@ -421,16 +418,24 @@ public class PlayerController : MonoBehaviour
         
         StartPlayerTurn();
     }
+
+    private void OnNumberOfPlayersSelected(int numberOfPlayers)
+    {
+        _numberOfPlayers = numberOfPlayers;
+        _totalReceivedArray = new int[_numberOfPlayers];
+    }
     
     private void SubscribeToEvents()
     {
         EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
         EventsManager.SubscribeToEvent(Event.GameStarted , OnGameStarted);
+        EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
     }
     
     private void UnsubscribeFromEvents()
     {
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
         EventsManager.UnsubscribeFromEvent(Event.GameStarted , OnGameStarted);
+        EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
     }
 }
