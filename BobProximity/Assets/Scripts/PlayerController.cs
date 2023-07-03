@@ -31,7 +31,8 @@ public class PlayerController : MonoBehaviour
         _playerInputActions.ProximityMap.Enable();
         _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
         
-        int capacity = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
+        //ToDo This is required but getting index out of bounds after the last cell occupied so investigate
+        int capacity = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows / _mainMenuManager.TotalNumberOfPlayers;
         
         //Debug.Log("Lists Capacity : " + capacity);
         
