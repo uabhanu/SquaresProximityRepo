@@ -12,6 +12,7 @@ public class InGameUIManager : MonoBehaviour
     private int[] _totalReceivedArray;
     private string[] _playerNamesArray;
 
+    [SerializeField] private GameObject coinUIObj;
     [SerializeField] private GameObject continueButtonObj;
     [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private GameObject gameTiedPanelObj;
@@ -102,6 +103,7 @@ public class InGameUIManager : MonoBehaviour
 
     public void ContinueButton()
     {
+        coinUIObj.SetActive(false);
         continueButtonObj.SetActive(false);
         gameOverPanelsObj.SetActive(true);
         
