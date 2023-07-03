@@ -1,13 +1,13 @@
 using Event = Events.Event;
 using Events;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
     private int _numberOfPlayers;
     private int[] _coinScoreValues;
-    private string[] _playerNames;
+    private string[] _playerNamesArray;
 
     [SerializeField] private TMP_Text[] coinScoreTMPTexts;
 
@@ -56,7 +56,7 @@ public class ScoreManager : MonoBehaviour
     {
         for(int i = 0; i < _numberOfPlayers; i++)
         {
-            coinScoreTMPTexts[i].text = _playerNames[i] + " : " + _coinScoreValues[i];
+            coinScoreTMPTexts[i].text = _playerNamesArray[i] + " : " + _coinScoreValues[i];
         }
     }
 
@@ -99,12 +99,12 @@ public class ScoreManager : MonoBehaviour
     {
         _numberOfPlayers = numberOfPlayers;
         _coinScoreValues = new int[_numberOfPlayers];
-        _playerNames = new string[_numberOfPlayers];
+        _playerNamesArray = new string[_numberOfPlayers];
     }
     
     private void OnPlayerNamesUpdated(int playerID , string playerName)
     {
-        _playerNames[playerID] = playerName;
+        _playerNamesArray[playerID] = playerName;
         UpdateScoreTexts();
     }
 
