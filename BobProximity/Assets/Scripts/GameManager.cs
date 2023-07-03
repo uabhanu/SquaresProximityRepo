@@ -39,7 +39,10 @@ public class GameManager : MonoBehaviour
 
     private void OnGameDataReset()
     {
-        PlayerPrefs.DeleteAll();
+        for(int i = 0; i < _playerTotalWinsArray.Length; i++)
+        {
+            _playerTotalWinsArray[i] = 0;   
+        }
     }
 
     private void OnGameTied()
@@ -56,19 +59,11 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerWins(int highestScorePlayerID)
     {
-        if(_isGameTied) return;
-
-        for(int i = 0; i < _playerTotalWinsArray.Length; i++)
+        if(!_isGameTied)
         {
-            if(i == highestScorePlayerID)
-            {
-                Debug.Log("i : " + i);
-                Debug.Log("Highest Score Player ID :  : " + highestScorePlayerID);
-                _playerTotalWinsArray[i]++; //ToDo This is increasing by 3 rather than 1 so fix this
-            }
+            _playerTotalWinsArray[highestScorePlayerID]++; //ToDo This is increasing by 3 rather than 1 so fix this but for 2 players, this is working great.
+            SaveData();   
         }
-        
-        SaveData();
     }
 
     private void SubscribeToEvents()
