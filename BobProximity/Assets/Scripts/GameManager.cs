@@ -57,8 +57,15 @@ public class GameManager : MonoBehaviour
     private void OnPlayerWins(int highestScorePlayer)
     {
         if(_isGameTied) return;
+
+        for(int i = 0; i < _playerTotalWinsArray.Length; i++)
+        {
+            if(i == highestScorePlayer)
+            {
+                _playerTotalWinsArray[i]++; //ToDo This is increasing by 3 rather than 1 so fix this
+            }
+        }
         
-        _playerTotalWinsArray[highestScorePlayer]++;
         SaveData();
     }
 
