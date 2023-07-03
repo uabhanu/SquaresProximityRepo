@@ -175,11 +175,14 @@ public class InGameUIManager : MonoBehaviour
 
     public void ResetButton()
     {
+        PlayerPrefs.DeleteAll();
         EventsManager.Invoke(Event.GameDataReset);
         
         for(int i = 0; i < _numberOfPlayers; i++)
         {
             playerNameTMPInputFields[i].text = "";
+            _playersTotalWinsArray[i] = 0;
+            playerTotalWinsLabelsTMPTexts[i].text = "";
         }
         
         LoadData();
