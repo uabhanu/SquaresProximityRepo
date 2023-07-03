@@ -24,22 +24,18 @@ public class PlayerController : MonoBehaviour
     private Vector2Int _cellIndexAtMousePosition;
 
     [SerializeField] private GameObject coinObj;
+    [SerializeField] private GameObject trailObj;
 
     private void Start()
     {
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
 
-        _mouseTrailObj = Instantiate(coinObj , Vector3.zero , Quaternion.identity , gameObject.transform);
-        UpdateTrailColor();
+        _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
         
-        if(_mouseTrailObj != null)
-        {
-            _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
-        }
-
-        UpdateTrailVisibility();
         SubscribeToEvents();
+        UpdateTrailColor();
+        UpdateTrailVisibility();
     }
 
     private void OnDestroy()
@@ -87,7 +83,6 @@ public class PlayerController : MonoBehaviour
                 _gridManager.CoinOnTheCellData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , newCoinObj);
                 SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
                 TMP_Text coinValueTMP = newCoinObj.GetComponentInChildren<TMP_Text>();
-                _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
                 newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
 
                 switch(_currentPlayerID)
@@ -289,17 +284,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(_mouseTrailObj != null)
-        {
-            _mouseTrailObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
-        }
-
         if(_playerNumbersList.Count > 1)
         {
             _playerNumbersList[_currentPlayerID].RemoveAt(0);   
         }
         
-        if (_playersRemaining.Count == 0)
+        if(_playersRemaining.Count == 0)
         {
             ResetPlayersRemaining();
         }
@@ -315,28 +305,23 @@ public class PlayerController : MonoBehaviour
         if(coin != null)
         {
             SpriteRenderer coinRenderer = coin.GetComponentInChildren<SpriteRenderer>();
-            TMP_Text coinValueTMP = coin.GetComponentInChildren<TMP_Text>();
-    
+
             switch(playerIndex)
             {
                 case 0:
                     coinRenderer.color = Color.red;
-                    coinValueTMP.color = Color.yellow;
                 break;
     
                 case 1:
                     coinRenderer.color = Color.green;
-                    coinValueTMP.color = Color.blue;
                 break;
     
                 case 2:
                     coinRenderer.color = Color.blue;
-                    coinValueTMP.color = Color.cyan;
                 break;
     
                 default:
                     coinRenderer.color = Color.white;
-                    coinValueTMP.color = Color.black;
                 break;
             }
         }
@@ -347,30 +332,8 @@ public class PlayerController : MonoBehaviour
         if(_mouseTrailObj != null)
         {
             SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
-            TMP_Text trailText = _mouseTrailObj.GetComponentInChildren<TMP_Text>();
-
             Color playerColor = GetPlayerColor(_currentPlayerID);
-
             trailRenderer.color = playerColor;
-
-            switch(_currentPlayerID)
-            {
-                case 0:
-                    trailText.color = Color.yellow;
-                break;
-
-                case 1:
-                    trailText.color = Color.blue;
-                break;
-
-                case 2:
-                    trailText.color = Color.cyan;
-                break;
-
-                default:
-                    trailText.color = Color.black;
-                break;
-            }
         }
     }
 
