@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private InputActions _playerInputActions;
     private int _coinValue;
     private int _currentPlayerID;
+    private int _playersListsCapacity;
+    private int _totalCells;
     private int[] _totalReceivedArray;
     private List<int> _playersRemaining;
     private List<List<int>> _playerNumbersList;
@@ -29,10 +31,11 @@ public class PlayerController : MonoBehaviour
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
+        _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
         
         //ToDo This is required but getting index out of bounds after the last cell occupied so investigate
-        int capacity = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows / _mainMenuManager.TotalNumberOfPlayers;
+        _playersListsCapacity = _totalCells / _mainMenuManager.TotalNumberOfPlayers;
         
         //Debug.Log("Lists Capacity : " + capacity);
         
@@ -47,9 +50,9 @@ public class PlayerController : MonoBehaviour
 
         for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
         {
-            List<int> playerNumbers = new List<int>(capacity);
+            List<int> playerNumbers = new List<int>(_playersListsCapacity);
 
-            for(int j = 1; j <= capacity; j++)
+            for(int j = 1; j <= _playersListsCapacity; j++)
             {
                 playerNumbers.Add(j % 20 + 1);
             }
