@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     private bool _isGameStarted;
     private bool _isMouseMoving;
+    private GameObject _coinUIObj;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
     private InputActions _playerInputActions;
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        _coinUIObj = GameObject.Find("CoinUI");
         _playerInputActions = new InputActions();
         _playerInputActions.ProximityMap.Enable();
 
@@ -274,6 +277,9 @@ public class PlayerController : MonoBehaviour
         
         _coinValue = _playerNumbersList[_currentPlayerID][0];
         
+        TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
+        coinUITMP.text = _coinValue.ToString();
+        
         _playersRemaining.RemoveAt(randomIndex);
 
         for(int i = 0; i < _totalReceivedArray.Length; i++)
@@ -294,6 +300,7 @@ public class PlayerController : MonoBehaviour
             ResetPlayersRemaining();
         }
 
+        UpdateCoinUIImageColors();
         UpdateTrailColor();
     }
 
@@ -305,23 +312,58 @@ public class PlayerController : MonoBehaviour
         if(coin != null)
         {
             SpriteRenderer coinRenderer = coin.GetComponentInChildren<SpriteRenderer>();
+            TMP_Text coinValueTMP = coin.GetComponentInChildren<TMP_Text>();
 
             switch(playerIndex)
             {
                 case 0:
                     coinRenderer.color = Color.red;
+                    coinValueTMP.color = Color.yellow;
                 break;
     
                 case 1:
                     coinRenderer.color = Color.green;
+                    coinValueTMP.color = Color.blue;
                 break;
     
                 case 2:
                     coinRenderer.color = Color.blue;
+                    coinValueTMP.color = Color.cyan;
                 break;
     
                 default:
                     coinRenderer.color = Color.white;
+                break;
+            }
+        }
+    }
+    
+    private void UpdateCoinUIImageColors()
+    {
+        if(_coinUIObj != null)
+        {
+            Color playerColor = GetPlayerColor(_currentPlayerID);
+            Image coinUIImage = _coinUIObj.GetComponent<Image>();
+            coinUIImage.color = playerColor;
+            
+            TMP_Text coinUIText = _coinUIObj.GetComponentInChildren<TMP_Text>();
+        
+            switch(_currentPlayerID)
+            {
+                case 0:
+                    coinUIText.color = Color.yellow;
+                break;
+
+                case 1:
+                    coinUIText.color = Color.blue;
+                break;
+
+                case 2:
+                    coinUIText.color = Color.cyan;
+                break;
+
+                default:
+                    coinUIText.color = Color.black;
                 break;
             }
         }
@@ -333,6 +375,7 @@ public class PlayerController : MonoBehaviour
         {
             SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
             Color playerColor = GetPlayerColor(_currentPlayerID);
+
             playerColor.a *= 0.5f;
             trailRenderer.color = playerColor;
         }
