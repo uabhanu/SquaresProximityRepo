@@ -2015,8 +2015,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: SetPlayersNumber
         m_Mode: 1
         m_Arguments:
@@ -4568,8 +4568,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: InGameUIManager, Assembly-CSharp
         m_MethodName: ConfirmButton
         m_Mode: 1
         m_Arguments:
@@ -5071,6 +5071,7 @@ MonoBehaviour:
   inGameUIPanelsObj: {fileID: 363162966536441467}
   inGameUIPlayerNamesDisplayPanelObj: {fileID: 988183984593403324}
   leaderboardPanelObj: {fileID: 638149817491610029}
+  numberOfPlayersSelectionPanelObj: {fileID: 3986046983479881617}
   playerInputPanelObj: {fileID: 6880717777950863187}
   totalReceivedPanelObj: {fileID: 5088950927552000208}
   totalWinsPanelObj: {fileID: 6292542094583664615}
@@ -5090,6 +5091,7 @@ MonoBehaviour:
   - {fileID: 1306599151596033312}
   - {fileID: 8418558298801778891}
   - {fileID: 8890262800759797634}
+  numberOfPlayersSelectionSlider: {fileID: 6777005735494850632}
   playerNameTMPInputFields:
   - {fileID: 5110851220399508464}
   - {fileID: 6378831753500823874}
