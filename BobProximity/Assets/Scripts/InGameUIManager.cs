@@ -63,8 +63,6 @@ public class InGameUIManager : MonoBehaviour
         {
             _playerNamesArray[i] = PlayerPrefs.GetString("Player " + i + " Name");
             playerNameTMPInputFields[i].text = _playerNamesArray[i];
-            
-            _playersTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
             playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins : " + _playersTotalWinsArray[i];
         }
     }
@@ -73,7 +71,6 @@ public class InGameUIManager : MonoBehaviour
     {
         for(int i = 0; i < _numberOfPlayers; i++)
         {
-            PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playersTotalWinsArray[i]);
             PlayerPrefs.SetString("Player " + i + " Name" , _playerNamesArray[i]);
         }
 
@@ -182,6 +179,8 @@ public class InGameUIManager : MonoBehaviour
         {
             playerNameTMPInputFields[i].text = "";
         }
+        
+        LoadData();
     }
     
     public void SetPlayersNumber()
