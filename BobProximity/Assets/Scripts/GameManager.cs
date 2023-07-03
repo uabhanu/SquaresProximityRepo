@@ -54,14 +54,16 @@ public class GameManager : MonoBehaviour
         LoadData();
     }
 
-    private void OnPlayerWins(int highestScorePlayer)
+    private void OnPlayerWins(int highestScorePlayerID)
     {
         if(_isGameTied) return;
 
         for(int i = 0; i < _playerTotalWinsArray.Length; i++)
         {
-            if(i == highestScorePlayer)
+            if(i == highestScorePlayerID)
             {
+                Debug.Log("i : " + i);
+                Debug.Log("Highest Score Player ID :  : " + highestScorePlayerID);
                 _playerTotalWinsArray[i]++; //ToDo This is increasing by 3 rather than 1 so fix this
             }
         }
