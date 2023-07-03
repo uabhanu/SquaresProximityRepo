@@ -38,18 +38,18 @@ public class ScoreManager : MonoBehaviour
     private int GetHighestScorePlayer()
     {
         int highestScore = int.MinValue;
-        int highestScorePlayer = -1;
+        int highestScorePlayerID = -1;
 
         for(int i = 0; i < _numberOfPlayers; i++)
         {
             if(_coinScoreValues[i] > highestScore)
             {
                 highestScore = _coinScoreValues[i];
-                highestScorePlayer = i;
+                highestScorePlayerID = i;
             }
         }
 
-        return highestScorePlayer;
+        return highestScorePlayerID;
     }
 
     private void UpdateScoreTexts()
