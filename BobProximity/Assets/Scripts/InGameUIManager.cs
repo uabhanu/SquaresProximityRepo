@@ -7,10 +7,9 @@ using UnityEngine.UI;
 
 public class InGameUIManager : MonoBehaviour
 {
+    private int _numberOfPlayers;
     private int[] _totalReceivedArray;
     private string[] _playerNamesArray;
-    
-    private MainMenuManager _mainMenuManager;
 
     [SerializeField] private GameObject continueButtonObj;
     [SerializeField] private GameObject gameOverPanelsObj;
@@ -18,6 +17,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
     [SerializeField] private GameObject leaderboardPanelObj;
+    [SerializeField] private GameObject numberOfPlayersSelectionPanelObj;
     [SerializeField] private GameObject playerInputPanelObj;
     [SerializeField] private GameObject totalReceivedPanelObj;
     [SerializeField] private GameObject totalWinsPanelObj;
@@ -25,6 +25,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
     [SerializeField] private GameObject[] totalReceivedPanelObjs;
     [SerializeField] private GameObject[] winsPanelObjs;
+    [SerializeField] private Slider numberOfPlayersSelectionSlider;
     [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
@@ -32,22 +33,15 @@ public class InGameUIManager : MonoBehaviour
 
     private void Start()
     {
-        _mainMenuManager = FindObjectOfType<MainMenuManager>();
-
         continueButtonObj.SetActive(false);
         gameOverPanelsObj.SetActive(false);
         gameTiedPanelObj.SetActive(false);
         inGameUIPanelsObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
-        playerInputPanelObj.SetActive(true);
+        playerInputPanelObj.SetActive(false);
 
-        _playerNamesArray = new string[_mainMenuManager.TotalNumberOfPlayers];
-        _totalReceivedArray = new int[_mainMenuManager.TotalNumberOfPlayers];
-
-        if(_mainMenuManager.TotalNumberOfPlayers == 2)
-        {
-            playerNameTMPInputFields[_mainMenuManager.TotalNumberOfPlayers].gameObject.SetActive(false);
-        }
+        _playerNamesArray = new string[_numberOfPlayers];
+        _totalReceivedArray = new int[_numberOfPlayers];
 
         for(int i = 0; i < winsPanelObjs.Length; i++)
         {
@@ -65,7 +59,7 @@ public class InGameUIManager : MonoBehaviour
 
     private void LoadData()
     {
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             _playerNamesArray[i] = PlayerPrefs.GetString("Player " + i + " Name");
             playerNameTMPInputFields[i].text = _playerNamesArray[i];
@@ -74,7 +68,7 @@ public class InGameUIManager : MonoBehaviour
 
     private void SaveData()
     {
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             PlayerPrefs.SetString("Player " + i + " Name" , _playerNamesArray[i]);
         }
@@ -93,21 +87,30 @@ public class InGameUIManager : MonoBehaviour
         leaderboardPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
     }
+    
+    public void ConfirmButton()
+    {
+        if(numberOfPlayersSelectionSlider.value == 0 || numberOfPlayersSelectionSlider.value == 1)
+        {
+            numberOfPlayersSelectionPanelObj.SetActive(false);
+            playerInputPanelObj.SetActive(true);
+        }
+    }
 
     public void ContinueButton()
     {
         continueButtonObj.SetActive(false);
         gameOverPanelsObj.SetActive(true);
-
-        if(_mainMenuManager.TotalNumberOfPlayers == 2)
+        
+        if(_numberOfPlayers == 2)
         {
-            totalReceivedPanelObjs[_mainMenuManager.TotalNumberOfPlayers].SetActive(false);
+            totalReceivedPanelObjs[_numberOfPlayers].SetActive(false);
             totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
 
-            winsPanelObjs[_mainMenuManager.TotalNumberOfPlayers].SetActive(false);
+            winsPanelObjs[_numberOfPlayers].SetActive(false);
         }
 
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             playerNameTMPInputFields[i].text = _playerNamesArray[i];
             totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
@@ -117,14 +120,14 @@ public class InGameUIManager : MonoBehaviour
     public void EnterButton()
     {
         bool allNamesFilled = true;
-
-        if(_mainMenuManager.TotalNumberOfPlayers == 2)
+        
+        if(_numberOfPlayers == 2)
         {
-            inGameUIPlayerNamesDisplayPanelObjs[_mainMenuManager.TotalNumberOfPlayers].SetActive(false);
+            inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers].SetActive(false);
             inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 545;
         }
 
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             _playerNamesArray[i] = playerNameTMPInputFields[i].text;
 
@@ -148,10 +151,10 @@ public class InGameUIManager : MonoBehaviour
     public void LeaderboardButton()
     {
         leaderboardPanelObj.SetActive(true);
-
-        if(_mainMenuManager.TotalNumberOfPlayers == 2)
+        
+        if(_numberOfPlayers == 2)
         {
-            leaderboardWinsPanelObjs[_mainMenuManager.TotalNumberOfPlayers].SetActive(false);
+            leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
             totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
         }
 
@@ -167,15 +170,33 @@ public class InGameUIManager : MonoBehaviour
     {
         EventsManager.Invoke(Event.GameDataReset);
         
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             playerNameTMPInputFields[i].text = "";
+        }
+    }
+    
+    public void SetPlayersNumber()
+    {
+        if(numberOfPlayersSelectionSlider.value == 0)
+        {
+            _numberOfPlayers = 2;
+            _playerNamesArray = new string[_numberOfPlayers];
+            playerNameTMPInputFields[_numberOfPlayers].gameObject.SetActive(false);
+            EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
+        }
+        
+        else if(numberOfPlayersSelectionSlider.value == 1)
+        {
+            _numberOfPlayers = 3;
+            _playerNamesArray = new string[_numberOfPlayers];
+            EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
         }
     }
 
     private void OnGameDataLoaded(int[] totalWinsArray)
     {
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins : " + totalWinsArray[i];
         }
