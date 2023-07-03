@@ -70,16 +70,7 @@ public class GameManager : MonoBehaviour
     {
         GameStarted = false;
     }
-
-    private void OnGamePaused()
-    {
-        GameStarted = false;
-    }
     
-    private void OnGameResumed()
-    {
-        GameStarted = true;
-    }
 
     private void OnGameStarted()
     {
@@ -103,8 +94,6 @@ public class GameManager : MonoBehaviour
     {
         EventsManager.SubscribeToEvent(Event.GameDataReset , OnGameDataReset);
         EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
-        EventsManager.SubscribeToEvent(Event.GamePaused , OnGamePaused);
-        EventsManager.SubscribeToEvent(Event.GameResumed , OnGameResumed);
         EventsManager.SubscribeToEvent(Event.GameStarted , OnGameStarted);
         EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
         EventsManager.SubscribeToEvent(Event.PlayerWins , OnPlayerWins);
@@ -114,8 +103,6 @@ public class GameManager : MonoBehaviour
     {
         EventsManager.UnsubscribeFromEvent(Event.GameDataReset , OnGameDataReset);
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
-        EventsManager.UnsubscribeFromEvent(Event.GamePaused , OnGamePaused);
-        EventsManager.UnsubscribeFromEvent(Event.GameResumed , OnGameResumed);
         EventsManager.UnsubscribeFromEvent(Event.GameStarted , OnGameStarted);
         EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
         EventsManager.UnsubscribeFromEvent(Event.PlayerWins , OnPlayerWins);
