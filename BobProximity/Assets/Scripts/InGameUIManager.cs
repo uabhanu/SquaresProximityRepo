@@ -18,8 +18,6 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
     [SerializeField] private GameObject leaderboardPanelObj;
-    [SerializeField] private GameObject pauseButtonObj;
-    [SerializeField] private GameObject pauseMenuPanelObj;
     [SerializeField] private GameObject playerInputPanelObj;
     [SerializeField] private GameObject totalReceivedPanelObj;
     [SerializeField] private GameObject totalWinsPanelObj;
@@ -41,7 +39,6 @@ public class InGameUIManager : MonoBehaviour
         gameTiedPanelObj.SetActive(false);
         inGameUIPanelsObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
-        pauseMenuPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(true);
 
         _playerNamesArray = new string[_mainMenuManager.TotalNumberOfPlayers];
@@ -166,13 +163,6 @@ public class InGameUIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public void PauseButton()
-    {
-        EventsManager.Invoke(Event.GamePaused);
-        pauseButtonObj.SetActive(false);
-        pauseMenuPanelObj.SetActive(true);
-    }
-
     public void ResetButton()
     {
         EventsManager.Invoke(Event.GameDataReset);
@@ -181,18 +171,6 @@ public class InGameUIManager : MonoBehaviour
         {
             playerNameTMPInputFields[i].text = "";
         }
-    }
-
-    public void RestartButton()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void ResumeButton()
-    {
-        EventsManager.Invoke(Event.GameResumed);
-        pauseButtonObj.SetActive(true);
-        pauseMenuPanelObj.SetActive(false);
     }
 
     private void OnGameDataLoaded(int[] totalWinsArray)
@@ -207,8 +185,6 @@ public class InGameUIManager : MonoBehaviour
     {
         SaveData();
         continueButtonObj.SetActive(true);
-        pauseButtonObj.SetActive(false);
-        pauseMenuPanelObj.SetActive(false);
     }
 
     private void OnGameTied()
