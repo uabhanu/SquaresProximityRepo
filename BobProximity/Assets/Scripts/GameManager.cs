@@ -5,16 +5,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private bool _isGameTied;
+    private int _numberOfPlayers;
     private int[] _playerTotalWinsArray;
-    private MainMenuManager _mainMenuManager;
 
     private void Start()
     {
-        _mainMenuManager = FindObjectOfType<MainMenuManager>();
-
-        _playerTotalWinsArray = new int[_mainMenuManager.TotalNumberOfPlayers];
-
-         LoadData();
+        LoadData();
         SubscribeToEvents();
     }
 
@@ -25,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     private void LoadData()
     {
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             _playerTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
             EventsManager.Invoke(Event.GameDataLoaded , _playerTotalWinsArray);
@@ -34,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void SaveData()
     {
-        for(int i = 0; i < _mainMenuManager.TotalNumberOfPlayers; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playerTotalWinsArray[i]);
         }
@@ -53,6 +49,12 @@ public class GameManager : MonoBehaviour
         _isGameTied = true;
     }
 
+    private void OnNumberOfPlayersSelected(int numberOfPlayers)
+    {
+        _numberOfPlayers = numberOfPlayers;
+        _playerTotalWinsArray = new int[_numberOfPlayers];
+    }
+
     private void OnPlayerWins(int highestScorePlayer)
     {
         if(_isGameTied) return;
@@ -65,6 +67,7 @@ public class GameManager : MonoBehaviour
     {
         EventsManager.SubscribeToEvent(Event.GameDataReset , OnGameDataReset);
         EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
+        EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
         EventsManager.SubscribeToEvent(Event.PlayerWins , OnPlayerWins);
     }
     
@@ -72,6 +75,7 @@ public class GameManager : MonoBehaviour
     {
         EventsManager.UnsubscribeFromEvent(Event.GameDataReset , OnGameDataReset);
         EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
+        EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
         EventsManager.UnsubscribeFromEvent(Event.PlayerWins , OnPlayerWins);
     }
 }
