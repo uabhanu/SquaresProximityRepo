@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class InGameUIManager : MonoBehaviour
 {
     private int _numberOfPlayers;
+    private int[] _playersTotalWinsArray;
     private int[] _totalReceivedArray;
     private string[] _playerNamesArray;
 
@@ -39,16 +40,15 @@ public class InGameUIManager : MonoBehaviour
         inGameUIPanelsObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(false);
-
-        _playerNamesArray = new string[_numberOfPlayers];
+        
+        _playersTotalWinsArray = new int[_numberOfPlayers];
         _totalReceivedArray = new int[_numberOfPlayers];
 
         for(int i = 0; i < winsPanelObjs.Length; i++)
         {
             winsPanelObjs[i].SetActive(false);
         }
-
-        LoadData();
+        
         SubscribeToEvents();
     }
 
@@ -63,6 +63,9 @@ public class InGameUIManager : MonoBehaviour
         {
             _playerNamesArray[i] = PlayerPrefs.GetString("Player " + i + " Name");
             playerNameTMPInputFields[i].text = _playerNamesArray[i];
+            
+            _playersTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
+            playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins : " + _playersTotalWinsArray[i];
         }
     }
 
@@ -70,6 +73,7 @@ public class InGameUIManager : MonoBehaviour
     {
         for(int i = 0; i < _numberOfPlayers; i++)
         {
+            PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playersTotalWinsArray[i]);
             PlayerPrefs.SetString("Player " + i + " Name" , _playerNamesArray[i]);
         }
 
@@ -95,6 +99,8 @@ public class InGameUIManager : MonoBehaviour
             numberOfPlayersSelectionPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(true);
         }
+        
+        LoadData();
     }
 
     public void ContinueButton()
@@ -115,6 +121,8 @@ public class InGameUIManager : MonoBehaviour
             playerNameTMPInputFields[i].text = _playerNamesArray[i];
             totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
         }
+        
+        SaveData();
     }
 
     public void EnterButton()
@@ -196,15 +204,16 @@ public class InGameUIManager : MonoBehaviour
 
     private void OnGameDataLoaded(int[] totalWinsArray)
     {
+        _playersTotalWinsArray = new int[_numberOfPlayers];
+        
         for(int i = 0; i < _numberOfPlayers; i++)
         {
-            playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins : " + totalWinsArray[i];
+            _playersTotalWinsArray[i] = totalWinsArray[i];
         }
     }
 
     private void OnGameOver()
     {
-        SaveData();
         continueButtonObj.SetActive(true);
     }
 
