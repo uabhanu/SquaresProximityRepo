@@ -6,9 +6,7 @@ public class GameManager : MonoBehaviour
 {
     private bool _gameStarted;
     private bool _isGameTied;
-    private GridManager _gridManager;
     private int[] _playerTotalWinsArray;
-    private int _totalCells;
     private MainMenuManager _mainMenuManager;
 
     public bool GameStarted
@@ -16,23 +14,14 @@ public class GameManager : MonoBehaviour
         get => _gameStarted;
         set => _gameStarted = value;
     }
-    
-    public int TotalCells
-    {
-        get => _totalCells;
-        set => _totalCells = value;
-    }
 
     private void Start()
     {
         _mainMenuManager = FindObjectOfType<MainMenuManager>();
-         _gridManager = FindObjectOfType<GridManager>();
-         
-         _playerTotalWinsArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
-        TotalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
+        _playerTotalWinsArray = new int[_mainMenuManager.TotalNumberOfPlayers];
 
-        LoadData();
+         LoadData();
         SubscribeToEvents();
     }
 
