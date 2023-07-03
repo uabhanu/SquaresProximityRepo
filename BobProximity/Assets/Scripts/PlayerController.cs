@@ -333,6 +333,7 @@ public class PlayerController : MonoBehaviour
         {
             SpriteRenderer trailRenderer = _mouseTrailObj.GetComponentInChildren<SpriteRenderer>();
             Color playerColor = GetPlayerColor(_currentPlayerID);
+            playerColor.a *= 0.5f;
             trailRenderer.color = playerColor;
         }
     }
