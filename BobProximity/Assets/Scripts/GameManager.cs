@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        LoadData();
         SubscribeToEvents();
     }
 
@@ -41,7 +40,6 @@ public class GameManager : MonoBehaviour
     private void OnGameDataReset()
     {
         PlayerPrefs.DeleteAll();
-        LoadData();
     }
 
     private void OnGameTied()
@@ -53,6 +51,7 @@ public class GameManager : MonoBehaviour
     {
         _numberOfPlayers = numberOfPlayers;
         _playerTotalWinsArray = new int[_numberOfPlayers];
+        LoadData();
     }
 
     private void OnPlayerWins(int highestScorePlayer)
