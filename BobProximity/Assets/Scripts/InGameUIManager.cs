@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class InGameUIManager : MonoBehaviour
 {
+    private int _highestScorePlayerID;
     private int _numberOfPlayers;
     private int[] _playersTotalWinsArray;
     private int[] _totalReceivedArray;
@@ -221,12 +222,21 @@ public class InGameUIManager : MonoBehaviour
         gameTiedPanelObj.SetActive(true);
     }
 
-    private void OnPlayerWins(int highestScorePlayerID , int[] playersTotalWinsArray)
+    private void OnPlayerWins(int highestScorePlayerID)
     {
-        _playersTotalWinsArray = playersTotalWinsArray;
-        _playersTotalWinsArray[highestScorePlayerID]++;
-        playerWinsLabelsTMPTexts[highestScorePlayerID].text = playerNameTMPInputFields[highestScorePlayerID].text + " Wins!!!";
-        winsPanelObjs[highestScorePlayerID].SetActive(true);
+        _highestScorePlayerID = highestScorePlayerID;
+
+        for(int i = 0; i < _playersTotalWinsArray.Length; i++)
+        {
+            if(i == _highestScorePlayerID)
+            {
+                _playersTotalWinsArray[i]++;   
+            }
+        }
+        
+        playerWinsLabelsTMPTexts[_highestScorePlayerID].text = playerNameTMPInputFields[_highestScorePlayerID].text + " Wins!!!";
+        winsPanelObjs[_highestScorePlayerID].SetActive(true);
+        
         SaveData();
     }
 
