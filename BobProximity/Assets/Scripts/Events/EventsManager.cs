@@ -13,7 +13,7 @@ namespace Events
         protected static event Action GameStartedAction;
         protected static event Action GameTiedAction;
         protected static event Action<int> NumberOfPlayersSelectedAction;
-        protected static event Action<int , int[]> PlayerWinsAction;
+        protected static event Action<int> PlayerWinsAction;
         protected static event Action<int[]> PlayerTotalReceivedAction;
         protected static event Action<int , int> CoinBuffedUpAction;
         protected static event Action<int , int> CoinPlacedAction;
@@ -61,6 +61,10 @@ namespace Events
                 case Event.NumberOfPlayersSelected:
                     NumberOfPlayersSelectedAction += actionFunction;
                 break;
+                
+                case Event.PlayerWins:
+                    PlayerWinsAction += actionFunction;
+                break;
             }
         }
         
@@ -87,17 +91,7 @@ namespace Events
                 break;
             }
         }
-        
-        public static void SubscribeToEvent(Event gameEvent , Action<int , int[]> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.PlayerWins:
-                    PlayerWinsAction += actionFunction;
-                break;
-            }
-        }
-        
+
         public static void SubscribeToEvent(Event gameEvent , Action<int , string> actionFunction)
         {
             switch(gameEvent)
@@ -159,6 +153,10 @@ namespace Events
                 case Event.NumberOfPlayersSelected:
                     NumberOfPlayersSelectedAction -= actionFunction;
                 break;
+                
+                case Event.PlayerWins:
+                    PlayerWinsAction -= actionFunction;
+                break;
             }
         }
         
@@ -185,17 +183,7 @@ namespace Events
                 break;
             }
         }
-        
-        public static void UnsubscribeFromEvent(Event gameEvent , Action<int , int[]> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.PlayerWins:
-                    PlayerWinsAction -= actionFunction;
-                break;
-            }
-        }
-        
+
         public static void UnsubscribeFromEvent(Event gameEvent , Action<int , string> actionFunction)
         {
             switch(gameEvent)
@@ -257,6 +245,10 @@ namespace Events
                 case Event.NumberOfPlayersSelected:
                     NumberOfPlayersSelectedAction?.Invoke(value);
                 break;
+                
+                case Event.PlayerWins:
+                    PlayerWinsAction?.Invoke(value);
+                break;
             }
         }
         
@@ -283,17 +275,7 @@ namespace Events
                 break;
             }
         }
-        
-        public static void Invoke(Event gameEvent , int highestScorePlayerID , int[] playersTotalWinsArray)
-        {
-            switch(gameEvent)
-            {
-                case Event.PlayerWins:
-                    PlayerWinsAction?.Invoke(highestScorePlayerID , playersTotalWinsArray);
-                break;
-            }
-        }
-        
+
         public static void Invoke(Event gameEvent , int playerID , string playerName)
         {
             switch(gameEvent)
