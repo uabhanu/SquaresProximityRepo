@@ -107,7 +107,6 @@ public class InGameUIManager : MonoBehaviour
 
     public void ContinueButton()
     {
-        coinUIObj.SetActive(false);
         continueButtonObj.SetActive(false);
         gameOverPanelsObj.SetActive(true);
         
@@ -214,6 +213,7 @@ public class InGameUIManager : MonoBehaviour
 
     private void OnGameOver()
     {
+        coinUIObj.SetActive(false);
         continueButtonObj.SetActive(true);
     }
 
