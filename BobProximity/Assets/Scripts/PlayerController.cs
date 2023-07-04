@@ -1,6 +1,7 @@
 using Event = Events.Event;
 using Events;
 using Random = UnityEngine.Random;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -434,15 +435,15 @@ public class PlayerController : MonoBehaviour
     
     private void SubscribeToEvents()
     {
-        EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
-        EventsManager.SubscribeToEvent(Event.GameStarted , OnGameStarted);
-        EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
+        EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+        EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
+        EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
     }
     
     private void UnsubscribeFromEvents()
     {
-        EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
-        EventsManager.UnsubscribeFromEvent(Event.GameStarted , OnGameStarted);
-        EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
+        EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+        EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
+        EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
     }
 }

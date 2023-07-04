@@ -1,5 +1,6 @@
 using Event = Events.Event;
 using Events;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -119,21 +120,21 @@ public class ScoreManager : MonoBehaviour
 
     private void SubscribeToEvents()
     {
-        EventsManager.SubscribeToEvent(Event.CoinBuffedUp , OnCoinBuffedUp);
-        EventsManager.SubscribeToEvent(Event.CoinCaptured , OnCoinCaptured);
-        EventsManager.SubscribeToEvent(Event.CoinPlaced , OnCoinPlaced);
-        EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
-        EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
-        EventsManager.SubscribeToEvent(Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
+        EventsManager.SubscribeToEvent(Event.CoinBuffedUp , (Action<int , int>)OnCoinBuffedUp);
+        EventsManager.SubscribeToEvent(Event.CoinCaptured , (Action<int , int , int>)OnCoinCaptured);
+        EventsManager.SubscribeToEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
+        EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+        EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
+        EventsManager.SubscribeToEvent(Event.PlayerNamesUpdated , (Action<int , string>)OnPlayerNamesUpdated);
     }
 
     private void UnsubscribeFromEvents()
     {
-        EventsManager.UnsubscribeFromEvent(Event.CoinBuffedUp , OnCoinBuffedUp);
-        EventsManager.UnsubscribeFromEvent(Event.CoinCaptured , OnCoinCaptured);
-        EventsManager.UnsubscribeFromEvent(Event.CoinPlaced , OnCoinPlaced);
-        EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
-        EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , OnNumberOfPlayersSelected);
-        EventsManager.UnsubscribeFromEvent(Event.PlayerNamesUpdated , OnPlayerNamesUpdated);
+        EventsManager.UnsubscribeFromEvent(Event.CoinBuffedUp , (Action<int , int>)OnCoinBuffedUp);
+        EventsManager.UnsubscribeFromEvent(Event.CoinCaptured , (Action<int , int , int>)OnCoinCaptured);
+        EventsManager.UnsubscribeFromEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
+        EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+        EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
+        EventsManager.UnsubscribeFromEvent(Event.PlayerNamesUpdated , (Action<int , string>)OnPlayerNamesUpdated);
     }
 }

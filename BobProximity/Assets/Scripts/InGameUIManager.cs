@@ -1,6 +1,7 @@
 using Data;
 using Event = Events.Event;
 using Events;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -237,17 +238,17 @@ public class InGameUIManager : MonoBehaviour
     
     private void SubscribeToEvents()
     {
-        EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
-        EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
-        EventsManager.SubscribeToEvent(Event.PlayerWins , OnPlayerWins);
-        EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , OnTotalReceived);
+        EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+        EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
+        EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
+        EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
     }
 
     private void UnsubscribeFromEvents()
     {
-        EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
-        EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
-        EventsManager.UnsubscribeFromEvent(Event.PlayerWins , OnPlayerWins);
-        EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , OnTotalReceived);
+        EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+        EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
+        EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
+        EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
     }
 }

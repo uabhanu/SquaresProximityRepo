@@ -1,301 +1,91 @@
 using System;
+using System.Collections.Generic;
 
 namespace Events
 {
-    public class EventsManager
+    public enum Event
     {
-        #region Actions
-        
-        protected static event Action GameDataResetAction;
-        protected static event Action GameOverAction;
-        protected static event Action GamePausedAction;
-        protected static event Action GameResumedAction;
-        protected static event Action GameStartedAction;
-        protected static event Action GameTiedAction;
-        protected static event Action<int> NumberOfPlayersSelectedAction;
-        protected static event Action<int> PlayerWinsAction;
-        protected static event Action<int[]> PlayerTotalReceivedAction;
-        protected static event Action<int , int> CoinBuffedUpAction;
-        protected static event Action<int , int> CoinPlacedAction;
-        protected static event Action<int , string> PlayerNamesUpdatedAction;
-        protected static event Action<int , int , int> CoinCapturedAction;
+        CoinBuffedUp,
+        CoinCaptured,
+        CoinPlaced,
+        GameDataReset,
+        GameOver,
+        GameStarted,
+        GameTied,
+        NumberOfPlayersSelected,
+        PlayerTotalReceived,
+        PlayerWins,
+        PlayerNamesUpdated
+    }
 
-        #endregion
+    public static class EventsManager
+    {
+        private static Dictionary<Event , Delegate> _eventSubscriptions = new ();
 
-        #region Subscribe Functions
-		
-        public static void SubscribeToEvent(Event gameEvent , Action actionFunction)
+        public static void SubscribeToEvent(Event gameEvent , Delegate actionDelegate)
         {
-            switch(gameEvent)
-            {
-                case Event.GameDataReset:
-                    GameDataResetAction += actionFunction;
-                break;
-                
-                case Event.GameOver:
-                    GameOverAction += actionFunction;
-                break;
-                
-                case Event.GamePaused:
-                    GamePausedAction += actionFunction;
-                break;
-                
-                case Event.GameResumed:
-                    GameResumedAction += actionFunction;
-                break;
-                
-                case Event.GameStarted:
-                    GameStartedAction += actionFunction;
-                break;
-                
-                case Event.GameTied:
-                    GameTiedAction += actionFunction;
-                break;
-            }
+            AddDelegateToEvent(gameEvent , actionDelegate);
         }
-        
-        public static void SubscribeToEvent(Event gameEvent , Action<int> actionFunction)
+
+        private static void AddDelegateToEvent(Event gameEvent , Delegate actionDelegate)
         {
-            switch(gameEvent)
+            if(_eventSubscriptions.ContainsKey(gameEvent))
             {
-                case Event.NumberOfPlayersSelected:
-                    NumberOfPlayersSelectedAction += actionFunction;
-                break;
-                
-                case Event.PlayerWins:
-                    PlayerWinsAction += actionFunction;
-                break;
+                _eventSubscriptions[gameEvent] = Delegate.Combine(_eventSubscriptions[gameEvent] , actionDelegate);
             }
-        }
-        
-        public static void SubscribeToEvent(Event gameEvent , Action<int[]> actionFunction)
-        {
-            switch(gameEvent)
+            else
             {
-                case Event.PlayerTotalReceived:
-                    PlayerTotalReceivedAction += actionFunction;
-                break;
-            }
-        }
-        
-        public static void SubscribeToEvent(Event gameEvent , Action<int , int> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.CoinBuffedUp:
-                    CoinBuffedUpAction += actionFunction;
-                break;
-                
-                case Event.CoinPlaced:
-                    CoinPlacedAction += actionFunction;
-                break;
+                _eventSubscriptions.Add(gameEvent , actionDelegate);
             }
         }
 
-        public static void SubscribeToEvent(Event gameEvent , Action<int , string> actionFunction)
+        public static void UnsubscribeFromEvent(Event gameEvent , Delegate actionDelegate)
         {
-            switch(gameEvent)
-            {
-                case Event.PlayerNamesUpdated:
-                    PlayerNamesUpdatedAction += actionFunction;
-                break;
-            }
-        }
-        
-        public static void SubscribeToEvent(Event gameEvent , Action<int , int , int> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.CoinCaptured:
-                    CoinCapturedAction += actionFunction;
-                break;
-            }
+            RemoveDelegateFromEvent(gameEvent , actionDelegate);
         }
 
-        #endregion
-        
-        #region Unsubscribe Functions
-
-        public static void UnsubscribeFromEvent(Event gameEvent , Action actionFunction)
+        private static void RemoveDelegateFromEvent(Event gameEvent , Delegate actionDelegate)
         {
-            switch(gameEvent)
+            if(_eventSubscriptions.ContainsKey(gameEvent))
             {
-                case Event.GameDataReset:
-                    GameDataResetAction -= actionFunction;
-                break;
-                
-                case Event.GameOver:
-                    GameOverAction -= actionFunction;
-                break;
-                
-                case Event.GamePaused:
-                    GamePausedAction -= actionFunction;
-                break;
-                
-                case Event.GameResumed:
-                    GameResumedAction -= actionFunction;
-                break;
-                
-                case Event.GameStarted:
-                    GameStartedAction -= actionFunction;
-                break;
-                
-                case Event.GameTied:
-                    GameTiedAction -= actionFunction;
-                break;
+                _eventSubscriptions[gameEvent] = Delegate.Remove(_eventSubscriptions[gameEvent] , actionDelegate);
             }
         }
-        
-        public static void UnsubscribeFromEvent(Event gameEvent , Action<int> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.NumberOfPlayersSelected:
-                    NumberOfPlayersSelectedAction -= actionFunction;
-                break;
-                
-                case Event.PlayerWins:
-                    PlayerWinsAction -= actionFunction;
-                break;
-            }
-        }
-        
-        public static void UnsubscribeFromEvent(Event gameEvent , Action<int[]> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.PlayerTotalReceived:
-                    PlayerTotalReceivedAction -= actionFunction;
-                break;
-            }
-        }
-        
-        public static void UnsubscribeFromEvent(Event gameEvent , Action<int , int> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.CoinBuffedUp:
-                    CoinBuffedUpAction -= actionFunction;
-                break;
-                
-                case Event.CoinPlaced:
-                    CoinPlacedAction -= actionFunction;
-                break;
-            }
-        }
-
-        public static void UnsubscribeFromEvent(Event gameEvent , Action<int , string> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.PlayerNamesUpdated:
-                    PlayerNamesUpdatedAction -= actionFunction;
-                break;
-            }
-        }
-        
-        public static void UnsubscribeFromEvent(Event gameEvent , Action<int , int , int> actionFunction)
-        {
-            switch(gameEvent)
-            {
-                case Event.CoinCaptured:
-                    CoinCapturedAction -= actionFunction;
-                break;
-            }
-        }
-
-        #endregion
-        
-        #region Invoke Functions
 
         public static void Invoke(Event gameEvent)
         {
-            switch(gameEvent)
+            if(_eventSubscriptions.TryGetValue(gameEvent , out var subscription))
             {
-                case Event.GameDataReset:
-                    GameDataResetAction?.Invoke();
-                break;
-                
-                case Event.GameOver:
-                    GameOverAction?.Invoke();
-                break;
-                
-                case Event.GamePaused:
-                    GamePausedAction?.Invoke();
-                break;
-                
-                case Event.GameResumed:
-                    GameResumedAction?.Invoke();
-                break;
-                
-                case Event.GameStarted:
-                    GameStartedAction?.Invoke();
-                break;
-                
-                case Event.GameTied:
-                    GameTiedAction?.Invoke();
-                break;
-            }
-        }
-        
-        public static void Invoke(Event gameEvent , int value)
-        {
-            switch(gameEvent)
-            {
-                case Event.NumberOfPlayersSelected:
-                    NumberOfPlayersSelectedAction?.Invoke(value);
-                break;
-                
-                case Event.PlayerWins:
-                    PlayerWinsAction?.Invoke(value);
-                break;
-            }
-        }
-        
-        public static void Invoke(Event gameEvent , int[] valueArray)
-        {
-            switch(gameEvent)
-            {
-                case Event.PlayerTotalReceived:
-                    PlayerTotalReceivedAction?.Invoke(valueArray);
-                break;
-            }
-        }
-        
-        public static void Invoke(Event gameEvent , int coinValue , int playerID)
-        {
-            switch(gameEvent)
-            {
-                case Event.CoinBuffedUp:
-                    CoinBuffedUpAction?.Invoke(coinValue , playerID);  //ToDo Improve this signature
-                break;
-                
-                case Event.CoinPlaced:
-                    CoinPlacedAction?.Invoke(coinValue , playerID);
-                break;
+                var delegateList = subscription as Action;
+                delegateList?.Invoke();
             }
         }
 
-        public static void Invoke(Event gameEvent , int playerID , string playerName)
+        public static void Invoke<T>(Event gameEvent , T value)
         {
-            switch(gameEvent)
+            if(_eventSubscriptions.TryGetValue(gameEvent , out var subscription))
             {
-                case Event.PlayerNamesUpdated:
-                    PlayerNamesUpdatedAction?.Invoke(playerID , playerName);
-                break;
-            }
-        }
-        
-        public static void Invoke(Event gameEvent , int currentPlayerID , int adjacentPlayerID , int adjacentPlayerCoinValue)
-        {
-            switch(gameEvent)
-            {
-                case Event.CoinCaptured:
-                    CoinCapturedAction?.Invoke(currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
-                break;
+                var delegateList = subscription as Action<T>;
+                delegateList?.Invoke(value);
             }
         }
 
-        #endregion
+        public static void Invoke<T1 , T2>(Event gameEvent , T1 arg1 , T2 arg2)
+        {
+            if(_eventSubscriptions.TryGetValue(gameEvent , out var subscription))
+            {
+                var delegateList = subscription as Action<T1 , T2>;
+                delegateList?.Invoke(arg1 , arg2);
+            }
+        }
+        
+        public static void Invoke<T1 , T2 , T3>(Event gameEvent , T1 arg1 , T2 arg2 , T3 arg3)
+        {
+            if(_eventSubscriptions.TryGetValue(gameEvent , out var subscription))
+            {
+                var delegateList = subscription as Action<T1 , T2>;
+                delegateList?.Invoke(arg1 , arg2);
+            }
+        }
     }
 }
