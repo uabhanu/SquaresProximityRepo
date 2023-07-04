@@ -87,12 +87,21 @@ public class ScoreManager : MonoBehaviour
             {
                 if(_coinScoreValuesArray[i] == _coinScoreValuesArray[j])
                 {
+                    for(int k = 0; k < _numberOfPlayers; k++)
+                    {
+                        if(_coinScoreValuesArray[k] > _coinScoreValuesArray[i] && _coinScoreValuesArray[k] > _coinScoreValuesArray[j])
+                        {
+                            EventsManager.Invoke(Event.PlayerWins , k , _playersTotalWinsArray);
+                            return;
+                        }
+                    }
+
                     EventsManager.Invoke(Event.GameTied);
                     return;
                 }
             }
         }
-        
+
         EventsManager.Invoke(Event.PlayerWins , highestScorePlayerID , _playersTotalWinsArray);
     }
 
