@@ -7,7 +7,6 @@ public class ScoreManager : MonoBehaviour
 {
     private int _numberOfPlayers;
     private int[] _coinScoreValuesArray;
-    private int[] _playersTotalWinsArray;
     private string[] _playerNamesArray;
 
     [SerializeField] private TMP_Text[] coinScoreTMPTexts;
@@ -91,7 +90,7 @@ public class ScoreManager : MonoBehaviour
                     {
                         if(_coinScoreValuesArray[k] > _coinScoreValuesArray[i] && _coinScoreValuesArray[k] > _coinScoreValuesArray[j])
                         {
-                            EventsManager.Invoke(Event.PlayerWins , k , _playersTotalWinsArray);
+                            EventsManager.Invoke(Event.PlayerWins , k);
                             return;
                         }
                     }
@@ -102,7 +101,7 @@ public class ScoreManager : MonoBehaviour
             }
         }
 
-        EventsManager.Invoke(Event.PlayerWins , highestScorePlayerID , _playersTotalWinsArray);
+        EventsManager.Invoke(Event.PlayerWins , highestScorePlayerID);
     }
 
     private void OnNumberOfPlayersSelected(int numberOfPlayers)
@@ -110,7 +109,6 @@ public class ScoreManager : MonoBehaviour
         _numberOfPlayers = numberOfPlayers;
         _coinScoreValuesArray = new int[_numberOfPlayers];
         _playerNamesArray = new string[_numberOfPlayers];
-        _playersTotalWinsArray = new int[_numberOfPlayers];
     }
     
     private void OnPlayerNamesUpdated(int playerID , string playerName)
