@@ -64,6 +64,8 @@ public class InGameUIManager : MonoBehaviour
         {
             _playerNamesArray[i] = PlayerPrefs.GetString("Player " + i + " Name");
             playerNameTMPInputFields[i].text = _playerNamesArray[i];
+
+            _playersTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
             playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins : " + _playersTotalWinsArray[i];
         }
     }
@@ -72,6 +74,7 @@ public class InGameUIManager : MonoBehaviour
     {
         for(int i = 0; i < _numberOfPlayers; i++)
         {
+            PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playersTotalWinsArray[i]);
             PlayerPrefs.SetString("Player " + i + " Name" , _playerNamesArray[i]);
         }
 
@@ -194,6 +197,7 @@ public class InGameUIManager : MonoBehaviour
         {
             _numberOfPlayers = 2;
             _playerNamesArray = new string[_numberOfPlayers];
+            _playersTotalWinsArray = new int[_numberOfPlayers];
             playerNameTMPInputFields[_numberOfPlayers].gameObject.SetActive(false);
             EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
         }
@@ -202,17 +206,8 @@ public class InGameUIManager : MonoBehaviour
         {
             _numberOfPlayers = 3;
             _playerNamesArray = new string[_numberOfPlayers];
+            _playersTotalWinsArray = new int[_numberOfPlayers];
             EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
-        }
-    }
-
-    private void OnGameDataLoaded(int[] totalWinsArray)
-    {
-        _playersTotalWinsArray = new int[_numberOfPlayers];
-        
-        for(int i = 0; i < _numberOfPlayers; i++)
-        {
-            _playersTotalWinsArray[i] = totalWinsArray[i];
         }
     }
 
@@ -228,9 +223,10 @@ public class InGameUIManager : MonoBehaviour
 
     private void OnPlayerWins(int highestScorePlayerID)
     {
-        playerTotalWinsLabelsTMPTexts[highestScorePlayerID].text = playerNameTMPInputFields[highestScorePlayerID].text + " Wins!!!";
-        playerWinsLabelsTMPTexts[highestScorePlayerID].text = playerTotalWinsLabelsTMPTexts[highestScorePlayerID].text;
+        _playersTotalWinsArray[highestScorePlayerID]++;
+        playerWinsLabelsTMPTexts[highestScorePlayerID].text = playerNameTMPInputFields[highestScorePlayerID].text + " Wins!!!";
         winsPanelObjs[highestScorePlayerID].SetActive(true);
+        SaveData();
     }
 
     private void OnTotalReceived(int[] totalReceivedArray)
@@ -240,7 +236,6 @@ public class InGameUIManager : MonoBehaviour
     
     private void SubscribeToEvents()
     {
-        EventsManager.SubscribeToEvent(Event.GameDataLoaded , OnGameDataLoaded);
         EventsManager.SubscribeToEvent(Event.GameOver , OnGameOver);
         EventsManager.SubscribeToEvent(Event.GameTied , OnGameTied);
         EventsManager.SubscribeToEvent(Event.PlayerWins , OnPlayerWins);
@@ -249,7 +244,6 @@ public class InGameUIManager : MonoBehaviour
 
     private void UnsubscribeFromEvents()
     {
-        EventsManager.UnsubscribeFromEvent(Event.GameDataLoaded , OnGameDataLoaded);
         EventsManager.UnsubscribeFromEvent(Event.GameOver , OnGameOver);
         EventsManager.UnsubscribeFromEvent(Event.GameTied , OnGameTied);
         EventsManager.UnsubscribeFromEvent(Event.PlayerWins , OnPlayerWins);
