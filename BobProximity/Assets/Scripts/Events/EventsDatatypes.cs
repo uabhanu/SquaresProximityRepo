@@ -5,7 +5,6 @@ namespace Events
         CoinBuffedUp,
         CoinCaptured,
         CoinPlaced,
-        GameDataLoaded,
         GameDataReset,
         GameOver,
         GamePaused,
