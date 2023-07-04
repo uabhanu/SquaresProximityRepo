@@ -274,27 +274,27 @@ public class PlayerController : MonoBehaviour
         int remainingPlayersCount = _playersRemaining.Count;
         int randomIndex = Random.Range(0 , remainingPlayersCount);
         _currentPlayerID = _playersRemaining[randomIndex];
-        
-        _coinValue = _playerNumbersList[_currentPlayerID][0];
-        
-        TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
-        coinUITMP.text = _coinValue.ToString();
-        
-        _playersRemaining.RemoveAt(randomIndex);
 
-        for(int i = 0; i < _totalReceivedArray.Length; i++)
+        if(_playerNumbersList[_currentPlayerID].Count > 0)
         {
-            if(_currentPlayerID == i)
+            _coinValue = _playerNumbersList[_currentPlayerID][0];
+
+            TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
+            coinUITMP.text = _coinValue.ToString();
+
+            _playersRemaining.RemoveAt(randomIndex);
+
+            for(int i = 0; i < _totalReceivedArray.Length; i++)
             {
-                _totalReceivedArray[i] += _coinValue;
+                if(_currentPlayerID == i)
+                {
+                    _totalReceivedArray[i] += _coinValue;
+                }
             }
+
+            _playerNumbersList[_currentPlayerID].RemoveAt(0);
         }
 
-        if(_playerNumbersList.Count > 1)
-        {
-            _playerNumbersList[_currentPlayerID].RemoveAt(0);   
-        }
-        
         if(_playersRemaining.Count == 0)
         {
             ResetPlayersRemaining();
