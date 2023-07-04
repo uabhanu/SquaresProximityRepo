@@ -221,8 +221,9 @@ public class InGameUIManager : MonoBehaviour
         gameTiedPanelObj.SetActive(true);
     }
 
-    private void OnPlayerWins(int highestScorePlayerID)
+    private void OnPlayerWins(int highestScorePlayerID , int[] playersTotalWinsArray)
     {
+        _playersTotalWinsArray = playersTotalWinsArray;
         _playersTotalWinsArray[highestScorePlayerID]++;
         playerWinsLabelsTMPTexts[highestScorePlayerID].text = playerNameTMPInputFields[highestScorePlayerID].text + " Wins!!!";
         winsPanelObjs[highestScorePlayerID].SetActive(true);
