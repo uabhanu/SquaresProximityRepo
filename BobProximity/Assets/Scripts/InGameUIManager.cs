@@ -1,3 +1,4 @@
+using Data;
 using Event = Events.Event;
 using Events;
 using TMPro;
@@ -59,29 +60,6 @@ public class InGameUIManager : MonoBehaviour
         UnsubscribeFromEvents();
     }
 
-    private void LoadData()
-    {
-        for(int i = 0; i < _numberOfPlayers; i++)
-        {
-            _playerNamesArray[i] = PlayerPrefs.GetString("Player " + i + " Name");
-            playerNameTMPInputFields[i].text = _playerNamesArray[i];
-
-            _playersTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
-            playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins : " + _playersTotalWinsArray[i];
-        }
-    }
-
-    private void SaveData()
-    {
-        for(int i = 0; i < _numberOfPlayers; i++)
-        {
-            PlayerPrefs.SetInt("Player " + i + " Total Wins" , _playersTotalWinsArray[i]);
-            PlayerPrefs.SetString("Player " + i + " Name" , _playerNamesArray[i]);
-        }
-
-        PlayerPrefs.Save();
-    }
-
     private void UpdateInGamePlayerNames(int playerID)
     {
         string playerName = playerNameTMPInputFields[playerID].text;
@@ -102,7 +80,13 @@ public class InGameUIManager : MonoBehaviour
             playerInputPanelObj.SetActive(true);
         }
         
-        LoadData();
+        PlayerPrefsManager.LoadData(_playerNamesArray, _playersTotalWinsArray);
+
+        for(int i = 0; i < _numberOfPlayers; i++)
+        {
+            playerNameTMPInputFields[i].text = _playerNamesArray[i];
+            playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins: " + _playersTotalWinsArray[i];
+        }
     }
 
     public void ContinueButton()
@@ -124,7 +108,7 @@ public class InGameUIManager : MonoBehaviour
             totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
         }
         
-        SaveData();
+        PlayerPrefsManager.SaveData(_playerNamesArray , _playersTotalWinsArray);
     }
 
     public void EnterButton()
@@ -178,7 +162,7 @@ public class InGameUIManager : MonoBehaviour
 
     public void ResetButton()
     {
-        PlayerPrefs.DeleteAll();
+        PlayerPrefsManager.DeleteAll(_playerNamesArray , _playersTotalWinsArray);
         EventsManager.Invoke(Event.GameDataReset);
         
         for(int i = 0; i < _numberOfPlayers; i++)
@@ -188,7 +172,13 @@ public class InGameUIManager : MonoBehaviour
             playerTotalWinsLabelsTMPTexts[i].text = "";
         }
         
-        LoadData();
+        PlayerPrefsManager.LoadData(_playerNamesArray , _playersTotalWinsArray);
+        
+        for(int i = 0; i < _numberOfPlayers; i++)
+        {
+            playerNameTMPInputFields[i].text = _playerNamesArray[i];
+            playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins: " + _playersTotalWinsArray[i];
+        }
     }
     
     public void SetPlayersNumber()
@@ -237,7 +227,7 @@ public class InGameUIManager : MonoBehaviour
         playerWinsLabelsTMPTexts[_highestScorePlayerID].text = playerNameTMPInputFields[_highestScorePlayerID].text + " Wins!!!";
         winsPanelObjs[_highestScorePlayerID].SetActive(true);
         
-        SaveData();
+        PlayerPrefsManager.SaveData(_playerNamesArray , _playersTotalWinsArray);
     }
 
     private void OnTotalReceived(int[] totalReceivedArray)
