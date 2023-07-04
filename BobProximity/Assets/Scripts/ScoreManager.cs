@@ -84,10 +84,12 @@ public class ScoreManager : MonoBehaviour
             {
                 if(_coinScoreValues[i] == _coinScoreValues[j])
                 {
-                    EventsManager.Invoke(Event.GameTied);
+                    //ToDo This logic doesn't account for more than 2 players
+                    return;
                 }
                 else
                 {
+                    //ToDo This is executing 3 times so fix this but for 2 players, this is working great.
                     int highestScorePlayerID = GetHighestScorePlayer();
                     EventsManager.Invoke(Event.PlayerWins , highestScorePlayerID);
                 }
