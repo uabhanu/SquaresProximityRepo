@@ -12,6 +12,8 @@ namespace Events
         GameOver,
         GameStarted,
         GameTied,
+        MouseLeftClicked,
+        MouseMoved,
         NumberOfPlayersSelected,
         PlayerTotalReceived,
         PlayerWins,
