@@ -17,7 +17,8 @@ namespace Events
         NumberOfPlayersSelected,
         PlayerTotalReceived,
         PlayerWins,
-        PlayerNamesUpdated
+        PlayerNamesUpdated,
+        RandomTurnsToggled
     }
 
     public static class EventsManager
