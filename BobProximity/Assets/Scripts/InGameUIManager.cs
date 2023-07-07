@@ -161,6 +161,11 @@ public class InGameUIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void RandomTurnsToggle()
+    {
+        EventsManager.Invoke(Event.RandomTurnsToggled);
+    }
+
     public void ResetButton()
     {
         PlayerPrefsManager.DeleteAll(_playerNamesArray , _playersTotalWinsArray);
