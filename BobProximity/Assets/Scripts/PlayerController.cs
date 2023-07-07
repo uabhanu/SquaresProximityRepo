@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
 {
     private bool _isGameStarted;
     private bool _isMouseMoving;
+    private bool _isRandomTurns;
     private GameObject _coinUIObj;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
@@ -272,9 +273,13 @@ public class PlayerController : MonoBehaviour
 
     private void StartPlayerTurn()
     {
-        int remainingPlayersCount = _playersRemaining.Count;
-        int randomIndex = Random.Range(0 , remainingPlayersCount);
-        _currentPlayerID = _playersRemaining[randomIndex];
+        if(_isRandomTurns)
+        {
+            int remainingPlayersCount = _playersRemaining.Count;
+            int randomIndex = Random.Range(0 , remainingPlayersCount);
+            _currentPlayerID = _playersRemaining[randomIndex];
+            _playersRemaining.RemoveAt(randomIndex);
+        }
 
         if(_playerNumbersList[_currentPlayerID].Count > 0)
         {
@@ -282,8 +287,6 @@ public class PlayerController : MonoBehaviour
 
             TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
             coinUITMP.text = _coinValue.ToString();
-
-            _playersRemaining.RemoveAt(randomIndex);
 
             for(int i = 0; i < _totalReceivedArray.Length; i++)
             {
@@ -432,12 +435,18 @@ public class PlayerController : MonoBehaviour
         _numberOfPlayers = numberOfPlayers;
         _totalReceivedArray = new int[_numberOfPlayers];
     }
+
+    private void OnRandomTurnsToggled()
+    {
+        _isRandomTurns = !_isRandomTurns;
+    }
     
     private void SubscribeToEvents()
     {
         EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
         EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
         EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
+        EventsManager.SubscribeToEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
     }
     
     private void UnsubscribeFromEvents()
@@ -445,5 +454,6 @@ public class PlayerController : MonoBehaviour
         EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
         EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
         EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
+        EventsManager.UnsubscribeFromEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
     }
 }
