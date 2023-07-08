@@ -425,17 +425,7 @@ public class PlayerController : MonoBehaviour
             ShuffleList(playerNumbers);
             _playerNumbersList.Add(playerNumbers);
         }
-        
-        // if(_isRandomTurns)
-        // {
-        //     StartPlayerRandomTurn();   
-        // }
-        //         
-        // else if(!_isRandomTurns)
-        // {
-        //     StartPlayerSequentialTurn();
-        // }
-        
+
         StartPlayerTurn();
     }
 
