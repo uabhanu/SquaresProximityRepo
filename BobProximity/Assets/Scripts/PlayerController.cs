@@ -117,16 +117,7 @@ public class PlayerController : MonoBehaviour
                 _isMouseMoving = false;
                 UpdateTrailVisibility();
                 EndPlayerTurn();
-
-                if(_isRandomTurns)
-                {
-                    StartPlayerRandomTurn();   
-                }
-                
-                else if(!_isRandomTurns)
-                {
-                    StartPlayerSequentialTurn();
-                }
+                StartPlayerTurn();
             }
         }
         else
@@ -278,43 +269,17 @@ public class PlayerController : MonoBehaviour
             (list[k] , list[n]) = (list[n] , list[k]);
         }
     }
-    
-    private void StartPlayerRandomTurn()
+
+    private void StartPlayerTurn()
     {
-        int remainingPlayersCount = _playersRemaining.Count;
-        int randomIndex = Random.Range(0 , remainingPlayersCount);
-        _currentPlayerID = _playersRemaining[randomIndex];
-        _playersRemaining.RemoveAt(randomIndex);
-
-        if(_playerNumbersList[_currentPlayerID].Count > 0)
+        if(_isRandomTurns)
         {
-            _coinValue = _playerNumbersList[_currentPlayerID][0];
-
-            TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
-            coinUITMP.text = _coinValue.ToString();
-
-            for(int i = 0; i < _totalReceivedArray.Length; i++)
-            {
-                if(_currentPlayerID == i)
-                {
-                    _totalReceivedArray[i] += _coinValue;
-                }
-            }
-
-            _playerNumbersList[_currentPlayerID].RemoveAt(0);
+            int remainingPlayersCount = _playersRemaining.Count;
+            int randomIndex = Random.Range(0 , remainingPlayersCount);
+            _currentPlayerID = _playersRemaining[randomIndex];
+            _playersRemaining.RemoveAt(randomIndex);
         }
 
-        if(_playersRemaining.Count == 0)
-        {
-            ResetPlayersRemaining();
-        }
-
-        UpdateCoinUIImageColors();
-        UpdateTrailColor();
-    }
-    
-    private void StartPlayerSequentialTurn()
-    {
         if(_playerNumbersList[_currentPlayerID].Count > 0)
         {
             _coinValue = _playerNumbersList[_currentPlayerID][0];
@@ -461,15 +426,17 @@ public class PlayerController : MonoBehaviour
             _playerNumbersList.Add(playerNumbers);
         }
         
-        if(_isRandomTurns)
-        {
-            StartPlayerRandomTurn();   
-        }
-                
-        else if(!_isRandomTurns)
-        {
-            StartPlayerSequentialTurn();
-        }
+        // if(_isRandomTurns)
+        // {
+        //     StartPlayerRandomTurn();   
+        // }
+        //         
+        // else if(!_isRandomTurns)
+        // {
+        //     StartPlayerSequentialTurn();
+        // }
+        
+        StartPlayerTurn();
     }
 
     private void OnNumberOfPlayersSelected(int numberOfPlayers)
