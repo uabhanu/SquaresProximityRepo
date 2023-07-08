@@ -44,5 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1719f1cceb6f5f843a9d14e3f7f1a777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinObj: {fileID: 4578332380355879588, guid: a9395e2cc0376484f9984ad964da4539, type: 3}
-  trailObj: {fileID: 4578332380355879588, guid: 9fa96010692363d48b945885160fe75a, type: 3}
+  mouseMovementThreshold: 0.1
