@@ -86,8 +86,8 @@ namespace Events
         {
             if(_eventSubscriptions.TryGetValue(gameEvent , out var subscription))
             {
-                var delegateList = subscription as Action<T1 , T2>;
-                delegateList?.Invoke(arg1 , arg2);
+                var delegateList = subscription as Action<T1 , T2 , T3>;
+                delegateList?.Invoke(arg1 , arg2 , arg3);
             }
         }
     }
