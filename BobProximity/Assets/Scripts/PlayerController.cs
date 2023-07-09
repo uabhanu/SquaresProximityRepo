@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-        #if UNITY_STANDALONE || UNITY_EDITOR
+        #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
         
             if(Mouse.current.leftButton.wasPressedThisFrame)
             {
