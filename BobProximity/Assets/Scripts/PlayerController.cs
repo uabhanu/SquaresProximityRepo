@@ -9,14 +9,26 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-        if(Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            EventsManager.Invoke(Event.MouseLeftClicked);
-        }
+        #if UNITY_STANDALONE || UNITY_EDITOR
         
-        if(Mouse.current.delta.ReadValue().magnitude > mouseMovementThreshold)
-        {
-            EventsManager.Invoke(Event.MouseMoved);
-        }
+            if(Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                EventsManager.Invoke(Event.MouseLeftClicked);
+            }
+
+            if(Mouse.current.delta.ReadValue().magnitude > mouseMovementThreshold)
+            {
+                EventsManager.Invoke(Event.MouseMoved);
+            }
+            
+        #endif
+
+        #if UNITY_IOS || UNITY_ANDROID
+            // Touch input handling for mobile platforms (iOS, Android)
+            if(Touchscreen.current.primaryTouch.tap.wasPressedThisFrame)
+            {
+                EventsManager.Invoke(Event.TouchscreenTapped);
+            }
+        #endif
     }
 }
