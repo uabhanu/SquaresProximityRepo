@@ -24,7 +24,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     ""name"": ""InputActions"",
     ""maps"": [
         {
-            ""name"": ""ProximityMap"",
+            ""name"": ""PCMap"",
             ""id"": ""62499dcc-dbd3-4c63-ab82-f241eea0856e"",
             ""actions"": [
                 {
@@ -70,14 +70,45 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""MobileMap"",
+            ""id"": ""0442e94a-9d75-4738-93e7-6994e9825b03"",
+            ""actions"": [
+                {
+                    ""name"": ""Tap"",
+                    ""type"": ""Button"",
+                    ""id"": ""133fe763-51d3-4ddb-9218-278c4149e08e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""89f03fd1-fe72-42c9-93aa-25af49a267a6"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // ProximityMap
-        m_ProximityMap = asset.FindActionMap("ProximityMap", throwIfNotFound: true);
-        m_ProximityMap_MouseClick = m_ProximityMap.FindAction("MouseClick", throwIfNotFound: true);
-        m_ProximityMap_MouseMovement = m_ProximityMap.FindAction("MouseMovement", throwIfNotFound: true);
+        // PCMap
+        m_PCMap = asset.FindActionMap("PCMap", throwIfNotFound: true);
+        m_PCMap_MouseClick = m_PCMap.FindAction("MouseClick", throwIfNotFound: true);
+        m_PCMap_MouseMovement = m_PCMap.FindAction("MouseMovement", throwIfNotFound: true);
+        // MobileMap
+        m_MobileMap = asset.FindActionMap("MobileMap", throwIfNotFound: true);
+        m_MobileMap_Tap = m_MobileMap.FindAction("Tap", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -136,26 +167,26 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // ProximityMap
-    private readonly InputActionMap m_ProximityMap;
-    private List<IProximityMapActions> m_ProximityMapActionsCallbackInterfaces = new List<IProximityMapActions>();
-    private readonly InputAction m_ProximityMap_MouseClick;
-    private readonly InputAction m_ProximityMap_MouseMovement;
-    public struct ProximityMapActions
+    // PCMap
+    private readonly InputActionMap m_PCMap;
+    private List<IPCMapActions> m_PCMapActionsCallbackInterfaces = new List<IPCMapActions>();
+    private readonly InputAction m_PCMap_MouseClick;
+    private readonly InputAction m_PCMap_MouseMovement;
+    public struct PCMapActions
     {
         private @InputActions m_Wrapper;
-        public ProximityMapActions(@InputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @MouseClick => m_Wrapper.m_ProximityMap_MouseClick;
-        public InputAction @MouseMovement => m_Wrapper.m_ProximityMap_MouseMovement;
-        public InputActionMap Get() { return m_Wrapper.m_ProximityMap; }
+        public PCMapActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @MouseClick => m_Wrapper.m_PCMap_MouseClick;
+        public InputAction @MouseMovement => m_Wrapper.m_PCMap_MouseMovement;
+        public InputActionMap Get() { return m_Wrapper.m_PCMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(ProximityMapActions set) { return set.Get(); }
-        public void AddCallbacks(IProximityMapActions instance)
+        public static implicit operator InputActionMap(PCMapActions set) { return set.Get(); }
+        public void AddCallbacks(IPCMapActions instance)
         {
-            if (instance == null || m_Wrapper.m_ProximityMapActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_ProximityMapActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_PCMapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PCMapActionsCallbackInterfaces.Add(instance);
             @MouseClick.started += instance.OnMouseClick;
             @MouseClick.performed += instance.OnMouseClick;
             @MouseClick.canceled += instance.OnMouseClick;
@@ -164,7 +195,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @MouseMovement.canceled += instance.OnMouseMovement;
         }
 
-        private void UnregisterCallbacks(IProximityMapActions instance)
+        private void UnregisterCallbacks(IPCMapActions instance)
         {
             @MouseClick.started -= instance.OnMouseClick;
             @MouseClick.performed -= instance.OnMouseClick;
@@ -174,24 +205,74 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @MouseMovement.canceled -= instance.OnMouseMovement;
         }
 
-        public void RemoveCallbacks(IProximityMapActions instance)
+        public void RemoveCallbacks(IPCMapActions instance)
         {
-            if (m_Wrapper.m_ProximityMapActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_PCMapActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IProximityMapActions instance)
+        public void SetCallbacks(IPCMapActions instance)
         {
-            foreach (var item in m_Wrapper.m_ProximityMapActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_PCMapActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_ProximityMapActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_PCMapActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public ProximityMapActions @ProximityMap => new ProximityMapActions(this);
-    public interface IProximityMapActions
+    public PCMapActions @PCMap => new PCMapActions(this);
+
+    // MobileMap
+    private readonly InputActionMap m_MobileMap;
+    private List<IMobileMapActions> m_MobileMapActionsCallbackInterfaces = new List<IMobileMapActions>();
+    private readonly InputAction m_MobileMap_Tap;
+    public struct MobileMapActions
+    {
+        private @InputActions m_Wrapper;
+        public MobileMapActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Tap => m_Wrapper.m_MobileMap_Tap;
+        public InputActionMap Get() { return m_Wrapper.m_MobileMap; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MobileMapActions set) { return set.Get(); }
+        public void AddCallbacks(IMobileMapActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MobileMapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MobileMapActionsCallbackInterfaces.Add(instance);
+            @Tap.started += instance.OnTap;
+            @Tap.performed += instance.OnTap;
+            @Tap.canceled += instance.OnTap;
+        }
+
+        private void UnregisterCallbacks(IMobileMapActions instance)
+        {
+            @Tap.started -= instance.OnTap;
+            @Tap.performed -= instance.OnTap;
+            @Tap.canceled -= instance.OnTap;
+        }
+
+        public void RemoveCallbacks(IMobileMapActions instance)
+        {
+            if (m_Wrapper.m_MobileMapActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMobileMapActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MobileMapActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MobileMapActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MobileMapActions @MobileMap => new MobileMapActions(this);
+    public interface IPCMapActions
     {
         void OnMouseClick(InputAction.CallbackContext context);
         void OnMouseMovement(InputAction.CallbackContext context);
+    }
+    public interface IMobileMapActions
+    {
+        void OnTap(InputAction.CallbackContext context);
     }
 }

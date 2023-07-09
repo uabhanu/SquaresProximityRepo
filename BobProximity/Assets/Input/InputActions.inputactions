@@ -2,7 +2,7 @@
     "name": "InputActions",
     "maps": [
         {
-            "name": "ProximityMap",
+            "name": "PCMap",
             "id": "62499dcc-dbd3-4c63-ab82-f241eea0856e",
             "actions": [
                 {
@@ -44,6 +44,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "MouseMovement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "MobileMap",
+            "id": "0442e94a-9d75-4738-93e7-6994e9825b03",
+            "actions": [
+                {
+                    "name": "Tap",
+                    "type": "Button",
+                    "id": "133fe763-51d3-4ddb-9218-278c4149e08e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "89f03fd1-fe72-42c9-93aa-25af49a267a6",
+                    "path": "<Touchscreen>/primaryTouch/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Tap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
