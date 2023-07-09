@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private bool _isGameStarted;
+    private bool _isMobileTapActive;
     private bool _isMouseMoving;
     private bool _isRandomTurns;
     private GameObject _coinUIObj;
@@ -34,7 +35,8 @@ public class GameManager : MonoBehaviour
     {
         _coinUIObj = GameObject.Find("CoinUI");
         _playerInputActions = new InputActions();
-        _playerInputActions.ProximityMap.Enable();
+        _playerInputActions.MobileMap.Enable();
+        _playerInputActions.PCMap.Enable();
 
         _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
         
@@ -142,6 +144,56 @@ public class GameManager : MonoBehaviour
                     //Debug.Log($"Adjacent Cell ({x} , {y}) has a coin placed by Player {playerIndexOfAdjacentCoin}");
                 }
             }
+        }
+    }
+    
+    private void CoinPlaced()
+    {
+        _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y, _coinValue);
+        _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y, _currentPlayerID);
+        _totalCells--;
+        EventsManager.Invoke(Event.CoinPlaced, _coinValue, _currentPlayerID);
+
+        if (!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
+        {
+            BuffUpAdjacentCoin();
+            CaptureAdjacentCoin();
+
+            Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y);
+            GameObject newCoinObj = Instantiate(coinObj, spawnPos, Quaternion.identity, gameObject.transform);
+            _gridManager.CoinOnTheCellData.SetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y, newCoinObj);
+            SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
+            TMP_Text coinValueTMP = newCoinObj.GetComponentInChildren<TMP_Text>();
+            newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
+
+            switch (_currentPlayerID)
+            {
+                case 0:
+                    coinRenderer.color = Color.red;
+                    coinValueTMP.color = Color.yellow;
+                    break;
+
+                case 1:
+                    coinRenderer.color = Color.green;
+                    coinValueTMP.color = Color.blue;
+                    break;
+
+                case 2:
+                    coinRenderer.color = Color.blue;
+                    coinValueTMP.color = Color.cyan;
+                    break;
+
+                default:
+                    coinRenderer.color = Color.white;
+                    coinValueTMP.color = Color.black;
+                    break;
+            }
+
+            _gridManager.IsCellBlockedData.SetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y, true);
+            _isMouseMoving = false;
+            UpdateTrailVisibility();
+            EndPlayerTurn();
+            StartPlayerTurn();
         }
     }
 
@@ -335,59 +387,12 @@ public class GameManager : MonoBehaviour
     {
         if(!_isGameStarted) return;
 
-        if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
+        if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
         {
-            //Debug.Log("This is either an invalid cell or the cell is blocked so can't place any coin here :(");
             return;
         }
-        
-        _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
-        _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
-        _totalCells--;
-        EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayerID);
 
-
-        if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
-        {
-            BuffUpAdjacentCoin();
-            CaptureAdjacentCoin();
-            
-            Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
-            GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
-            _gridManager.CoinOnTheCellData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , newCoinObj);
-            SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
-            TMP_Text coinValueTMP = newCoinObj.GetComponentInChildren<TMP_Text>();
-            newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
-
-            switch(_currentPlayerID)
-            {
-                case 0:
-                    coinRenderer.color = Color.red;
-                    coinValueTMP.color = Color.yellow;
-                break;
-
-                case 1:
-                    coinRenderer.color = Color.green;
-                    coinValueTMP.color = Color.blue;
-                break;
-
-                case 2:
-                    coinRenderer.color = Color.blue;
-                    coinValueTMP.color = Color.cyan;
-                break;
-
-                default:
-                    coinRenderer.color = Color.white;
-                    coinValueTMP.color = Color.black;
-                break;
-            }
-
-            _gridManager.IsCellBlockedData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
-            _isMouseMoving = false;
-            UpdateTrailVisibility();
-            EndPlayerTurn();
-            StartPlayerTurn();
-        }
+        CoinPlaced();
     }
 
     private void OnMouseMoved()
@@ -417,6 +422,7 @@ public class GameManager : MonoBehaviour
 
     private void OnNumberOfPlayersSelected(int numberOfPlayers)
     {
+        _isMobileTapActive = true;
         _numberOfPlayers = numberOfPlayers;
         _totalReceivedArray = new int[_numberOfPlayers];
     }
@@ -424,6 +430,20 @@ public class GameManager : MonoBehaviour
     private void OnRandomTurnsToggled()
     {
         _isRandomTurns = !_isRandomTurns;
+    }
+    
+    private void OnTouchscreenTapped()
+    {
+        if(!_isMobileTapActive) return;
+        
+        if(!_isGameStarted) return;
+
+        if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
+        {
+            return;
+        }
+
+        CoinPlaced();
     }
     
     private void SubscribeToEvents()
@@ -434,6 +454,7 @@ public class GameManager : MonoBehaviour
         EventsManager.SubscribeToEvent(Event.MouseMoved , new Action(OnMouseMoved));
         EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
         EventsManager.SubscribeToEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
+        EventsManager.SubscribeToEvent(Event.TouchscreenTapped , new Action(OnTouchscreenTapped));
     }
     
     private void UnsubscribeFromEvents()
@@ -443,5 +464,6 @@ public class GameManager : MonoBehaviour
         EventsManager.UnsubscribeFromEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
         EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
         EventsManager.UnsubscribeFromEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
+        EventsManager.UnsubscribeFromEvent(Event.TouchscreenTapped , new Action(OnTouchscreenTapped));
     }
 }
