@@ -5,6 +5,7 @@ namespace Events
 {
     public enum Event
     {
+        AIHumanToggled,
         CoinBuffedUp,
         CoinCaptured,
         CoinPlaced,
