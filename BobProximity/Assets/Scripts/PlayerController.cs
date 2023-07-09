@@ -24,11 +24,12 @@ public class PlayerController : MonoBehaviour
         #endif
 
         #if UNITY_IOS || UNITY_ANDROID
-            // Touch input handling for mobile platforms (iOS, Android)
+
             if(Touchscreen.current.primaryTouch.tap.wasPressedThisFrame)
             {
                 EventsManager.Invoke(Event.TouchscreenTapped);
             }
+        
         #endif
     }
 }

@@ -11,7 +11,6 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private bool _isGameStarted;
-    private bool _isMobileTapActive;
     private bool _isMouseMoving;
     private bool _isRandomTurns;
     private GameObject _coinUIObj;
@@ -422,7 +421,6 @@ public class GameManager : MonoBehaviour
 
     private void OnNumberOfPlayersSelected(int numberOfPlayers)
     {
-        _isMobileTapActive = true;
         _numberOfPlayers = numberOfPlayers;
         _totalReceivedArray = new int[_numberOfPlayers];
     }
@@ -434,8 +432,6 @@ public class GameManager : MonoBehaviour
     
     private void OnTouchscreenTapped()
     {
-        if(!_isMobileTapActive) return;
-        
         if(!_isGameStarted) return;
 
         if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
