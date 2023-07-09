@@ -149,47 +149,47 @@ public class GameManager : MonoBehaviour
     
     private void CoinPlaced()
     {
-        _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y, _coinValue);
-        _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y, _currentPlayerID);
+        _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
+        _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
         _totalCells--;
-        EventsManager.Invoke(Event.CoinPlaced, _coinValue, _currentPlayerID);
+        EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayerID);
 
-        if (!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
+        if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
         {
             BuffUpAdjacentCoin();
             CaptureAdjacentCoin();
 
-            Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y);
-            GameObject newCoinObj = Instantiate(coinObj, spawnPos, Quaternion.identity, gameObject.transform);
-            _gridManager.CoinOnTheCellData.SetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y, newCoinObj);
+            Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+            GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
+            _gridManager.CoinOnTheCellData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , newCoinObj);
             SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
             TMP_Text coinValueTMP = newCoinObj.GetComponentInChildren<TMP_Text>();
             newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
 
-            switch (_currentPlayerID)
+            switch(_currentPlayerID)
             {
                 case 0:
                     coinRenderer.color = Color.red;
                     coinValueTMP.color = Color.yellow;
-                    break;
+                break;
 
                 case 1:
                     coinRenderer.color = Color.green;
                     coinValueTMP.color = Color.blue;
-                    break;
+                break;
 
                 case 2:
                     coinRenderer.color = Color.blue;
                     coinValueTMP.color = Color.cyan;
-                    break;
+                break;
 
                 default:
                     coinRenderer.color = Color.white;
                     coinValueTMP.color = Color.black;
-                    break;
+                break;
             }
 
-            _gridManager.IsCellBlockedData.SetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y, true);
+            _gridManager.IsCellBlockedData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
             _isMouseMoving = false;
             UpdateTrailVisibility();
             EndPlayerTurn();
@@ -359,8 +359,7 @@ public class GameManager : MonoBehaviour
         
         _gridManager = FindObjectOfType<GridManager>();
         _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
-
-        //ToDo This is required but getting index out of bounds after the last cell occupied so investigate
+        
         _playersListsCapacity = _totalCells / _numberOfPlayers;
         
         _playerNumbersList = new List<List<int>>();
@@ -392,7 +391,7 @@ public class GameManager : MonoBehaviour
     {
         if(!_isGameStarted) return;
 
-        if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
+        if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
         {
             return;
         }
@@ -440,7 +439,7 @@ public class GameManager : MonoBehaviour
     {
         if(!_isGameStarted) return;
 
-        if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x, _cellIndexAtMousePosition.y))
+        if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
         {
             return;
         }
