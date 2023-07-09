@@ -2310,7 +2310,7 @@ GameObject:
   - component: {fileID: 4741897761127368006}
   - component: {fileID: 4921818586766482093}
   m_Layer: 5
-  m_Name: GreenLabelText (TMP)
+  m_Name: GreenCoinScoreText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2771,7 +2771,7 @@ GameObject:
   - component: {fileID: 302549403249050182}
   - component: {fileID: 1596449877754723051}
   m_Layer: 5
-  m_Name: BlueLabelText (TMP)
+  m_Name: BlueCoinScoreText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5949,7 +5949,7 @@ GameObject:
   - component: {fileID: 3202605042185390453}
   - component: {fileID: 2561551179081926638}
   m_Layer: 5
-  m_Name: RedLabelText (TMP)
+  m_Name: RedCoinScoreText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
