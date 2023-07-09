@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private bool _isGameStarted;
+    private bool _isHuman;
     private bool _isMouseMoving;
     private bool _isRandomTurns;
     private GameObject _coinUIObj;
@@ -342,6 +343,11 @@ public class GameManager : MonoBehaviour
         _mouseTrailObj.SetActive(_isMouseMoving);
     }
 
+    private void OnAIHumanToggled()
+    {
+        _isHuman = !_isHuman;
+    }
+
     private void OnGameOver()
     {
         _isGameStarted = false;
@@ -444,6 +450,7 @@ public class GameManager : MonoBehaviour
     
     private void SubscribeToEvents()
     {
+        EventsManager.SubscribeToEvent(Event.AIHumanToggled , new Action(OnAIHumanToggled));
         EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
         EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
         EventsManager.SubscribeToEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
