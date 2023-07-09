@@ -461,6 +461,7 @@ public class GameManager : MonoBehaviour
     
     private void UnsubscribeFromEvents()
     {
+        EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , new Action(OnAIHumanToggled));
         EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
         EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
         EventsManager.UnsubscribeFromEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
