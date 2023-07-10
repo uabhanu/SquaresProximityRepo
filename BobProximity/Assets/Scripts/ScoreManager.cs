@@ -1,7 +1,6 @@
 using Event = Events.Event;
 using Events;
 using System;
-using TMPro;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
@@ -10,12 +9,10 @@ public class ScoreManager : MonoBehaviour
     private int[] _coinScoreValuesArray;
     private string[] _playerNamesArray;
 
-    [SerializeField] private TMP_Text[] coinScoreTMPTexts;
-
     private void Start()
     {
         SubscribeToEvents();
-        UpdateScoreTexts();
+        EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
     }
 
     private void OnDestroy()
@@ -26,14 +23,14 @@ public class ScoreManager : MonoBehaviour
     private void CoinBuffedUpScore(int buffedUpCoinPlayerID , int buffedUpCoinIncrement)
     {
         _coinScoreValuesArray[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
-        UpdateScoreTexts();
+        EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
     }
 
     private void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
     {
         _coinScoreValuesArray[capturingPlayerID] += capturedCoinValue;
         _coinScoreValuesArray[capturedPlayerID] -= capturedCoinValue;
-        UpdateScoreTexts();
+        EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
     }
     
     private int GetHighestScorePlayer()
@@ -53,14 +50,6 @@ public class ScoreManager : MonoBehaviour
         return highestScorePlayerID;
     }
 
-    private void UpdateScoreTexts()
-    {
-        for(int i = 0; i < _numberOfPlayers; i++)
-        {
-            coinScoreTMPTexts[i].text = _playerNamesArray[i] + " : " + _coinScoreValuesArray[i];
-        }
-    }
-
     private void OnCoinBuffedUp(int playerID , int coinValue)
     {
         CoinBuffedUpScore(playerID , coinValue);
@@ -74,7 +63,7 @@ public class ScoreManager : MonoBehaviour
     private void OnCoinPlaced(int coinValue , int playerID)
     {
         _coinScoreValuesArray[playerID] += coinValue;
-        UpdateScoreTexts();
+        EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
     }
 
     private void OnGameOver()
@@ -115,7 +104,7 @@ public class ScoreManager : MonoBehaviour
     private void OnPlayerNamesUpdated(int playerID , string playerName)
     {
         _playerNamesArray[playerID] = playerName;
-        UpdateScoreTexts();
+        EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
     }
 
     private void SubscribeToEvents()
