@@ -2,6 +2,7 @@ using Event = Events.Event;
 using Events;
 using Random = UnityEngine.Random;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     private List<List<int>> _playerNumbersList;
     private Vector2Int _cellIndexAtMousePosition;
 
+    [SerializeField] private float aiCoinPlaceDelay;
     [SerializeField] private GameObject coinObj;
     [SerializeField] private GameObject trailObj;
 
@@ -71,6 +73,12 @@ public class GameManager : MonoBehaviour
             default: return Color.white;
         }
     }
+
+    private IEnumerator AIPlaceCoinCoroutine()
+    {
+        yield return new WaitForSeconds(aiCoinPlaceDelay);
+        PlaceCoin();
+    }
     
     private Vector2Int FindUnblockedCell()
     {
@@ -96,11 +104,6 @@ public class GameManager : MonoBehaviour
         return _gridManager.InvalidCellIndex;
     }
 
-    private void AIPlaceCoin()
-    {
-        PlaceCoin();
-    }
-    
     private void BuffUpAdjacentCoin()
     {
         int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
@@ -302,7 +305,7 @@ public class GameManager : MonoBehaviour
 
                     if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
                     {
-                        AIPlaceCoin();
+                        StartCoroutine(AIPlaceCoinCoroutine());
                         foundUnblockedCell = true;
                     }
                 }
