@@ -44,5 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b5c109c193b76d4ea4bf2e2ec266640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiCoinPlaceDelay: 3
   coinObj: {fileID: 4578332380355879588, guid: a9395e2cc0376484f9984ad964da4539, type: 3}
   trailObj: {fileID: 4578332380355879588, guid: 9fa96010692363d48b945885160fe75a, type: 3}
