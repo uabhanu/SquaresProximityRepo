@@ -20,6 +20,7 @@ namespace Events
         PlayerWins,
         PlayerNamesUpdated,
         RandomTurnsToggled,
+        ScoreUpdated,
         TouchscreenTapped
     }
 
