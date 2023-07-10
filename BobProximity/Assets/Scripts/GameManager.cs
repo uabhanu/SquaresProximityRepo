@@ -74,15 +74,23 @@ public class GameManager : MonoBehaviour
     
     private Vector2Int FindUnblockedCell()
     {
+        List<Vector2Int> unblockedCells = new List<Vector2Int>();
+
         for(int x = 0; x < _gridManager.GridInfo.Cols; x++)
         {
             for(int y = 0; y < _gridManager.GridInfo.Rows; y++)
             {
                 if(!_gridManager.IsCellBlockedData.GetValue(x , y))
                 {
-                    return new Vector2Int(x , y);
+                    unblockedCells.Add(new Vector2Int(x , y));
                 }
             }
+        }
+
+        if(unblockedCells.Count > 0)
+        {
+            int randomIndex = Random.Range(0 , unblockedCells.Count);
+            return unblockedCells[randomIndex];
         }
 
         return _gridManager.InvalidCellIndex;
