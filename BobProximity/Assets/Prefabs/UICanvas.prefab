@@ -6123,6 +6123,10 @@ MonoBehaviour:
   - {fileID: 7012457841348404593}
   - {fileID: 6354599125397305656}
   - {fileID: 4553965960158965144}
+  aiHumanTogglesArray:
+  - {fileID: 4563720629489141825}
+  - {fileID: 838066222367575166}
+  - {fileID: 6940601874941429448}
 --- !u!1 &6056266090565472135
 GameObject:
   m_ObjectHideFlags: 0
