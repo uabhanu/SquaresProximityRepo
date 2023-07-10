@@ -11,9 +11,9 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private bool _isGameStarted;
-    private bool _isHuman;
     private bool _isMouseMoving;
     private bool _isRandomTurns;
+    private bool[] _isAIArray;
     private GameObject _coinUIObj;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
@@ -343,9 +343,9 @@ public class GameManager : MonoBehaviour
         _mouseTrailObj.SetActive(_isMouseMoving);
     }
 
-    private void OnAIHumanToggled()
+    private void OnAIHumanToggled(int playerID , bool isAI)
     {
-        _isHuman = !_isHuman;
+        _isAIArray[playerID] = isAI;
     }
 
     private void OnGameOver()
@@ -427,6 +427,7 @@ public class GameManager : MonoBehaviour
     private void OnNumberOfPlayersSelected(int numberOfPlayers)
     {
         _numberOfPlayers = numberOfPlayers;
+        _isAIArray = new bool[_numberOfPlayers];
         _totalReceivedArray = new int[_numberOfPlayers];
     }
 
@@ -449,7 +450,7 @@ public class GameManager : MonoBehaviour
     
     private void SubscribeToEvents()
     {
-        EventsManager.SubscribeToEvent(Event.AIHumanToggled , new Action(OnAIHumanToggled));
+        EventsManager.SubscribeToEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
         EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
         EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
         EventsManager.SubscribeToEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
@@ -461,7 +462,7 @@ public class GameManager : MonoBehaviour
     
     private void UnsubscribeFromEvents()
     {
-        EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , new Action(OnAIHumanToggled));
+        EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
         EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
         EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
         EventsManager.UnsubscribeFromEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));

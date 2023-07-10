@@ -35,6 +35,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
+    [SerializeField] private Toggle[] aiHumanTogglesArray;
 
     private void Start()
     {
@@ -65,6 +66,15 @@ public class InGameUIManager : MonoBehaviour
     {
         string playerName = playerNameTMPInputFields[playerID].text;
         EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
+    }
+
+    public void AIHumanToggle()
+    {
+        for(int i = 0; i < aiHumanTogglesArray.Length; i++)
+        {
+            bool isAI = aiHumanTogglesArray[i].isOn;
+            EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
+        }
     }
 
     public void BackButton()
