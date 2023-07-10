@@ -391,6 +391,14 @@ public class GameManager : MonoBehaviour
     {
         if(!_isGameStarted) return;
 
+        for(int i = 0; i < _isAIArray.Length; i++)
+        {
+            if(_isAIArray[i] && _currentPlayerID == i)
+            {
+                return;
+            }
+        }
+
         if(_cellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
         {
             return;
@@ -402,6 +410,14 @@ public class GameManager : MonoBehaviour
     private void OnMouseMoved()
     {
         if(!_isGameStarted) return;
+        
+        for(int i = 0; i < _isAIArray.Length; i++)
+        {
+            if(_isAIArray[i] && _currentPlayerID == i)
+            {
+                return;
+            }
+        }
 
         _isMouseMoving = true;
 
