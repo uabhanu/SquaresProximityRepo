@@ -72,6 +72,28 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    private Vector2Int FindUnblockedCell()
+    {
+        for(int x = 0; x < _gridManager.GridInfo.Cols; x++)
+        {
+            for(int y = 0; y < _gridManager.GridInfo.Rows; y++)
+            {
+                if(!_gridManager.IsCellBlockedData.GetValue(x , y))
+                {
+                    return new Vector2Int(x , y);
+                }
+            }
+        }
+
+        return _gridManager.InvalidCellIndex;
+    }
+
+    private void AIPlaceCoin()
+    {
+        Debug.Log("AIPlaceCoin()-> AI Place the Coin Now");
+        PlaceCoin();
+    }
+    
     private void BuffUpAdjacentCoin()
     {
         int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
@@ -147,8 +169,10 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    private void CoinPlaced()
+    private void PlaceCoin()
     {
+        //Debug.Log("PlaceCoin called for Player ID: " + _currentPlayerID);
+        
         _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
         _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
         _totalCells--;
@@ -201,7 +225,7 @@ public class GameManager : MonoBehaviour
     {
         _currentPlayerID = (_currentPlayerID + 1) % _numberOfPlayers;
     }
-    
+
     private void ResetPlayersRemaining()
     {
         _playersRemaining.Clear();
@@ -234,38 +258,61 @@ public class GameManager : MonoBehaviour
             _playersRemaining.RemoveAt(randomIndex);
         }
 
-        if(_playerNumbersList[_currentPlayerID].Count > 0)
+        bool foundUnblockedCell = false;
+        int maxIterations = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
+        int currentIteration = 0;
+
+        while(!foundUnblockedCell && currentIteration < maxIterations)
         {
-            _coinValue = _playerNumbersList[_currentPlayerID][0];
-
-            TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
-            coinUITMP.text = _coinValue.ToString();
-
-            for(int i = 0; i < _totalReceivedArray.Length; i++)
+            if(_playerNumbersList[_currentPlayerID].Count > 0)
             {
-                if(_currentPlayerID == i)
+                _coinValue = _playerNumbersList[_currentPlayerID][0];
+
+                TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
+                coinUITMP.text = _coinValue.ToString();
+
+                for(int i = 0; i < _totalReceivedArray.Length; i++)
                 {
-                    _totalReceivedArray[i] += _coinValue;
+                    if(_currentPlayerID == i)
+                    {
+                        _totalReceivedArray[i] += _coinValue;
+                    }
+                }
+
+                _playerNumbersList[_currentPlayerID].RemoveAt(0);
+            }
+
+            if(_playersRemaining.Count == 0)
+            {
+                ResetPlayersRemaining();
+            }
+
+            for(int i = 0; i < _isAIArray.Length; i++)
+            {
+                if(_isAIArray[i] && _currentPlayerID == i)
+                {
+                    _cellIndexAtMousePosition = FindUnblockedCell();
+                    
+                    if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
+                    {
+                        AIPlaceCoin();
+                        foundUnblockedCell = true;
+                    }
                 }
             }
 
-            _playerNumbersList[_currentPlayerID].RemoveAt(0);
-        }
+            UpdateCoinUIImageColors();
+            UpdateTrailColor();
 
-        if(_playersRemaining.Count == 0)
-        {
-            ResetPlayersRemaining();
+            currentIteration++;
         }
-
-        UpdateCoinUIImageColors();
-        UpdateTrailColor();
     }
 
     private void UpdateCoinColor(int x , int y , int playerIndex)
     {
         GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
         //Debug.Log("Name of the Adjacent Coin: " + coin.name);
-    
+
         if(coin != null)
         {
             SpriteRenderer coinRenderer = coin.GetComponentInChildren<SpriteRenderer>();
@@ -277,17 +324,17 @@ public class GameManager : MonoBehaviour
                     coinRenderer.color = Color.red;
                     coinValueTMP.color = Color.yellow;
                 break;
-    
+
                 case 1:
                     coinRenderer.color = Color.green;
                     coinValueTMP.color = Color.blue;
                 break;
-    
+
                 case 2:
                     coinRenderer.color = Color.blue;
                     coinValueTMP.color = Color.cyan;
                 break;
-    
+
                 default:
                     coinRenderer.color = Color.white;
                 break;
@@ -404,7 +451,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        CoinPlaced();
+        PlaceCoin();
     }
 
     private void OnMouseMoved()
@@ -461,7 +508,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        CoinPlaced();
+        PlaceCoin();
     }
     
     private void SubscribeToEvents()
