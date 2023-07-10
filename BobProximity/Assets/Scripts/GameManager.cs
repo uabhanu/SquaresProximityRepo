@@ -98,7 +98,6 @@ public class GameManager : MonoBehaviour
 
     private void AIPlaceCoin()
     {
-        Debug.Log("AIPlaceCoin()-> AI Place the Coin Now");
         PlaceCoin();
     }
     
@@ -270,37 +269,37 @@ public class GameManager : MonoBehaviour
         int maxIterations = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         int currentIteration = 0;
 
+        if(_playerNumbersList[_currentPlayerID].Count > 0)
+        {
+            _coinValue = _playerNumbersList[_currentPlayerID][0];
+
+            TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
+            coinUITMP.text = _coinValue.ToString();
+
+            for(int i = 0; i < _totalReceivedArray.Length; i++)
+            {
+                if(_currentPlayerID == i)
+                {
+                    _totalReceivedArray[i] += _coinValue;
+                }
+            }
+
+            _playerNumbersList[_currentPlayerID].RemoveAt(0);
+        }
+
+        if(_playersRemaining.Count == 0)
+        {
+            ResetPlayersRemaining();
+        }
+
         while(!foundUnblockedCell && currentIteration < maxIterations)
         {
-            if(_playerNumbersList[_currentPlayerID].Count > 0)
-            {
-                _coinValue = _playerNumbersList[_currentPlayerID][0];
-
-                TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
-                coinUITMP.text = _coinValue.ToString();
-
-                for(int i = 0; i < _totalReceivedArray.Length; i++)
-                {
-                    if(_currentPlayerID == i)
-                    {
-                        _totalReceivedArray[i] += _coinValue;
-                    }
-                }
-
-                _playerNumbersList[_currentPlayerID].RemoveAt(0);
-            }
-
-            if(_playersRemaining.Count == 0)
-            {
-                ResetPlayersRemaining();
-            }
-
             for(int i = 0; i < _isAIArray.Length; i++)
             {
                 if(_isAIArray[i] && _currentPlayerID == i)
                 {
                     _cellIndexAtMousePosition = FindUnblockedCell();
-                    
+
                     if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
                     {
                         AIPlaceCoin();
@@ -309,11 +308,11 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            UpdateCoinUIImageColors();
-            UpdateTrailColor();
-
             currentIteration++;
         }
+
+        UpdateCoinUIImageColors();
+        UpdateTrailColor();
     }
 
     private void UpdateCoinColor(int x , int y , int playerIndex)
