@@ -35,6 +35,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
+    [SerializeField] private TMP_Text[] coinScoreTMPTexts;
     [SerializeField] private Toggle[] aiHumanTogglesArray;
 
     private void Start()
@@ -246,6 +247,14 @@ public class InGameUIManager : MonoBehaviour
         PlayerPrefsManager.SaveData(_playerNamesArray , _playersTotalWinsArray);
     }
 
+    private void OnScoreUpdated(int[] coinScoresArray)
+    {
+        for(int i = 0; i < _numberOfPlayers; i++)
+        {
+            coinScoreTMPTexts[i].text = _playerNamesArray[i] + " : " + coinScoresArray[i];
+        }
+    }
+
     private void OnTotalReceived(int[] totalReceivedArray)
     {
         _totalReceivedArray = totalReceivedArray;
@@ -256,6 +265,7 @@ public class InGameUIManager : MonoBehaviour
         EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
         EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
         EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
+        EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
         EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
     }
 
@@ -264,6 +274,7 @@ public class InGameUIManager : MonoBehaviour
         EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
         EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
         EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
+        EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
         EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
     }
 }
