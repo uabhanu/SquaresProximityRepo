@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     private GameObject _coinUIObj;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
+    private List<int> _lesserValueCoinsList;
+    private List<Vector2Int> _otherPlayerCoinsCellIndicesList;
+    private List<Vector2Int> _unblockedCellIndicesList;
     private InputActions _playerInputActions;
     private int _coinValue;
     private int _currentPlayerID;
@@ -82,16 +85,15 @@ public class GameManager : MonoBehaviour
     
     private Vector2Int FindUnblockedCell()
     {
-        List<Vector2Int> unblockedCells = new List<Vector2Int>();
-        List<Vector2Int> otherPlayerCoins = new List<Vector2Int>();
-    
+        _unblockedCellIndicesList.Clear();
+        
         for(int x = 0; x < _gridManager.GridInfo.Cols; x++)
         {
             for(int y = 0; y < _gridManager.GridInfo.Rows; y++)
             {
                 if(!_gridManager.IsCellBlockedData.GetValue(x , y))
                 {
-                    unblockedCells.Add(new Vector2Int(x , y));
+                    _unblockedCellIndicesList.Add(new Vector2Int(x , y));
                 }
                 
                 else if(_gridManager.IsCellBlockedData.GetValue(x , y))
@@ -100,20 +102,34 @@ public class GameManager : MonoBehaviour
     
                     if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) != _currentPlayerID)
                     {
-                        otherPlayerCoins.Add(new Vector2Int(x , y));
+                        _otherPlayerCoinsCellIndicesList.Clear();
+                        _otherPlayerCoinsCellIndicesList.Add(new Vector2Int(x , y));
                     }
                 }
             }
         }
     
-        if(otherPlayerCoins.Count > 0)
+        if(_otherPlayerCoinsCellIndicesList.Count > 0)
         {
-            Debug.Log("Total Coins Placed by the other Players: " + otherPlayerCoins.Count);
-    
+            //Debug.Log("Total Coins Placed by the other Players: " + otherPlayerCoins.Count);
+
+            int aiCoinValue = _coinValue;
             int maxCoinValue = int.MinValue;
             Vector2Int maxCoinPosition = Vector2Int.zero;
+
+            foreach(Vector2Int coinPosition in _otherPlayerCoinsCellIndicesList)
+            {
+                int coinValue = _gridManager.CoinValueData.GetValue(coinPosition.x , coinPosition.y);
+
+                if(coinValue < aiCoinValue)
+                {
+                    Debug.Log("Coin with value less than AI's coin value: " + coinValue);
+                    _lesserValueCoinsList.Clear();
+                    _lesserValueCoinsList.Add(coinValue);
+                }
+            }
     
-            foreach(Vector2Int coinPosition in otherPlayerCoins)
+            foreach(Vector2Int coinPosition in _otherPlayerCoinsCellIndicesList)
             {
                 int coinValue = _gridManager.CoinValueData.GetValue(coinPosition.x , coinPosition.y);
                 
@@ -124,14 +140,13 @@ public class GameManager : MonoBehaviour
                 }
             }
     
-            Debug.Log("Coin with Highest Value: " + maxCoinValue + " at Position: " + maxCoinPosition);
-            //ToDo Coin Place Logic Here
+            //Debug.Log("Coin with Highest Value: " + maxCoinValue + " at Position: " + maxCoinPosition);
         }
     
-        if(unblockedCells.Count > 0)
+        if(_unblockedCellIndicesList.Count > 0)
         {
-            int randomIndex = Random.Range(0 , unblockedCells.Count);
-            return unblockedCells[randomIndex];
+            int randomIndex = Random.Range(0 , _unblockedCellIndicesList.Count);
+            return _unblockedCellIndicesList[randomIndex];
         }
     
         return _gridManager.InvalidCellIndex;
@@ -446,14 +461,16 @@ public class GameManager : MonoBehaviour
     private void OnGameStarted()
     {
         _isGameStarted = true;
-        
+
         _gridManager = FindObjectOfType<GridManager>();
         _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         
         _playersListsCapacity = _totalCells / _numberOfPlayers;
         
+        _lesserValueCoinsList = new List<int>();
+        _otherPlayerCoinsCellIndicesList = new List<Vector2Int>();
+        _unblockedCellIndicesList = new List<Vector2Int>();
         _playerNumbersList = new List<List<int>>();
-        
         _playersRemaining = new List<int>();
 
         for(int i = 0; i < _numberOfPlayers; i++)
