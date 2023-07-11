@@ -85,8 +85,10 @@ public class GameManager : MonoBehaviour
     
     private Vector2Int FindUnblockedCell()
     {
+        _lesserValueCoinsList.Clear();
+        _otherPlayerCoinsCellIndicesList.Clear();
         _unblockedCellIndicesList.Clear();
-        
+
         for(int x = 0; x < _gridManager.GridInfo.Cols; x++)
         {
             for(int y = 0; y < _gridManager.GridInfo.Rows; y++)
@@ -99,23 +101,22 @@ public class GameManager : MonoBehaviour
                 else if(_gridManager.IsCellBlockedData.GetValue(x , y))
                 {
                     GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
-    
+
                     if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) != _currentPlayerID)
                     {
-                        _otherPlayerCoinsCellIndicesList.Clear();
                         _otherPlayerCoinsCellIndicesList.Add(new Vector2Int(x , y));
                     }
                 }
             }
         }
-    
+
         if(_otherPlayerCoinsCellIndicesList.Count > 0)
         {
-            //Debug.Log("Total Coins Placed by the other Players: " + otherPlayerCoins.Count);
-
             int aiCoinValue = _coinValue;
             int maxCoinValue = int.MinValue;
             Vector2Int maxCoinPosition = Vector2Int.zero;
+            Vector2Int adjacentCell = Vector2Int.zero;
+            bool foundAdjacentCell = false;
 
             foreach(Vector2Int coinPosition in _otherPlayerCoinsCellIndicesList)
             {
@@ -124,31 +125,52 @@ public class GameManager : MonoBehaviour
                 if(coinValue < aiCoinValue)
                 {
                     Debug.Log("Coin with value less than AI's coin value: " + coinValue);
-                    _lesserValueCoinsList.Clear();
                     _lesserValueCoinsList.Add(coinValue);
                 }
-            }
-    
-            foreach(Vector2Int coinPosition in _otherPlayerCoinsCellIndicesList)
-            {
-                int coinValue = _gridManager.CoinValueData.GetValue(coinPosition.x , coinPosition.y);
-                
+
                 if(coinValue > maxCoinValue)
                 {
                     maxCoinValue = coinValue;
                     maxCoinPosition = coinPosition;
                 }
             }
-    
-            //Debug.Log("Coin with Highest Value: " + maxCoinValue + " at Position: " + maxCoinPosition);
+            
+            if(maxCoinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x - 1 , maxCoinPosition.y))
+            {
+                adjacentCell = new Vector2Int(maxCoinPosition.x - 1 , maxCoinPosition.y);
+                foundAdjacentCell = true;
+            }
+            
+            else if(maxCoinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x + 1 , maxCoinPosition.y))
+            {
+                adjacentCell = new Vector2Int(maxCoinPosition.x + 1 , maxCoinPosition.y);
+                foundAdjacentCell = true;
+            }
+            
+            else if(maxCoinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x , maxCoinPosition.y - 1))
+            {
+                adjacentCell = new Vector2Int(maxCoinPosition.x , maxCoinPosition.y - 1);
+                foundAdjacentCell = true;
+            }
+            
+            else if(maxCoinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x , maxCoinPosition.y + 1))
+            {
+                adjacentCell = new Vector2Int(maxCoinPosition.x , maxCoinPosition.y + 1);
+                foundAdjacentCell = true;
+            }
+
+            if(foundAdjacentCell)
+            {
+                return adjacentCell;
+            }
         }
-    
+
         if(_unblockedCellIndicesList.Count > 0)
         {
             int randomIndex = Random.Range(0 , _unblockedCellIndicesList.Count);
             return _unblockedCellIndicesList[randomIndex];
         }
-    
+
         return _gridManager.InvalidCellIndex;
     }
 
