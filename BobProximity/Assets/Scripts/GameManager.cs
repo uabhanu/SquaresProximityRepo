@@ -18,7 +18,8 @@ public class GameManager : MonoBehaviour
     private GameObject _coinUIObj;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
-    private List<int> _lesserValueCoinsList;
+    private List<int> _lesserCoinValuesList;
+    private List<int> _otherPlayerCoinValuesList;
     private List<Vector2Int> _otherPlayerCoinsCellIndicesList;
     private List<Vector2Int> _unblockedCellIndicesList;
     private InputActions _playerInputActions;
@@ -85,8 +86,9 @@ public class GameManager : MonoBehaviour
     
     private Vector2Int FindUnblockedCell()
     {
-        _lesserValueCoinsList.Clear();
+        _lesserCoinValuesList.Clear();
         _otherPlayerCoinsCellIndicesList.Clear();
+        _otherPlayerCoinValuesList.Clear();
         _unblockedCellIndicesList.Clear();
 
         for(int x = 0; x < _gridManager.GridInfo.Cols; x++)
@@ -105,6 +107,8 @@ public class GameManager : MonoBehaviour
                     if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) != _currentPlayerID)
                     {
                         _otherPlayerCoinsCellIndicesList.Add(new Vector2Int(x , y));
+                        int coinValue = _gridManager.CoinValueData.GetValue(x , y);
+                        _otherPlayerCoinValuesList.Add(coinValue);
                     }
                 }
             }
@@ -125,7 +129,7 @@ public class GameManager : MonoBehaviour
                 if(coinValue < aiCoinValue)
                 {
                     Debug.Log("Coin with value less than AI's coin value: " + coinValue);
-                    _lesserValueCoinsList.Add(coinValue);
+                    _lesserCoinValuesList.Add(coinValue);
                 }
 
                 if(coinValue > maxCoinValue)
@@ -489,8 +493,9 @@ public class GameManager : MonoBehaviour
         
         _playersListsCapacity = _totalCells / _numberOfPlayers;
         
-        _lesserValueCoinsList = new List<int>();
+        _lesserCoinValuesList = new List<int>();
         _otherPlayerCoinsCellIndicesList = new List<Vector2Int>();
+        _otherPlayerCoinValuesList = new List<int>();
         _unblockedCellIndicesList = new List<Vector2Int>();
         _playerNumbersList = new List<List<int>>();
         _playersRemaining = new List<int>();
