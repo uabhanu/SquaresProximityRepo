@@ -83,7 +83,8 @@ public class GameManager : MonoBehaviour
     private Vector2Int FindUnblockedCell()
     {
         List<Vector2Int> unblockedCells = new List<Vector2Int>();
-
+        List<Vector2Int> otherPlayerCoins = new List<Vector2Int>();
+    
         for(int x = 0; x < _gridManager.GridInfo.Cols; x++)
         {
             for(int y = 0; y < _gridManager.GridInfo.Rows; y++)
@@ -92,15 +93,47 @@ public class GameManager : MonoBehaviour
                 {
                     unblockedCells.Add(new Vector2Int(x , y));
                 }
+                
+                else if(_gridManager.IsCellBlockedData.GetValue(x , y))
+                {
+                    GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
+    
+                    if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) != _currentPlayerID)
+                    {
+                        otherPlayerCoins.Add(new Vector2Int(x , y));
+                    }
+                }
             }
         }
-
+    
+        if(otherPlayerCoins.Count > 0)
+        {
+            Debug.Log("Total Coins Placed by the other Players: " + otherPlayerCoins.Count);
+    
+            int maxCoinValue = int.MinValue;
+            Vector2Int maxCoinPosition = Vector2Int.zero;
+    
+            foreach(Vector2Int coinPosition in otherPlayerCoins)
+            {
+                int coinValue = _gridManager.CoinValueData.GetValue(coinPosition.x , coinPosition.y);
+                
+                if(coinValue > maxCoinValue)
+                {
+                    maxCoinValue = coinValue;
+                    maxCoinPosition = coinPosition;
+                }
+            }
+    
+            Debug.Log("Coin with Highest Value: " + maxCoinValue + " at Position: " + maxCoinPosition);
+            //ToDo Coin Place Logic Here
+        }
+    
         if(unblockedCells.Count > 0)
         {
             int randomIndex = Random.Range(0 , unblockedCells.Count);
             return unblockedCells[randomIndex];
         }
-
+    
         return _gridManager.InvalidCellIndex;
     }
 
