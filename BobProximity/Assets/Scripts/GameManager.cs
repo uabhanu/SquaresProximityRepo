@@ -4,6 +4,7 @@ using Random = UnityEngine.Random;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -99,7 +100,6 @@ public class GameManager : MonoBehaviour
                 {
                     _unblockedCellIndicesList.Add(new Vector2Int(x , y));
                 }
-                
                 else if(_gridManager.IsCellBlockedData.GetValue(x , y))
                 {
                     GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
 
                 if(coinValue < aiCoinValue)
                 {
-                    Debug.Log("Coin with value less than AI's coin value: " + coinValue);
+                    //Debug.Log("Coin with value less than AI's coin value: " + coinValue);
                     _lesserCoinValuesList.Add(coinValue);
                 }
 
@@ -138,29 +138,71 @@ public class GameManager : MonoBehaviour
                     maxCoinPosition = coinPosition;
                 }
             }
-            
-            if(maxCoinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x - 1 , maxCoinPosition.y))
+
+            if(_lesserCoinValuesList.Count > 0)
             {
-                adjacentCell = new Vector2Int(maxCoinPosition.x - 1 , maxCoinPosition.y);
-                foundAdjacentCell = true;
+                int highestValue = _lesserCoinValuesList.Max();
+                
+                foreach(Vector2Int coinPosition in _otherPlayerCoinsCellIndicesList)
+                {
+                    if(_gridManager.CoinValueData.GetValue(coinPosition.x , coinPosition.y) == highestValue)
+                    {
+                        if(coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1 , coinPosition.y))
+                        {
+                            adjacentCell = new Vector2Int(coinPosition.x - 1 , coinPosition.y);
+                            foundAdjacentCell = true;
+                            break;
+                        }
+                        
+                        if (coinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x + 1 , coinPosition.y))
+                        {
+                            adjacentCell = new Vector2Int(coinPosition.x + 1 , coinPosition.y);
+                            foundAdjacentCell = true;
+                            break;
+                        }
+                        
+                        if (coinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y - 1))
+                        {
+                            adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y - 1);
+                            foundAdjacentCell = true;
+                            break;
+                        }
+                        
+                        if (coinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y + 1))
+                        {
+                            adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y + 1);
+                            foundAdjacentCell = true;
+                            break;
+                        }
+                    }
+                }
             }
-            
-            else if(maxCoinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x + 1 , maxCoinPosition.y))
+
+            if(!foundAdjacentCell)
             {
-                adjacentCell = new Vector2Int(maxCoinPosition.x + 1 , maxCoinPosition.y);
-                foundAdjacentCell = true;
-            }
-            
-            else if(maxCoinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x , maxCoinPosition.y - 1))
-            {
-                adjacentCell = new Vector2Int(maxCoinPosition.x , maxCoinPosition.y - 1);
-                foundAdjacentCell = true;
-            }
-            
-            else if(maxCoinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x , maxCoinPosition.y + 1))
-            {
-                adjacentCell = new Vector2Int(maxCoinPosition.x , maxCoinPosition.y + 1);
-                foundAdjacentCell = true;
+                if(maxCoinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x - 1 , maxCoinPosition.y))
+                {
+                    adjacentCell = new Vector2Int(maxCoinPosition.x - 1 , maxCoinPosition.y);
+                    foundAdjacentCell = true;
+                }
+                
+                else if(maxCoinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x + 1 , maxCoinPosition.y))
+                {
+                    adjacentCell = new Vector2Int(maxCoinPosition.x + 1 , maxCoinPosition.y);
+                    foundAdjacentCell = true;
+                }
+                
+                else if(maxCoinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x , maxCoinPosition.y - 1))
+                {
+                    adjacentCell = new Vector2Int(maxCoinPosition.x , maxCoinPosition.y - 1);
+                    foundAdjacentCell = true;
+                }
+                
+                else if(maxCoinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(maxCoinPosition.x , maxCoinPosition.y + 1))
+                {
+                    adjacentCell = new Vector2Int(maxCoinPosition.x , maxCoinPosition.y + 1);
+                    foundAdjacentCell = true;
+                }
             }
 
             if(foundAdjacentCell)
