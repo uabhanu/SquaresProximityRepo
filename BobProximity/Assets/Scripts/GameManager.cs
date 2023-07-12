@@ -85,6 +85,47 @@ public class GameManager : MonoBehaviour
         PlaceCoin();
     }
     
+    private IEnumerator AnimateCoinEffect(SpriteRenderer coinRenderer)
+    {
+        Color originalColor = coinRenderer.color;
+        float originalAlpha = originalColor.a;
+        float fadeDuration = 0.2f;
+        float fadeInterval = 0.05f;
+        int fadeSteps = Mathf.RoundToInt(fadeDuration / fadeInterval);
+        int fadeCycles = 3;
+
+        for(int cycle = 0; cycle < fadeCycles; cycle++)
+        {
+            for(int i = 0; i < fadeSteps; i++)
+            {
+                float t = (float)i / fadeSteps;
+                float alpha = Mathf.Lerp(originalAlpha , 0f , t);
+
+                Color newColor = new Color(originalColor.r , originalColor.g , originalColor.b , alpha);
+                coinRenderer.color = newColor;
+
+                yield return new WaitForSeconds(fadeInterval);
+            }
+
+            yield return new WaitForSeconds(0.1f);
+
+            for(int i = 0; i < fadeSteps; i++)
+            {
+                float t = (float)i / fadeSteps;
+                float alpha = Mathf.Lerp(0f , originalAlpha , t);
+
+                Color newColor = new Color(originalColor.r , originalColor.g , originalColor.b , alpha);
+                coinRenderer.color = newColor;
+
+                yield return new WaitForSeconds(fadeInterval);
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        coinRenderer.color = new Color(originalColor.r , originalColor.g , originalColor.b , originalAlpha);
+    }
+
     private Vector2Int FindUnblockedCell()
     {
         _lesserCoinValuesList.Clear();
@@ -337,6 +378,14 @@ public class GameManager : MonoBehaviour
                     coinRenderer.color = Color.white;
                     coinValueTMP.color = Color.black;
                 break;
+            }
+            
+            for(int i = 0; i < _isAIArray.Length; i++)
+            {
+                if(_isAIArray[i] && i == _currentPlayerID)
+                {
+                    StartCoroutine(AnimateCoinEffect(newCoinObj.GetComponentInChildren<SpriteRenderer>()));       
+                }
             }
 
             _gridManager.IsCellBlockedData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
