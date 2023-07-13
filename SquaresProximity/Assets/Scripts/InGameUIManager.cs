@@ -46,7 +46,7 @@ public class InGameUIManager : MonoBehaviour
         inGameUIPanelsObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(false);
-        
+
         _playersTotalWinsArray = new int[_numberOfPlayers];
         _totalReceivedArray = new int[_numberOfPlayers];
 
@@ -84,6 +84,12 @@ public class InGameUIManager : MonoBehaviour
         playerInputPanelObj.SetActive(true);
     }
     
+    public void BackButtonMain()
+    {
+        numberOfPlayersSelectionPanelObj.SetActive(true);
+        playerInputPanelObj.SetActive(false);
+    }
+    
     public void ConfirmButton()
     {
         if(numberOfPlayersSelectionSlider.value == 0 || numberOfPlayersSelectionSlider.value == 1)
@@ -92,7 +98,7 @@ public class InGameUIManager : MonoBehaviour
             playerInputPanelObj.SetActive(true);
         }
         
-        PlayerPrefsManager.LoadData(_playerNamesArray, _playersTotalWinsArray);
+        PlayerPrefsManager.LoadData(_playerNamesArray , _playersTotalWinsArray);
 
         for(int i = 0; i < _numberOfPlayers; i++)
         {
