@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
         coinRenderer.color = new Color(originalColor.r , originalColor.g , originalColor.b , originalAlpha);
     }
 
-    private Vector2Int FindUnblockedCell()
+    private Vector2Int FindTargetCell()
     {
         _lesserCoinValuesList.Clear();
         _otherPlayerCoinsCellIndicesList.Clear();
@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
             Vector2Int adjacentCell = Vector2Int.zero;
             bool foundAdjacentCell = false;
 
-            foreach (Vector2Int coinPosition in _otherPlayerCoinsCellIndicesList)
+            foreach(Vector2Int coinPosition in _otherPlayerCoinsCellIndicesList)
             {
                 int coinValue = _gridManager.CoinValueData.GetValue(coinPosition.x , coinPosition.y);
 
@@ -252,6 +252,35 @@ public class GameManager : MonoBehaviour
             if(foundAdjacentCell)
             {
                 return adjacentCell;
+            }
+        }
+
+        if(_otherPlayerCoinsCellIndicesList.Count > 0)
+        {
+            foreach(Vector2Int coinPosition in _otherPlayerCoinsCellIndicesList)
+            {
+                if(_gridManager.CoinValueData.GetValue(coinPosition.x , coinPosition.y) == _coinValue)
+                {
+                    if(coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1 , coinPosition.y))
+                    {
+                        return new Vector2Int(coinPosition.x - 1 , coinPosition.y);
+                    }
+
+                    if(coinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x + 1 , coinPosition.y))
+                    {
+                        return new Vector2Int(coinPosition.x + 1 , coinPosition.y);
+                    }
+
+                    if(coinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y - 1))
+                    {
+                        return new Vector2Int(coinPosition.x , coinPosition.y - 1);
+                    }
+
+                    if(coinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y + 1))
+                    {
+                        return new Vector2Int(coinPosition.x , coinPosition.y + 1);
+                    }
+                }
             }
         }
 
@@ -469,7 +498,7 @@ public class GameManager : MonoBehaviour
             {
                 if(_isAIArray[i] && _currentPlayerID == i)
                 {
-                    _cellIndexAtMousePosition = FindUnblockedCell();
+                    _cellIndexAtMousePosition = FindTargetCell();
 
                     if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
                     {
