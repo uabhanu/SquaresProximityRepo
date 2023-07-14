@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private GameObject _coinUIObj;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
+    private List<int> _aiCoinValuesList;
     private List<int> _lesserCoinValuesList;
     private List<int> _otherPlayerCoinValuesList;
     private List<Vector2Int> _otherPlayerCoinsCellIndicesList;
@@ -128,6 +129,7 @@ public class GameManager : MonoBehaviour
 
     private Vector2Int FindTargetCell()
     {
+        _aiCoinValuesList.Clear();
         _lesserCoinValuesList.Clear();
         _otherPlayerCoinsCellIndicesList.Clear();
         _otherPlayerCoinValuesList.Clear();
@@ -151,6 +153,12 @@ public class GameManager : MonoBehaviour
                         _otherPlayerCoinsCellIndicesList.Add(new Vector2Int(x , y));
                         int coinValue = _gridManager.CoinValueData.GetValue(x , y);
                         _otherPlayerCoinValuesList.Add(coinValue);
+                    }
+                    
+                    else if (coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _currentPlayerID)
+                    {
+                        int aiCoinValue = _gridManager.CoinValueData.GetValue(x , y);
+                        _aiCoinValuesList.Add(aiCoinValue);
                     }
                 }
             }
@@ -615,7 +623,8 @@ public class GameManager : MonoBehaviour
         _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         
         _playersListsCapacity = _totalCells / _numberOfPlayers;
-        
+
+        _aiCoinValuesList = new List<int>();
         _lesserCoinValuesList = new List<int>();
         _otherPlayerCoinsCellIndicesList = new List<Vector2Int>();
         _otherPlayerCoinValuesList = new List<int>();
