@@ -169,14 +169,45 @@ public class GameManager : MonoBehaviour
             int aiCoinValue = _coinValue;
             int maxCoinValue = int.MinValue;
 
-            foreach (int coinValue in _otherPlayerCoinValuesList)
+            foreach(int coinValue in _otherPlayerCoinValuesList)
             {
-                if (coinValue < aiCoinValue)
+                if(coinValue < aiCoinValue)
                 {
-                    _lesserCoinValuesList.Add(coinValue);
+                    List<Vector2Int> coinPositions = _otherPlayerCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue).ToList();
+
+                    foreach(Vector2Int coinPosition in coinPositions)
+                    {
+                        bool hasUnblockedAdjacentCell = false;
+
+                        if(coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1 , coinPosition.y))
+                        {
+                            hasUnblockedAdjacentCell = true;
+                        }
+                        
+                        else if(coinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x + 1 , coinPosition.y))
+                        {
+                            hasUnblockedAdjacentCell = true;
+                        }
+                        
+                        else if(coinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y - 1))
+                        {
+                            hasUnblockedAdjacentCell = true;
+                        }
+                        
+                        else if(coinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y + 1))
+                        {
+                            hasUnblockedAdjacentCell = true;
+                        }
+
+                        if(hasUnblockedAdjacentCell)
+                        {
+                            _lesserCoinValuesList.Add(coinValue);
+                            break;
+                        }
+                    }
                 }
 
-                if (coinValue > maxCoinValue)
+                if(coinValue > maxCoinValue)
                 {
                     maxCoinValue = coinValue;
                 }
@@ -194,7 +225,7 @@ public class GameManager : MonoBehaviour
             {
                 Vector2Int adjacentCell = Vector2Int.zero;
 
-                foreach(Vector2Int coinPosition in highestValueCoins)
+                foreach (Vector2Int coinPosition in highestValueCoins)
                 {
                     if(coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1 , coinPosition.y))
                     {
@@ -221,49 +252,6 @@ public class GameManager : MonoBehaviour
                     }
                 }
 
-                if(adjacentCell == Vector2Int.zero)
-                {
-                    List<int> sortedCoinValues = _lesserCoinValuesList.OrderByDescending(value => value).ToList();
-                    
-                    foreach(int lesserValue in sortedCoinValues)
-                    {
-                        if(lesserValue != highestValue)
-                        {
-                            List<Vector2Int> lesserValueCoins = _otherPlayerCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == lesserValue).ToList();
-                            
-                            foreach(Vector2Int coinPosition in lesserValueCoins)
-                            {
-                                adjacentCell = Vector2Int.zero;
-
-                                if(coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1 , coinPosition.y))
-                                {
-                                    adjacentCell = new Vector2Int(coinPosition.x - 1 , coinPosition.y);
-                                }
-                                
-                                else if(coinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x + 1 , coinPosition.y))
-                                {
-                                    adjacentCell = new Vector2Int(coinPosition.x + 1 , coinPosition.y);
-                                }
-                                
-                                else if(coinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y - 1))
-                                {
-                                    adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y - 1);
-                                }
-                                
-                                else if(coinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y + 1))
-                                {
-                                    adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y + 1);
-                                }
-
-                                if(adjacentCell != Vector2Int.zero)
-                                {
-                                    return adjacentCell;
-                                }
-                            }
-                        }
-                    }
-                }
-
                 if(adjacentCell != Vector2Int.zero)
                 {
                     return adjacentCell;
@@ -273,47 +261,45 @@ public class GameManager : MonoBehaviour
             {
                 foreach(int lesserValue in _lesserCoinValuesList.OrderByDescending(value => value))
                 {
-                    if(lesserValue != highestValue)
+                    List<Vector2Int> lesserValueCoins = _otherPlayerCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == lesserValue).ToList();
+
+                    foreach(Vector2Int coinPosition in lesserValueCoins)
                     {
-                        List<Vector2Int> lesserValueCoins = _otherPlayerCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == lesserValue).ToList();
-                        
-                        foreach(Vector2Int coinPosition in lesserValueCoins)
+                        Vector2Int adjacentCell = Vector2Int.zero;
+
+                        if(coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1 , coinPosition.y))
                         {
-                            Vector2Int adjacentCell = Vector2Int.zero;
+                            adjacentCell = new Vector2Int(coinPosition.x - 1 , coinPosition.y);
+                        }
+                        
+                        else if (coinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x + 1 , coinPosition.y))
+                        {
+                            adjacentCell = new Vector2Int(coinPosition.x + 1 , coinPosition.y);
+                        }
+                        
+                        else if (coinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y - 1))
+                        {
+                            adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y - 1);
+                        }
+                        
+                        else if (coinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y + 1))
+                        {
+                            adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y + 1);
+                        }
 
-                            if(coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1 , coinPosition.y))
-                            {
-                                adjacentCell = new Vector2Int(coinPosition.x - 1 , coinPosition.y);
-                            }
-                            
-                            else if(coinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x + 1 , coinPosition.y))
-                            {
-                                adjacentCell = new Vector2Int(coinPosition.x + 1 , coinPosition.y);
-                            }
-                            
-                            else if(coinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y - 1))
-                            {
-                                adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y - 1);
-                            }
-                            
-                            else if(coinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y + 1))
-                            {
-                                adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y + 1);
-                            }
-
-                            if(adjacentCell != Vector2Int.zero)
-                            {
-                                return adjacentCell;
-                            }
+                        if (adjacentCell != Vector2Int.zero)
+                        {
+                            return adjacentCell;
                         }
                     }
                 }
             }
         }
-        
+
         Debug.Log("No suitable placement found within the lesserCoinValuesList. Placed on a Random Cell");
         int randomIndex = Random.Range(0 , _unblockedCellIndicesList.Count);
         return _unblockedCellIndicesList[randomIndex];
+
     }
 
     private void BuffUpAdjacentCoin()
