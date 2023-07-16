@@ -220,6 +220,7 @@ public class InGameUIManager : MonoBehaviour
             _numberOfPlayers = 3;
             _playerNamesArray = new string[_numberOfPlayers];
             _playersTotalWinsArray = new int[_numberOfPlayers];
+            playerNameTMPInputFields[_numberOfPlayers - 1].gameObject.SetActive(true);
             EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
         }
     }
