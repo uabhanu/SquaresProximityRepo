@@ -30,14 +30,14 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
     [SerializeField] private GameObject[] totalReceivedPanelObjs;
     [SerializeField] private GameObject[] winsPanelObjs;
-    [SerializeField] private Slider numberOfPlayersSelectionSlider;
     [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] coinScoreTMPTexts;
+    [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
     [SerializeField] private Toggle[] aiHumanTogglesArray;
-
+    
     private void Start()
     {
         continueButtonObj.SetActive(false);
@@ -50,11 +50,16 @@ public class InGameUIManager : MonoBehaviour
         _playersTotalWinsArray = new int[_numberOfPlayers];
         _totalReceivedArray = new int[_numberOfPlayers];
 
+        for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+        {
+            numberOfPlayersSelectionTogglesArray[i].isOn = false;
+        }
+
         for(int i = 0; i < winsPanelObjs.Length; i++)
         {
             winsPanelObjs[i].SetActive(false);
         }
-        
+
         SubscribeToEvents();
     }
 
@@ -92,10 +97,15 @@ public class InGameUIManager : MonoBehaviour
     
     public void ConfirmButton()
     {
-        if(numberOfPlayersSelectionSlider.value == 0 || numberOfPlayersSelectionSlider.value == 1)
+        if(numberOfPlayersSelectionTogglesArray[0].isOn && numberOfPlayersSelectionTogglesArray[1].isOn)
         {
-            numberOfPlayersSelectionPanelObj.SetActive(false);
-            playerInputPanelObj.SetActive(true);
+            return;
+        }
+        
+        if(numberOfPlayersSelectionTogglesArray[0].isOn || numberOfPlayersSelectionTogglesArray[1].isOn)
+        {
+             numberOfPlayersSelectionPanelObj.SetActive(false);
+             playerInputPanelObj.SetActive(true);
         }
         
         PlayerPrefsManager.LoadData(_playerNamesArray , _playersTotalWinsArray);
@@ -203,10 +213,10 @@ public class InGameUIManager : MonoBehaviour
             playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins: " + _playersTotalWinsArray[i];
         }
     }
-    
+
     public void SetPlayersNumber()
     {
-        if(numberOfPlayersSelectionSlider.value == 0)
+        if(numberOfPlayersSelectionTogglesArray[0].isOn)
         {
             _numberOfPlayers = 2;
             _playerNamesArray = new string[_numberOfPlayers];
@@ -215,7 +225,7 @@ public class InGameUIManager : MonoBehaviour
             EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
         }
         
-        else if(numberOfPlayersSelectionSlider.value == 1)
+        else if(numberOfPlayersSelectionTogglesArray[1].isOn)
         {
             _numberOfPlayers = 3;
             _playerNamesArray = new string[_numberOfPlayers];
