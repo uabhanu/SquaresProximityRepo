@@ -4,32 +4,50 @@ namespace Data
 {
     public static class PlayerPrefsManager
     {
-        public static void LoadData(string[] playerNamesArray , int[] playersTotalWinsArray)
+        private static T Deserialize<T>(string serializedData)
         {
-            for(int i = 0; i < playerNamesArray.Length; i++)
+            try
             {
-                playerNamesArray[i] = PlayerPrefs.GetString("Player " + i + " Name");
-                playersTotalWinsArray[i] = PlayerPrefs.GetInt("Player " + i + " Total Wins");
+                return (T)System.Convert.ChangeType(serializedData , typeof(T));
+            }
+            catch
+            {
+                return default;
             }
         }
-
-        public static void DeleteAll(string[] playerNamesArray , int[] playersTotalWinsArray)
+        
+        private static string Serialize<T>(T data)
+        {
+            return data.ToString();
+        }
+        
+        public static void DeleteAll()
         {
             PlayerPrefs.DeleteAll();
-        
-            for(int i = 0; i < playerNamesArray.Length; i++)
+        }
+
+        public static void LoadData<T>(ref T[] dataArray , string[] keys)
+        {
+            for(int i = 0; i < dataArray.Length; i++)
             {
-                playerNamesArray[i] = "Total Wins ";
-                playersTotalWinsArray[i] = 0;
+                if(PlayerPrefs.HasKey(keys[i]))
+                {
+                    string serializedData = PlayerPrefs.GetString(keys[i]);
+                    dataArray[i] = Deserialize<T>(serializedData);
+                }
+                else
+                {
+                    dataArray[i] = default;
+                }
             }
         }
 
-        public static void SaveData(string[] playerNamesArray , int[] playersTotalWinsArray)
+        public static void SaveData<T>(T[] dataArray , string[] keys)
         {
-            for(int i = 0; i < playerNamesArray.Length; i++)
+            for(int i = 0; i < dataArray.Length; i++)
             {
-                PlayerPrefs.SetString("Player " + i + " Name", playerNamesArray[i]);
-                PlayerPrefs.SetInt("Player " + i + " Total Wins", playersTotalWinsArray[i]);
+                string serializedData = Serialize(dataArray[i]);
+                PlayerPrefs.SetString(keys[i] , serializedData);
             }
 
             PlayerPrefs.Save();
