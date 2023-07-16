@@ -654,6 +654,7 @@ public class GameManager : MonoBehaviour
 
     private void OnAIHumanToggled(int playerID , bool isAI)
     {
+        //Todo This or other code related to this is causing IndexOutOfBounds Error and cannot figure out why
         _isAIArray[playerID] = isAI;
     }
 
