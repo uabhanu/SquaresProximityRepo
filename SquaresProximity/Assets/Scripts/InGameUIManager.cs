@@ -76,7 +76,7 @@ public class InGameUIManager : MonoBehaviour
 
     public void AIHumanToggle()
     {
-        for(int i = 0; i < aiHumanTogglesArray.Length; i++)
+        for(int i = 0; i < _numberOfPlayers; i++)
         {
             bool isAI = aiHumanTogglesArray[i].isOn;
             EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
