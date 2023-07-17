@@ -29,8 +29,12 @@ public class ScoreManager : MonoBehaviour
     private void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
     {
         _coinScoreValuesArray[capturingPlayerID] += capturedCoinValue;
-        _coinScoreValuesArray[capturedPlayerID] -= capturedCoinValue;
-        EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
+
+        if(_coinScoreValuesArray[capturedPlayerID] > 0)
+        {
+            _coinScoreValuesArray[capturedPlayerID] -= capturedCoinValue;
+            EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);   
+        }
     }
     
     private int GetHighestScorePlayer()
