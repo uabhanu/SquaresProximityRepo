@@ -364,12 +364,11 @@ public class GameManager : MonoBehaviour
                         int newAdjacentCoinValue = adjacentCoinValue + 1;
                         _gridManager.CoinValueData.SetValue(x , y , newAdjacentCoinValue);
                         
-                        
                         GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
                         TMP_Text adjacentCoinValueText = adjacentCoinObj.GetComponentInChildren<TMP_Text>();
                         adjacentCoinValueText.text = _gridManager.CoinValueData.GetValue(x , y).ToString();
                         
-                        EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue); //TODO Improve this signature
+                        EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);
                     }
                 }
             }
