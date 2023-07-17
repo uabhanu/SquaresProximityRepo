@@ -13,6 +13,7 @@ namespace Events
         GameOver,
         GameStarted,
         GameTied,
+        HolesToggled,
         MouseLeftClicked,
         MouseMoved,
         NumberOfPlayersSelected,
