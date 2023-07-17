@@ -35,6 +35,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] coinScoreTMPTexts;
+    [SerializeField] private Toggle holesToggle;
     [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
     [SerializeField] private Toggle[] aiHumanTogglesArray;
     
@@ -200,6 +201,11 @@ public class InGameUIManager : MonoBehaviour
             inGameUIPanelsObj.SetActive(true);
             playerInputPanelObj.SetActive(false);
         }
+    }
+
+    public void HolesToggle()
+    {
+        EventsManager.Invoke(Event.HolesToggled);
     }
 
     public void LeaderboardButton()
