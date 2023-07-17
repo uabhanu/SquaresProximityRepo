@@ -365,10 +365,47 @@ public class GameManager : MonoBehaviour
                         _gridManager.CoinValueData.SetValue(x , y , newAdjacentCoinValue);
                         
                         GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
-                        TMP_Text adjacentCoinValueText = adjacentCoinObj.GetComponentInChildren<TMP_Text>();
-                        adjacentCoinValueText.text = _gridManager.CoinValueData.GetValue(x , y).ToString();
-                        
-                        EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);
+                        TMP_Text adjacentCoinValueText = null;
+
+                        if(adjacentCoinObj != null)
+                        {
+                            adjacentCoinValueText = adjacentCoinObj.GetComponentInChildren<TMP_Text>();
+
+                            if(adjacentCoinValueText  == null)
+                            {
+                                int[] offsetX = { -1, 0, 1, -1, 1, -1, 0, 1 };
+                                int[] offsetY = { -1, -1, -1, 0, 0, 1, 1, 1 };
+
+                                for(int i = 0; i < 8; i++)
+                                {
+                                    int adjacentCellIndexX = x + offsetX[i];
+                                    int adjacentCellIndexY = y + offsetY[i];
+                                    
+                                    GameObject adjacentAdjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(adjacentCellIndexX , adjacentCellIndexY);
+                                    
+                                    if(adjacentAdjacentCoinObj != null)
+                                    {
+                                        TMP_Text adjacentAdjacentCoinValueText = adjacentAdjacentCoinObj.GetComponentInChildren<TMP_Text>();
+                                        
+                                        if(adjacentAdjacentCoinValueText != null)
+                                        {
+                                            adjacentCoinValueText = adjacentAdjacentCoinValueText;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if(adjacentCoinValueText != null)
+                            {
+                                adjacentCoinValueText.text = _gridManager.CoinValueData.GetValue(x , y).ToString();
+                                EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);   
+                            }
+                            else
+                            {
+                                Debug.LogWarning("Could not find adjacent cell with TMP_Text component.");
+                            }
+                        }
                     }
                 }
             }
@@ -395,20 +432,23 @@ public class GameManager : MonoBehaviour
 
                 if(isCellBlocked)
                 {
-                    int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
-                    int adjacentPlayerCoinValue = _gridManager.CoinValueData.GetValue(x , y);
-
-                    if(adjacentPlayerID != _currentPlayerID && adjacentPlayerCoinValue < _coinValue)
+                    GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
+                    
+                    if(adjacentCoinObj != null)
                     {
-                        //Debug.Log("Adjacent Coin Value : " + adjacentCoinValue.ToString() + " & " + "Current Coin Value : " + _coinValue);
-                        _gridManager.PlayerIndexData.SetValue(x , y , _currentPlayerID);
-                        EventsManager.Invoke(Event.CoinCaptured , _currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
-                        //Debug.Log($"Changed the coin on adjacent Cell ({x} , {y}) to Player {currentPlayerIndex}");
+                        int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
+                        int adjacentPlayerCoinValue = _gridManager.CoinValueData.GetValue(x , y);
 
-                        UpdateCoinColor(x , y , _currentPlayerID);
+                        //Debug.Log($"Adjacent Cell ({x}, {y}) has a coin placed by Player {adjacentPlayerID}. Coin Value: {adjacentPlayerCoinValue}");
+
+                        if(adjacentPlayerID != _currentPlayerID && adjacentPlayerCoinValue < _coinValue)
+                        {
+                            _gridManager.PlayerIndexData.SetValue(x , y , _currentPlayerID);
+                            EventsManager.Invoke(Event.CoinCaptured , _currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
+                            //Debug.Log($"Changed the coin on adjacent Cell ({x}, {y}) to Player {_currentPlayerID}");
+                            UpdateCoinColor(x , y , _currentPlayerID);
+                        }
                     }
-
-                    //Debug.Log($"Adjacent Cell ({x} , {y}) has a coin placed by Player {playerIndexOfAdjacentCoin}");
                 }
             }
         }
