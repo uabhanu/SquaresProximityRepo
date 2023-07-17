@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     private int _currentPlayerID;
     private int _numberOfPlayers;
     private int _playersListsCapacity;
-    private int _totalCells;
+    //private int _totalCells;
     private int[] _totalReceivedArray;
     private List<int> _playersRemaining;
     private List<List<int>> _playerNumbersList;
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
         _playerInputActions.PCMap.Enable();
 
         _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
-        
+
         SubscribeToEvents();
         UpdateTrailColor();
         UpdateTrailVisibility();
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     {
         if(!_isGameStarted) return;
         
-        if(_totalCells == 0)
+        if(_gridManager.TotalCells == 0)
         {
             EventsManager.Invoke(Event.GameOver);
             EventsManager.Invoke(Event.PlayerTotalReceived , _totalReceivedArray);
@@ -457,10 +457,14 @@ public class GameManager : MonoBehaviour
     private void PlaceCoin()
     {
         //Debug.Log("PlaceCoin called for Player ID: " + _currentPlayerID);
-        
+
         _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
         _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
-        _totalCells--;
+        //_totalCells--;
+        _gridManager.TotalCells--;
+        
+        //Debug.Log("Total Cells : " + _totalCells);
+        
         EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayerID);
 
         if(!_gridManager.IsCellBlockedData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y))
@@ -698,9 +702,8 @@ public class GameManager : MonoBehaviour
         _isGameStarted = true;
 
         _gridManager = FindObjectOfType<GridManager>();
-        _totalCells = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
-        
-        _playersListsCapacity = _totalCells / _numberOfPlayers;
+
+        _playersListsCapacity = _gridManager.TotalCells / _numberOfPlayers;
 
         _selfCoinsCellIndicesList = new List<Vector2Int>();
         _selfCoinValuesList = new List<int>();
