@@ -1,13 +1,20 @@
+using Event = Events.Event;
+using Events;
+using Random = UnityEngine.Random;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
+    private bool _shouldGenerateEmptyCells;
     private GridData<bool> _isCellBlockedData;
     private GridData<GameObject> _coinOnTheCellData;
+    private GridData<GameObject> _cellPrefabData;
     private GridData<int> _coinValueData;
     private GridData<int> _playerIndexData;
     private GridData<SpriteRenderer> _cellSpriteRenderersData;
-    private readonly Vector2Int _invalidCellIndex = new Vector2Int(-1 , -1);
+    private readonly Vector2Int _invalidCellIndex = new (-1 , -1);
 
     [SerializeField] private bool isTestingMode;
     [SerializeField] private GameObject cellPrefab;
@@ -51,7 +58,6 @@ public class GridManager : MonoBehaviour
 
     private void Awake()
     {
-
         if(isTestingMode)
         {
             GridInfo.Cols = 12;
@@ -62,28 +68,21 @@ public class GridManager : MonoBehaviour
             GridInfo.Cols = columns;
             GridInfo.Rows = rows;
         }
-        
+
+        _cellPrefabData = new GridData<GameObject>(GridInfo);
         CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
         CoinOnTheCellData = new GridData<GameObject>(GridInfo);
         CoinValueData = new GridData<int>(GridInfo);
         IsCellBlockedData = new GridData<bool>(GridInfo);
         PlayerIndexData = new GridData<int>(GridInfo);
-        GenerateGrid();
+        SubscribeToEvents();
     }
 
-    private void GenerateGrid()
+    private void OnDestroy()
     {
-        for(int col = 0; col < GridInfo.Cols; col++)
-        {
-            for(int row = 0; row < GridInfo.Rows; row++)
-            {
-                Vector2 cellWorldPos = CellToWorld(col , row);
-                GameObject cell = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
-                CellSpriteRenderersData.SetValue(col , row , cell.GetComponentInChildren<SpriteRenderer>());
-            }
-        }
+        UnsubscribeFromEvents();
     }
-    
+
     public Vector2 CellToWorld(int col , int row)
     {
         var x = (col * GridInfo.CellSize) + transform.position.x;
@@ -104,5 +103,74 @@ public class GridManager : MonoBehaviour
         }
 
         return new Vector2Int(col , row);
+    }
+    
+    private void GenerateGrid()
+    {
+        List<Vector2Int> cellIndices = new List<Vector2Int>();
+        
+        for(int col = 0; col < GridInfo.Cols; col++)
+        {
+            for(int row = 0; row < GridInfo.Rows; row++)
+            {
+                cellIndices.Add(new Vector2Int(col , row));
+            }
+        }
+
+        if(_shouldGenerateEmptyCells)
+        {
+            int emptyCellsCount = 3 * Random.Range(1 , 7);
+
+            if(emptyCellsCount > cellIndices.Count)
+            {
+                emptyCellsCount = cellIndices.Count;
+            }
+
+            for(int i = 0; i < emptyCellsCount; i++)
+            {
+                int randomIndex = Random.Range(0 , cellIndices.Count);
+                Vector2Int cellIndex = cellIndices[randomIndex];
+                cellIndices.RemoveAt(randomIndex);
+                
+                IsCellBlockedData.SetValue(cellIndex.x , cellIndex.y , true);
+                
+                GameObject cellObject = _cellPrefabData.GetValue(cellIndex.x , cellIndex.y);
+                
+                if(cellObject != null)
+                {
+                    cellObject.SetActive(false);
+                }
+            }
+        }
+
+        foreach(Vector2Int cellIndex in cellIndices)
+        {
+            Vector2 cellWorldPos = CellToWorld(cellIndex.x , cellIndex.y);
+            GameObject cell = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
+            CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cell.GetComponentInChildren<SpriteRenderer>());
+            CoinOnTheCellData.SetValue(cellIndex.x , cellIndex.y , cell);
+        }
+    }
+    
+    private void OnGameStarted()
+    {
+        GenerateGrid();
+    }
+
+    private void OnHolesToggled()
+    {
+        _shouldGenerateEmptyCells = !_shouldGenerateEmptyCells;
+    }
+    
+    private void SubscribeToEvents()
+    {
+        EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
+        EventsManager.SubscribeToEvent(Event.HolesToggled , new Action(OnHolesToggled));
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
+        EventsManager.UnsubscribeFromEvent(Event.HolesToggled , new Action(OnHolesToggled));
     }
 }
