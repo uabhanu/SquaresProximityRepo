@@ -8,6 +8,8 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     private bool _shouldGenerateEmptyCells;
+    private int _emptyCellsCount;
+    private int _totalCells;
     private GridData<bool> _isCellBlockedData;
     private GridData<GameObject> _coinOnTheCellData;
     private GridData<GameObject> _cellPrefabData;
@@ -53,6 +55,12 @@ public class GridManager : MonoBehaviour
     }
     
     public GridInfo GridInfo => gridInfo;
+    
+    public int TotalCells
+    {
+        get => _totalCells;
+        set => _totalCells = value;
+    }
 
     public Vector2Int InvalidCellIndex => _invalidCellIndex;
 
@@ -75,6 +83,7 @@ public class GridManager : MonoBehaviour
         CoinValueData = new GridData<int>(GridInfo);
         IsCellBlockedData = new GridData<bool>(GridInfo);
         PlayerIndexData = new GridData<int>(GridInfo);
+        TotalCells = GridInfo.Cols * GridInfo.Rows;
         SubscribeToEvents();
     }
 
@@ -119,21 +128,22 @@ public class GridManager : MonoBehaviour
 
         if(_shouldGenerateEmptyCells)
         {
-            int emptyCellsCount = 3 * Random.Range(1 , 7);
+            _emptyCellsCount = 3 * Random.Range(1 , 7);
+            TotalCells -= _emptyCellsCount;
 
-            if(emptyCellsCount > cellIndices.Count)
+            if(_emptyCellsCount > cellIndices.Count)
             {
-                emptyCellsCount = cellIndices.Count;
+                _emptyCellsCount = cellIndices.Count;
             }
 
-            for(int i = 0; i < emptyCellsCount; i++)
+            for(int i = 0; i < _emptyCellsCount; i++)
             {
                 int randomIndex = Random.Range(0 , cellIndices.Count);
                 Vector2Int cellIndex = cellIndices[randomIndex];
                 cellIndices.RemoveAt(randomIndex);
                 
                 IsCellBlockedData.SetValue(cellIndex.x , cellIndex.y , true);
-                
+
                 GameObject cellObject = _cellPrefabData.GetValue(cellIndex.x , cellIndex.y);
                 
                 if(cellObject != null)
