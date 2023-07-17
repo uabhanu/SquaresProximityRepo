@@ -19,11 +19,11 @@ public class GameManager : MonoBehaviour
     private GameObject _coinUIObj;
     private GameObject _mouseTrailObj;
     private GridManager _gridManager;
-    private List<int> _aiCoinValuesList;
     private List<int> _lesserCoinValuesList;
     private List<int> _otherPlayerCoinValuesList;
-    private List<Vector2Int> _aiCoinsCellIndicesList;
+    private List<int> _selfCoinValuesList;
     private List<Vector2Int> _otherPlayerCoinsCellIndicesList;
+    private List<Vector2Int> _selfCoinsCellIndicesList;
     private List<Vector2Int> _unblockedCellIndicesList;
     private InputActions _playerInputActions;
     private int _coinValue;
@@ -130,8 +130,8 @@ public class GameManager : MonoBehaviour
 
     private Vector2Int FindTargetCell()
     {
-        _aiCoinsCellIndicesList.Clear();
-        _aiCoinValuesList.Clear();
+        _selfCoinsCellIndicesList.Clear();
+        _selfCoinValuesList.Clear();
         _lesserCoinValuesList.Clear();
         _otherPlayerCoinsCellIndicesList.Clear();
         _otherPlayerCoinValuesList.Clear();
@@ -160,8 +160,8 @@ public class GameManager : MonoBehaviour
                     else if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _currentPlayerID)
                     {
                         int aiCoinValue = _gridManager.CoinValueData.GetValue(x , y);
-                        _aiCoinsCellIndicesList.Add(new Vector2Int(x , y));
-                        _aiCoinValuesList.Add(aiCoinValue);
+                        _selfCoinsCellIndicesList.Add(new Vector2Int(x , y));
+                        _selfCoinValuesList.Add(aiCoinValue);
                     }
                 }
             }
@@ -288,13 +288,13 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        else if (_aiCoinValuesList.Count > 0)
+        else if (_selfCoinValuesList.Count > 0)
         {
             Debug.Log("No suitable placement found within the lesserCoinValuesList. Placed next to AI's coin");
 
             List<Vector2Int> adjacentCells = new List<Vector2Int>();
 
-            foreach (Vector2Int coinPosition in _aiCoinsCellIndicesList)
+            foreach (Vector2Int coinPosition in _selfCoinsCellIndicesList)
             {
                 if (coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1, coinPosition.y))
                 {
@@ -657,8 +657,8 @@ public class GameManager : MonoBehaviour
         
         _playersListsCapacity = _totalCells / _numberOfPlayers;
 
-        _aiCoinsCellIndicesList = new List<Vector2Int>();
-        _aiCoinValuesList = new List<int>();
+        _selfCoinsCellIndicesList = new List<Vector2Int>();
+        _selfCoinValuesList = new List<int>();
         _lesserCoinValuesList = new List<int>();
         _otherPlayerCoinsCellIndicesList = new List<Vector2Int>();
         _otherPlayerCoinValuesList = new List<int>();
