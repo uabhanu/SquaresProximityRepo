@@ -288,42 +288,39 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        else if(_aiCoinValuesList.Count > 0)
+        else if (_aiCoinValuesList.Count > 0)
         {
             Debug.Log("No suitable placement found within the lesserCoinValuesList. Placed next to AI's coin");
-            
-            Vector2Int adjacentCell = Vector2Int.zero;
 
-            foreach(Vector2Int coinPosition in _aiCoinsCellIndicesList)
+            List<Vector2Int> adjacentCells = new List<Vector2Int>();
+
+            foreach (Vector2Int coinPosition in _aiCoinsCellIndicesList)
             {
-                if(coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1 , coinPosition.y))
+                if (coinPosition.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x - 1, coinPosition.y))
                 {
-                    adjacentCell = new Vector2Int(coinPosition.x - 1 , coinPosition.y);
-                    break;
+                    adjacentCells.Add(new Vector2Int(coinPosition.x - 1, coinPosition.y));
                 }
 
-                if(coinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x + 1 , coinPosition.y))
+                if (coinPosition.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x + 1, coinPosition.y))
                 {
-                    adjacentCell = new Vector2Int(coinPosition.x + 1 , coinPosition.y);
-                    break;
+                    adjacentCells.Add(new Vector2Int(coinPosition.x + 1, coinPosition.y));
                 }
 
-                if(coinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y - 1))
+                if (coinPosition.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x, coinPosition.y - 1))
                 {
-                    adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y - 1);
-                    break;
+                    adjacentCells.Add(new Vector2Int(coinPosition.x, coinPosition.y - 1));
                 }
 
-                if(coinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x , coinPosition.y + 1))
+                if (coinPosition.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinPosition.x, coinPosition.y + 1))
                 {
-                    adjacentCell = new Vector2Int(coinPosition.x , coinPosition.y + 1);
-                    break;
+                    adjacentCells.Add(new Vector2Int(coinPosition.x, coinPosition.y + 1));
                 }
             }
 
-            if(adjacentCell != Vector2Int.zero)
+            if (adjacentCells.Count > 0)
             {
-                return adjacentCell;
+                int randomIndex = Random.Range(0, adjacentCells.Count);
+                return adjacentCells[randomIndex];
             }
         }
 
