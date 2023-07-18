@@ -51,4 +51,5 @@ MonoBehaviour:
     Cols: 12
     CellSize: 1
   columns: 12
+  holeCellsCount: 18
   rows: 8
