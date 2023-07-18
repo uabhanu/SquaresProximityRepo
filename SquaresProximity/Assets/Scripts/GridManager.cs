@@ -8,7 +8,6 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     private bool _shouldGenerateEmptyCells;
-    private int _emptyCellsCount;
     private int _totalCells;
     private GridData<bool> _isCellBlockedData;
     private GridData<GameObject> _coinOnTheCellData;
@@ -22,6 +21,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject cellPrefab;
     [HideInInspector] [SerializeField] private GridInfo gridInfo;
     [SerializeField] private int columns;
+    [SerializeField] private int holeCellsCount;
     [SerializeField] private int rows;
 
     public GridData<bool> IsCellBlockedData
@@ -126,29 +126,41 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        if(_shouldGenerateEmptyCells)
+        if (_shouldGenerateEmptyCells)
         {
-            _emptyCellsCount = 3 * Random.Range(1 , 7);
-            TotalCells -= _emptyCellsCount;
+            TotalCells -= holeCellsCount;
 
-            if(_emptyCellsCount > cellIndices.Count)
+            if(holeCellsCount > cellIndices.Count)
             {
-                _emptyCellsCount = cellIndices.Count;
+                holeCellsCount = cellIndices.Count;
             }
 
-            for(int i = 0; i < _emptyCellsCount; i++)
+            for(int i = 0; i < holeCellsCount; i++)
             {
-                int randomIndex = Random.Range(0 , cellIndices.Count);
+                int randomIndex = Random.Range(0, cellIndices.Count);
                 Vector2Int cellIndex = cellIndices[randomIndex];
                 cellIndices.RemoveAt(randomIndex);
-                
-                IsCellBlockedData.SetValue(cellIndex.x , cellIndex.y , true);
 
-                GameObject cellObject = _cellPrefabData.GetValue(cellIndex.x , cellIndex.y);
-                
+                IsCellBlockedData.SetValue(cellIndex.x, cellIndex.y, true);
+
+                GameObject cellObject = _cellPrefabData.GetValue(cellIndex.x, cellIndex.y);
+                SpriteRenderer cellRenderer;
+
                 if(cellObject != null)
                 {
-                    cellObject.SetActive(false);
+                    cellRenderer = cellObject.GetComponentInChildren<SpriteRenderer>();
+                    cellRenderer.color = Color.black;
+                }
+                else
+                {
+                    Vector2 cellWorldPos = CellToWorld(cellIndex.x , cellIndex.y);
+                    cellObject = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
+                    cellRenderer = cellObject.GetComponentInChildren<SpriteRenderer>();
+                    cellRenderer.color = Color.black;
+                    
+                    _cellPrefabData.SetValue(cellIndex.x , cellIndex.y , cellObject);
+                    CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
+                    CoinOnTheCellData.SetValue(cellIndex.x , cellIndex.y , cellObject);
                 }
             }
         }
