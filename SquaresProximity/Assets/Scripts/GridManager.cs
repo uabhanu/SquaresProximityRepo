@@ -126,7 +126,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        if (_shouldGenerateEmptyCells)
+        if(_shouldGenerateEmptyCells)
         {
             TotalCells -= holeCellsCount;
 
@@ -137,31 +137,19 @@ public class GridManager : MonoBehaviour
 
             for(int i = 0; i < holeCellsCount; i++)
             {
-                int randomIndex = Random.Range(0, cellIndices.Count);
+                int randomIndex = Random.Range(0 , cellIndices.Count);
                 Vector2Int cellIndex = cellIndices[randomIndex];
                 cellIndices.RemoveAt(randomIndex);
 
-                IsCellBlockedData.SetValue(cellIndex.x, cellIndex.y, true);
+                IsCellBlockedData.SetValue(cellIndex.x , cellIndex.y , true);
 
-                GameObject cellObject = _cellPrefabData.GetValue(cellIndex.x, cellIndex.y);
-                SpriteRenderer cellRenderer;
-
-                if(cellObject != null)
-                {
-                    cellRenderer = cellObject.GetComponentInChildren<SpriteRenderer>();
-                    cellRenderer.color = Color.black;
-                }
-                else
-                {
-                    Vector2 cellWorldPos = CellToWorld(cellIndex.x , cellIndex.y);
-                    cellObject = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
-                    cellRenderer = cellObject.GetComponentInChildren<SpriteRenderer>();
-                    cellRenderer.color = Color.black;
-                    
-                    _cellPrefabData.SetValue(cellIndex.x , cellIndex.y , cellObject);
-                    CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
-                    CoinOnTheCellData.SetValue(cellIndex.x , cellIndex.y , cellObject);
-                }
+                Vector2 cellWorldPos = CellToWorld(cellIndex.x , cellIndex.y);
+                GameObject cellObject = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
+                SpriteRenderer cellRenderer = cellObject.GetComponentInChildren<SpriteRenderer>();
+                cellRenderer.color = Color.black;
+                
+                _cellPrefabData.SetValue(cellIndex.x , cellIndex.y , cellObject);
+                CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
             }
         }
 
