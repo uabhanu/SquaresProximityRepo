@@ -8,6 +8,7 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     private bool _shouldGenerateEmptyCells;
+    private int _holeCellsCount;
     private int _totalCells;
     private GridData<bool> _isCellBlockedData;
     private GridData<GameObject> _coinOnTheCellData;
@@ -21,7 +22,6 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject cellPrefab;
     [HideInInspector] [SerializeField] private GridInfo gridInfo;
     [SerializeField] private int columns;
-    [SerializeField] private int holeCellsCount;
     [SerializeField] private int rows;
 
     public GridData<bool> IsCellBlockedData
@@ -81,6 +81,7 @@ public class GridManager : MonoBehaviour
         CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
         CoinOnTheCellData = new GridData<GameObject>(GridInfo);
         CoinValueData = new GridData<int>(GridInfo);
+        _holeCellsCount = GetRandomDivisibleNumber(18 , 30 , 2 , 3);
         IsCellBlockedData = new GridData<bool>(GridInfo);
         PlayerIndexData = new GridData<int>(GridInfo);
         TotalCells = GridInfo.Cols * GridInfo.Rows;
@@ -90,6 +91,18 @@ public class GridManager : MonoBehaviour
     private void OnDestroy()
     {
         UnsubscribeFromEvents();
+    }
+    
+    private int GetRandomDivisibleNumber(int minValue , int maxValue , int divisor1 , int divisor2)
+    {
+        int randomValue = Random.Range(minValue , maxValue + 1);
+        
+        while(randomValue % divisor1 != 0 || randomValue % divisor2 != 0)
+        {
+            randomValue = Random.Range(minValue , maxValue + 1);
+        }
+        
+        return randomValue;
     }
 
     public Vector2 CellToWorld(int col , int row)
@@ -128,14 +141,14 @@ public class GridManager : MonoBehaviour
 
         if(_shouldGenerateEmptyCells)
         {
-            TotalCells -= holeCellsCount;
+            TotalCells -= _holeCellsCount;
 
-            if(holeCellsCount > cellIndices.Count)
+            if(_holeCellsCount > cellIndices.Count)
             {
-                holeCellsCount = cellIndices.Count;
+                _holeCellsCount = cellIndices.Count;
             }
 
-            for(int i = 0; i < holeCellsCount; i++)
+            for(int i = 0; i < _holeCellsCount; i++)
             {
                 int randomIndex = Random.Range(0 , cellIndices.Count);
                 Vector2Int cellIndex = cellIndices[randomIndex];
