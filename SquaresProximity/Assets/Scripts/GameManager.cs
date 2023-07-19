@@ -30,7 +30,6 @@ public class GameManager : MonoBehaviour
     private int _currentPlayerID;
     private int _numberOfPlayers;
     private int _playersListsCapacity;
-    //private int _totalCells;
     private int[] _totalReceivedArray;
     private List<int> _playersRemaining;
     private List<List<int>> _playerNumbersList;
@@ -721,15 +720,19 @@ public class GameManager : MonoBehaviour
 
         for(int i = 0; i < _numberOfPlayers; i++)
         {
-            List<int> playerNumbers = new List<int>(_playersListsCapacity);
+            List<int> randomNumbers = new List<int>(_playersListsCapacity);
 
-            for(int j = 1; j <= _playersListsCapacity; j++)
+            for(int j = 0; j < _playersListsCapacity; j++)
             {
-                playerNumbers.Add(j % 20 + 1);
+                int randomValue = Random.Range(1 , 21);
+                randomNumbers.Add(randomValue);
             }
 
-            ShuffleList(playerNumbers);
-            _playerNumbersList.Add(playerNumbers);
+            for(i = 0; i < _numberOfPlayers; i++)
+            {
+                ShuffleList(randomNumbers);
+                _playerNumbersList.Add(new List<int>(randomNumbers));
+            }
         }
 
         StartPlayerTurn();
