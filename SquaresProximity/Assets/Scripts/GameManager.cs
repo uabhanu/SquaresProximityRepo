@@ -254,37 +254,63 @@ public class GameManager : MonoBehaviour
             Debug.Log("Placed next to the lesser values list highest value");
 
             int highestCoinValue = _lesserCoinValuesList.Max();
-            
+
             List<Vector2Int> highestValueCoinCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == highestCoinValue).ToList();
+
+            List<Vector2Int> bestAdjacentCells = new List<Vector2Int>();
+            int maxAdjacentCoins = 0;
 
             foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
             {
-                Vector2Int adjacentCellIndex = Vector2Int.zero;
+                List<Vector2Int> adjacentCells = new List<Vector2Int>();
 
                 if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                 {
-                    adjacentCellIndex = new Vector2Int(coinCellIndex.x - 1, coinCellIndex.y);
-                }
-                
-                else if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y))
-                {
-                    adjacentCellIndex = new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y);
-                }
-                
-                else if(coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y - 1))
-                {
-                    adjacentCellIndex = new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1);
-                }
-                
-                else if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
-                {
-                    adjacentCellIndex = new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1);
+                    adjacentCells.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y));
                 }
 
-                if(adjacentCellIndex != Vector2Int.zero)
+                if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y))
                 {
-                    return adjacentCellIndex;
+                    adjacentCells.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y));
                 }
+
+                if(coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y - 1))
+                {
+                    adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1));
+                }
+
+                if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
+                {
+                    adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
+                }
+
+                int adjacentCoinCount = 0;
+
+                foreach(Vector2Int adjacentCell in adjacentCells)
+                {
+                    if(_gridManager.CoinOnTheCellData.GetValue(adjacentCell.x , adjacentCell.y) != null)
+                    {
+                        adjacentCoinCount++;
+                    }
+                }
+
+                if(adjacentCoinCount > maxAdjacentCoins)
+                {
+                    bestAdjacentCells.Clear();
+                    bestAdjacentCells.AddRange(adjacentCells);
+                    maxAdjacentCoins = adjacentCoinCount;
+                }
+                
+                else if(adjacentCoinCount == maxAdjacentCoins)
+                {
+                    bestAdjacentCells.AddRange(adjacentCells);
+                }
+            }
+
+            if(bestAdjacentCells.Count > 0)
+            {
+                int randomIndex = Random.Range(0 , bestAdjacentCells.Count);
+                return bestAdjacentCells[randomIndex];
             }
 
             foreach(int lesserValue in _lesserCoinValuesList.OrderByDescending(value => value))
