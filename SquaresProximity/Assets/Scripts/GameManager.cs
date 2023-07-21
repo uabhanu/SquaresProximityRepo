@@ -251,7 +251,7 @@ public class GameManager : MonoBehaviour
 
         if(_lesserCoinValuesList.Count > 0)
         {
-            Debug.Log("Placed next to the lesser values list highest value");
+             Debug.Log("Placed next to the lesser values list highest value");
 
             int highestCoinValue = _lesserCoinValuesList.Max();
 
@@ -309,8 +309,70 @@ public class GameManager : MonoBehaviour
 
             if(bestAdjacentCells.Count > 0)
             {
-                int randomIndex = Random.Range(0 , bestAdjacentCells.Count);
-                return bestAdjacentCells[randomIndex];
+                Vector2Int bestCell = bestAdjacentCells[0];
+                bool foundCellWithOneNeighbor = false;
+
+                foreach(Vector2Int cell in bestAdjacentCells)
+                {
+                    int neighborCount = 0;
+
+                    List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
+                    {
+                        new (cell.x - 1 , cell.y),
+                        new (cell.x + 1 , cell.y),
+                        new (cell.x , cell.y - 1),
+                        new (cell.x , cell.y + 1)
+                    };
+
+                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+                    {
+                        if(_gridManager.CoinOnTheCellData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != null)
+                        {
+                            neighborCount++;
+                        }
+                    }
+
+                    if(neighborCount == 1)
+                    {
+                        bestCell = cell;
+                        foundCellWithOneNeighbor = true;
+                        break;
+                    }
+                }
+
+                if(!foundCellWithOneNeighbor)
+                {
+                    int minNeighborCount = int.MaxValue;
+
+                    foreach(Vector2Int cell in bestAdjacentCells)
+                    {
+                        int neighborCount = 0;
+
+                        List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
+                        {
+                            new (cell.x - 1 , cell.y),
+                            new (cell.x + 1 , cell.y),
+                            new (cell.x , cell.y - 1),
+                            new (cell.x , cell.y + 1)
+                        };
+
+                        foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+                        {
+                            if(_gridManager.CoinOnTheCellData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != null)
+                            {
+                                neighborCount++;
+                            }
+                        }
+
+                        if(neighborCount < minNeighborCount)
+                        {
+                            minNeighborCount = neighborCount;
+                            bestCell = cell;
+                        }
+                    }
+                }
+
+                return bestCell;
             }
 
             foreach(int lesserValue in _lesserCoinValuesList.OrderByDescending(value => value))
