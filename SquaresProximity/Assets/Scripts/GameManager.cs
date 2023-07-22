@@ -311,7 +311,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-
         if(_selfCoinValuesList.Count > 0)
         {
             Debug.Log("Placed next to the self coin values list highest value");
