@@ -481,11 +481,10 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        
-        Debug.Log("No suitable placement found within the lesserCoinsList or selfCoinValuesList. Placed on a random cell");
-        
+
         if(_unblockedCellIndicesList.Count > 0)
         {
+            Debug.Log("No suitable placement found within the lesserCoinsList or selfCoinValuesList. Placed on a random cell");
             int randomIndexOutside = Random.Range(0 , _unblockedCellIndicesList.Count);
             return _unblockedCellIndicesList[randomIndexOutside];
         }
