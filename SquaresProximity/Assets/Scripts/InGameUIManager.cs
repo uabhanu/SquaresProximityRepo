@@ -183,8 +183,6 @@ public class InGameUIManager : MonoBehaviour
 
     public void EnterButton()
     {
-        bool allNamesFilled = true;
-        
         string[] defaultPlayerNames =
         {
             "Red",
@@ -206,19 +204,15 @@ public class InGameUIManager : MonoBehaviour
 
             if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
             {
-                allNamesFilled = false;
                 _playerNamesArray[i] = defaultPlayerNames[i];
                 playerNameTMPInputFields[i].text = _playerNamesArray[i];
                 aiHumanTogglesArray[0].isOn = true;
             }
         }
-
-        if(allNamesFilled)
-        {
-            inGameUIPanelsObj.SetActive(true);
-            playerInputPanelObj.SetActive(false);
-            EventsManager.Invoke(Event.GameStarted);
-        }
+        
+        inGameUIPanelsObj.SetActive(true);
+        playerInputPanelObj.SetActive(false);
+        EventsManager.Invoke(Event.GameStarted);
     }
 
     public void HolesToggle()
