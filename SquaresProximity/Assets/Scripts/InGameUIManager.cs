@@ -35,7 +35,6 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] coinScoreTMPTexts;
-    [SerializeField] private Toggle holesToggle;
     [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
     [SerializeField] private Toggle[] aiHumanTogglesArray;
     
@@ -176,6 +175,13 @@ public class InGameUIManager : MonoBehaviour
     {
         bool allNamesFilled = true;
         
+        string[] defaultPlayerNames =
+        {
+            "Red",
+            "Green",
+            "Blue"
+        };
+
         if(_numberOfPlayers == 2)
         {
             inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers].SetActive(false);
@@ -191,15 +197,16 @@ public class InGameUIManager : MonoBehaviour
             if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
             {
                 allNamesFilled = false;
-                break;
+                _playerNamesArray[i] = defaultPlayerNames[i];
+                playerNameTMPInputFields[i].text = _playerNamesArray[i];
             }
         }
 
         if(allNamesFilled)
         {
-            EventsManager.Invoke(Event.GameStarted);
             inGameUIPanelsObj.SetActive(true);
             playerInputPanelObj.SetActive(false);
+            EventsManager.Invoke(Event.GameStarted);
         }
     }
 
