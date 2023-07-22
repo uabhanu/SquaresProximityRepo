@@ -130,10 +130,10 @@ public class GameManager : MonoBehaviour
 
     private Vector2Int FindTargetCell()
     {
-        _selfCoinsCellIndicesList.Clear();
-        _selfCoinValuesList.Clear();
         _lesserCoinsCellIndicesList.Clear();
         _lesserCoinValuesList.Clear();
+        _selfCoinsCellIndicesList.Clear();
+        _selfCoinValuesList.Clear();
         _otherPlayerCoinsCellIndicesList.Clear();
         _otherPlayerCoinValuesList.Clear();
         _unblockedCellIndicesList.Clear();
