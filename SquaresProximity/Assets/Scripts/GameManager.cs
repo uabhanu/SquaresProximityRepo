@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
                     
                     if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _currentPlayerID)
                     {
-                        Vector2Int adjacentCellIndex = Vector2Int.zero;
+                        Vector2Int adjacentCellIndex = _gridManager.InvalidCellIndex;
 
                         if(x > 0 && !_gridManager.IsCellBlockedData.GetValue(x - 1 , y))
                         {
@@ -182,7 +182,7 @@ public class GameManager : MonoBehaviour
                             adjacentCellIndex = new Vector2Int(x , y + 1);
                         }
 
-                        if(adjacentCellIndex != Vector2Int.zero)
+                        if(adjacentCellIndex != _gridManager.InvalidCellIndex)
                         {
                             int aiCoinValue = _gridManager.CoinValueData.GetValue(x , y);
                             _selfCoinsCellIndicesList.Add(adjacentCellIndex);
