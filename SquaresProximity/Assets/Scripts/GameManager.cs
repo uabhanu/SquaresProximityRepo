@@ -226,7 +226,7 @@ public class GameManager : MonoBehaviour
 
             List<Vector2Int> highestValueCoinCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == highestCoinValue).ToList();
 
-            Vector2Int bestCell = Vector2Int.zero;
+            Vector2Int bestCell = _gridManager.InvalidCellIndex;
             int maxAdjacentCoinCount = 0;
 
             foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
@@ -282,7 +282,7 @@ public class GameManager : MonoBehaviour
 
             foreach(Vector2Int coinCellIndex in lesserValueCoinCellIndicesList)
             {
-                Vector2Int adjacentCellIndex = Vector2Int.zero;
+                Vector2Int adjacentCellIndex = _gridManager.InvalidCellIndex;
 
                 if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                 {
@@ -304,7 +304,7 @@ public class GameManager : MonoBehaviour
                     adjacentCellIndex = new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1);
                 }
 
-                if(adjacentCellIndex != Vector2Int.zero)
+                if(adjacentCellIndex != _gridManager.InvalidCellIndex)
                 {
                     return adjacentCellIndex;
                 }
@@ -448,7 +448,7 @@ public class GameManager : MonoBehaviour
         
             foreach(Vector2Int coinCellIndex in selfCoinValueCellIndicesList)
             {
-                Vector2Int adjacentCellIndex = Vector2Int.zero;
+                Vector2Int adjacentCellIndex = _gridManager.InvalidCellIndex;
         
                 if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                 {
@@ -470,7 +470,7 @@ public class GameManager : MonoBehaviour
                     adjacentCellIndex = new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1);
                 }
         
-                if(adjacentCellIndex != Vector2Int.zero)
+                if(adjacentCellIndex != _gridManager.InvalidCellIndex)
                 {
                     return adjacentCellIndex;
                 }
