@@ -97,33 +97,42 @@ public class InGameUIManager : MonoBehaviour
     
     public void ConfirmButton()
     {
-        if(numberOfPlayersSelectionTogglesArray[0].isOn && numberOfPlayersSelectionTogglesArray[1].isOn)
+        bool isAnyToggleOn = numberOfPlayersSelectionTogglesArray[0].isOn || numberOfPlayersSelectionTogglesArray[1].isOn;
+
+        if(!isAnyToggleOn)
+        {
+            _numberOfPlayers = 2;
+            numberOfPlayersSelectionTogglesArray[0].isOn = true;
+        }
+        
+        else if(numberOfPlayersSelectionTogglesArray[0].isOn && numberOfPlayersSelectionTogglesArray[1].isOn)
         {
             return;
         }
-        
-        if(numberOfPlayersSelectionTogglesArray[0].isOn || numberOfPlayersSelectionTogglesArray[1].isOn)
+        else
         {
-             numberOfPlayersSelectionPanelObj.SetActive(false);
-             playerInputPanelObj.SetActive(true);
+            _numberOfPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
         }
         
+        numberOfPlayersSelectionPanelObj.SetActive(false);
+        playerInputPanelObj.SetActive(true);
+
         string[] nameKeys = new string[_numberOfPlayers];
 
         for(int i = 0; i < _numberOfPlayers; i++)
         {
             nameKeys[i] = "Player" + i + "Name";
         }
-        
+
         PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
-        
+
         string[] winsKeys = new string[_numberOfPlayers];
-        
+
         for(int i = 0; i < _numberOfPlayers; i++)
         {
             winsKeys[i] = "Player" + i + "TotalWins";
         }
-        
+
         PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
 
         for(int i = 0; i < _numberOfPlayers; i++)
