@@ -209,6 +209,7 @@ public class InGameUIManager : MonoBehaviour
                 allNamesFilled = false;
                 _playerNamesArray[i] = defaultPlayerNames[i];
                 playerNameTMPInputFields[i].text = _playerNamesArray[i];
+                aiHumanTogglesArray[0].isOn = true;
             }
         }
 
