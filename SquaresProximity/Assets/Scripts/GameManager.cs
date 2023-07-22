@@ -506,11 +506,11 @@ public class GameManager : MonoBehaviour
                 return bestCell;
             }
         
-            foreach(int lesserValue in _selfCoinValuesList.OrderByDescending(value => value))
+            foreach(int selfValue in _selfCoinValuesList.OrderByDescending(value => value))
             {
-                List<Vector2Int> lesserValueCoinCellIndicesList = _selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == lesserValue).ToList();
+                List<Vector2Int> selfCoinValueCellIndicesList = _selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == selfValue).ToList();
         
-                foreach(Vector2Int coinCellIndex in lesserValueCoinCellIndicesList)
+                foreach(Vector2Int coinCellIndex in selfCoinValueCellIndicesList)
                 {
                     Vector2Int adjacentCellIndex = Vector2Int.zero;
         
