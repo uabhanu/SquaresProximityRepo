@@ -109,6 +109,7 @@ public class InGameUIManager : MonoBehaviour
         {
             return;
         }
+        
         else
         {
             _numberOfPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
