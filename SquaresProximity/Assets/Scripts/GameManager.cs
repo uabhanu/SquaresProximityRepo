@@ -160,34 +160,9 @@ public class GameManager : MonoBehaviour
                     
                     if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _currentPlayerID)
                     {
-                        Vector2Int adjacentCellIndex = _gridManager.InvalidCellIndex;
-
-                        if(x > 0 && !_gridManager.IsCellBlockedData.GetValue(x - 1 , y))
-                        {
-                            adjacentCellIndex = new Vector2Int(x - 1 , y);
-                        }
-                        
-                        else if(x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(x + 1 , y))
-                        {
-                            adjacentCellIndex = new Vector2Int(x + 1 , y);
-                        }
-                        
-                        else if(y > 0 && !_gridManager.IsCellBlockedData.GetValue(x , y - 1))
-                        {
-                            adjacentCellIndex = new Vector2Int(x , y - 1);
-                        }
-                        
-                        else if(y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(x , y + 1))
-                        {
-                            adjacentCellIndex = new Vector2Int(x , y + 1);
-                        }
-
-                        if(adjacentCellIndex != _gridManager.InvalidCellIndex)
-                        {
-                            int aiCoinValue = _gridManager.CoinValueData.GetValue(x , y);
-                            _selfCoinsCellIndicesList.Add(adjacentCellIndex);
-                            _selfCoinValuesList.Add(aiCoinValue);
-                        }
+                        _selfCoinsCellIndicesList.Add(new Vector2Int(x , y));
+                        int coinValue = _gridManager.CoinValueData.GetValue(x , y);
+                        _selfCoinValuesList.Add(coinValue);
                     }
                 }
             }
@@ -245,41 +220,41 @@ public class GameManager : MonoBehaviour
 
         if(_lesserCoinValuesList.Count > 0)
         {
-             Debug.Log("Placed next to the lesser values list highest value");
-
+             Debug.Log("Placed next to the lesser coin values list highest value");
+        
             int highestCoinValue = _lesserCoinValuesList.Max();
-
+        
             List<Vector2Int> highestValueCoinCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == highestCoinValue).ToList();
-
+        
             List<Vector2Int> bestAdjacentCells = new List<Vector2Int>();
             int maxAdjacentCoins = 0;
-
+        
             foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
             {
                 List<Vector2Int> adjacentCells = new List<Vector2Int>();
-
+        
                 if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                 {
                     adjacentCells.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y));
                 }
-
+        
                 if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y))
                 {
                     adjacentCells.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y));
                 }
-
+        
                 if(coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y - 1))
                 {
                     adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1));
                 }
-
+        
                 if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
                 {
                     adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
                 }
-
+        
                 int adjacentCoinCount = 0;
-
+        
                 foreach(Vector2Int adjacentCell in adjacentCells)
                 {
                     if(_gridManager.CoinOnTheCellData.GetValue(adjacentCell.x , adjacentCell.y) != null)
@@ -287,7 +262,7 @@ public class GameManager : MonoBehaviour
                         adjacentCoinCount++;
                     }
                 }
-
+        
                 if(adjacentCoinCount > maxAdjacentCoins)
                 {
                     bestAdjacentCells.Clear();
@@ -300,16 +275,16 @@ public class GameManager : MonoBehaviour
                     bestAdjacentCells.AddRange(adjacentCells);
                 }
             }
-
+        
             if(bestAdjacentCells.Count > 0)
             {
                 Vector2Int bestCell = bestAdjacentCells[0];
                 bool foundCellWithOneNeighbor = false;
-
+        
                 foreach(Vector2Int cell in bestAdjacentCells)
                 {
                     int neighborCount = 0;
-
+        
                     List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
                     {
                         new (cell.x - 1 , cell.y),
@@ -317,7 +292,7 @@ public class GameManager : MonoBehaviour
                         new (cell.x , cell.y - 1),
                         new (cell.x , cell.y + 1)
                     };
-
+        
                     foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
                     {
                         if(_gridManager.CoinOnTheCellData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != null)
@@ -325,7 +300,7 @@ public class GameManager : MonoBehaviour
                             neighborCount++;
                         }
                     }
-
+        
                     if(neighborCount == 1)
                     {
                         bestCell = cell;
@@ -333,15 +308,15 @@ public class GameManager : MonoBehaviour
                         break;
                     }
                 }
-
+        
                 if(!foundCellWithOneNeighbor)
                 {
                     int minNeighborCount = int.MaxValue;
-
+        
                     foreach(Vector2Int cell in bestAdjacentCells)
                     {
                         int neighborCount = 0;
-
+        
                         List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
                         {
                             new (cell.x - 1 , cell.y),
@@ -349,7 +324,7 @@ public class GameManager : MonoBehaviour
                             new (cell.x , cell.y - 1),
                             new (cell.x , cell.y + 1)
                         };
-
+        
                         foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
                         {
                             if(_gridManager.CoinOnTheCellData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != null)
@@ -357,7 +332,7 @@ public class GameManager : MonoBehaviour
                                 neighborCount++;
                             }
                         }
-
+        
                         if(neighborCount < minNeighborCount)
                         {
                             minNeighborCount = neighborCount;
@@ -365,18 +340,18 @@ public class GameManager : MonoBehaviour
                         }
                     }
                 }
-
+        
                 return bestCell;
             }
-
+        
             foreach(int lesserValue in _lesserCoinValuesList.OrderByDescending(value => value))
             {
                 List<Vector2Int> lesserValueCoinCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == lesserValue).ToList();
-
+        
                 foreach(Vector2Int coinCellIndex in lesserValueCoinCellIndicesList)
                 {
                     Vector2Int adjacentCellIndex = Vector2Int.zero;
-
+        
                     if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                     {
                         adjacentCellIndex = new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y);
@@ -396,7 +371,7 @@ public class GameManager : MonoBehaviour
                     {
                         adjacentCellIndex = new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1);
                     }
-
+        
                     if(adjacentCellIndex != Vector2Int.zero)
                     {
                         return adjacentCellIndex;
@@ -407,76 +382,161 @@ public class GameManager : MonoBehaviour
 
         if(_selfCoinValuesList.Count > 0)
         {
-            Debug.Log("Placed next to the self coins list highest value");
-
-            int highestValue = _selfCoinValuesList.Max();
-            
-            List<Vector2Int> adjacentCellIndices = new List<Vector2Int>();
-
-            Vector2Int highestValueCoinCellIndex = _selfCoinsCellIndicesList.FirstOrDefault(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == highestValue);
-
-            if(highestValueCoinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(highestValueCoinCellIndex.x - 1 , highestValueCoinCellIndex.y))
+             Debug.Log("Placed next to the self coin values list highest value");
+        
+            int highestCoinValue = _selfCoinValuesList.Max();
+        
+            List<Vector2Int> highestValueCoinCellIndicesList = _selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == highestCoinValue).ToList();
+        
+            List<Vector2Int> bestAdjacentCells = new List<Vector2Int>();
+            int maxAdjacentCoins = 0;
+        
+            foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
             {
-                adjacentCellIndices.Add(new Vector2Int(highestValueCoinCellIndex.x - 1 , highestValueCoinCellIndex.y));
-            }
-            
-            if(highestValueCoinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(highestValueCoinCellIndex.x + 1 , highestValueCoinCellIndex.y))
-            {
-                adjacentCellIndices.Add(new Vector2Int(highestValueCoinCellIndex.x + 1 , highestValueCoinCellIndex.y));
-            }
-            
-            if(highestValueCoinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(highestValueCoinCellIndex.x , highestValueCoinCellIndex.y - 1))
-            {
-                adjacentCellIndices.Add(new Vector2Int(highestValueCoinCellIndex.x , highestValueCoinCellIndex.y - 1));
-            }
-            
-            if(highestValueCoinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(highestValueCoinCellIndex.x , highestValueCoinCellIndex.y + 1))
-            {
-                adjacentCellIndices.Add(new Vector2Int(highestValueCoinCellIndex.x , highestValueCoinCellIndex.y + 1));
-            }
-            
-            adjacentCellIndices = adjacentCellIndices.Where(position => !_gridManager.IsCellBlockedData.GetValue(position.x , position.y)).ToList();
-            
-            if(adjacentCellIndices.Count > 0)
-            {
-                int randomIndex = Random.Range(0 , adjacentCellIndices.Count);
-                return adjacentCellIndices[randomIndex];
-            }
-            
-            foreach(int selfCoinValue in _selfCoinValuesList.OrderByDescending(value => value))
-            {
-                List<Vector2Int> selfCoinValueCellIndicesList = _selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == selfCoinValue).ToList();
-
-                foreach(Vector2Int coinCellIndex in selfCoinValueCellIndicesList)
+                List<Vector2Int> adjacentCells = new List<Vector2Int>();
+        
+                if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                 {
-                    List<Vector2Int> selfAdjacentCellIndices = new List<Vector2Int>();
-
+                    adjacentCells.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y));
+                }
+        
+                if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y))
+                {
+                    adjacentCells.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y));
+                }
+        
+                if(coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y - 1))
+                {
+                    adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1));
+                }
+        
+                if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
+                {
+                    adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
+                }
+        
+                int adjacentCoinCount = 0;
+        
+                foreach(Vector2Int adjacentCell in adjacentCells)
+                {
+                    if(_gridManager.CoinOnTheCellData.GetValue(adjacentCell.x , adjacentCell.y) != null)
+                    {
+                        adjacentCoinCount++;
+                    }
+                }
+        
+                if(adjacentCoinCount > maxAdjacentCoins)
+                {
+                    bestAdjacentCells.Clear();
+                    bestAdjacentCells.AddRange(adjacentCells);
+                    maxAdjacentCoins = adjacentCoinCount;
+                }
+                
+                else if(adjacentCoinCount == maxAdjacentCoins)
+                {
+                    bestAdjacentCells.AddRange(adjacentCells);
+                }
+            }
+        
+            if(bestAdjacentCells.Count > 0)
+            {
+                Vector2Int bestCell = bestAdjacentCells[0];
+                bool foundCellWithOneNeighbor = false;
+        
+                foreach(Vector2Int cell in bestAdjacentCells)
+                {
+                    int neighborCount = 0;
+        
+                    List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
+                    {
+                        new (cell.x - 1 , cell.y),
+                        new (cell.x + 1 , cell.y),
+                        new (cell.x , cell.y - 1),
+                        new (cell.x , cell.y + 1)
+                    };
+        
+                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+                    {
+                        if(_gridManager.CoinOnTheCellData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != null)
+                        {
+                            neighborCount++;
+                        }
+                    }
+        
+                    if(neighborCount == 1)
+                    {
+                        bestCell = cell;
+                        foundCellWithOneNeighbor = true;
+                        break;
+                    }
+                }
+        
+                if(!foundCellWithOneNeighbor)
+                {
+                    int minNeighborCount = int.MaxValue;
+        
+                    foreach(Vector2Int cell in bestAdjacentCells)
+                    {
+                        int neighborCount = 0;
+        
+                        List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
+                        {
+                            new (cell.x - 1 , cell.y),
+                            new (cell.x + 1 , cell.y),
+                            new (cell.x , cell.y - 1),
+                            new (cell.x , cell.y + 1)
+                        };
+        
+                        foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+                        {
+                            if(_gridManager.CoinOnTheCellData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != null)
+                            {
+                                neighborCount++;
+                            }
+                        }
+        
+                        if(neighborCount < minNeighborCount)
+                        {
+                            minNeighborCount = neighborCount;
+                            bestCell = cell;
+                        }
+                    }
+                }
+        
+                return bestCell;
+            }
+        
+            foreach(int lesserValue in _selfCoinValuesList.OrderByDescending(value => value))
+            {
+                List<Vector2Int> lesserValueCoinCellIndicesList = _selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == lesserValue).ToList();
+        
+                foreach(Vector2Int coinCellIndex in lesserValueCoinCellIndicesList)
+                {
+                    Vector2Int adjacentCellIndex = Vector2Int.zero;
+        
                     if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                     {
-                        selfAdjacentCellIndices.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y));
-                    }
-
-                    if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y))
-                    {
-                        selfAdjacentCellIndices.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y));
-                    }
-
-                    if(coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y - 1))
-                    {
-                        selfAdjacentCellIndices.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1));
-                    }
-
-                    if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
-                    {
-                        selfAdjacentCellIndices.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
+                        adjacentCellIndex = new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y);
                     }
                     
-                    selfAdjacentCellIndices = selfAdjacentCellIndices.Where(position => !_gridManager.IsCellBlockedData.GetValue(position.x, position.y)).ToList();
-                    
-                    if(selfAdjacentCellIndices.Count > 0)
+                    else if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y))
                     {
-                        int selfRandomIndex = Random.Range(0 , selfAdjacentCellIndices.Count);
-                        return selfAdjacentCellIndices[selfRandomIndex];
+                        adjacentCellIndex = new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y);
+                    }
+                    
+                    else if(coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y - 1))
+                    {
+                        adjacentCellIndex = new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1);
+                    }
+                    
+                    else if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
+                    {
+                        adjacentCellIndex = new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1);
+                    }
+        
+                    if(adjacentCellIndex != Vector2Int.zero)
+                    {
+                        return adjacentCellIndex;
                     }
                 }
             }
