@@ -158,36 +158,31 @@ public class GameManager : MonoBehaviour
                         _otherPlayerCoinValuesList.Add(coinValue);
                     }
                     
-                    else if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _currentPlayerID)
+                    if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _currentPlayerID)
                     {
-                        bool hasUnblockedAdjacentCell = false;
                         Vector2Int adjacentCellIndex = Vector2Int.zero;
 
                         if(x > 0 && !_gridManager.IsCellBlockedData.GetValue(x - 1 , y))
                         {
                             adjacentCellIndex = new Vector2Int(x - 1 , y);
-                            hasUnblockedAdjacentCell = true;
                         }
                         
                         else if(x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(x + 1 , y))
                         {
                             adjacentCellIndex = new Vector2Int(x + 1 , y);
-                            hasUnblockedAdjacentCell = true;
                         }
                         
                         else if(y > 0 && !_gridManager.IsCellBlockedData.GetValue(x , y - 1))
                         {
                             adjacentCellIndex = new Vector2Int(x , y - 1);
-                            hasUnblockedAdjacentCell = true;
                         }
                         
                         else if(y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(x , y + 1))
                         {
                             adjacentCellIndex = new Vector2Int(x , y + 1);
-                            hasUnblockedAdjacentCell = true;
                         }
-                        
-                        if(hasUnblockedAdjacentCell)
+
+                        if(adjacentCellIndex != Vector2Int.zero)
                         {
                             int aiCoinValue = _gridManager.CoinValueData.GetValue(x , y);
                             _selfCoinsCellIndicesList.Add(adjacentCellIndex);
@@ -237,7 +232,6 @@ public class GameManager : MonoBehaviour
                         {
                             _lesserCoinsCellIndicesList.Add(coinCellIndex);
                             _lesserCoinValuesList.Add(coinValue);
-                            break;
                         }
                     }
                 }
