@@ -846,6 +846,16 @@ public class GameManager : MonoBehaviour
     {
         _isGameStarted = false;
     }
+
+    private void OnGamePaused()
+    {
+        _isGameStarted = false;
+    }
+    
+    private void OnGameResumed()
+    {
+        _isGameStarted = true;
+    }
     
     private void OnGameStarted()
     {
@@ -971,6 +981,8 @@ public class GameManager : MonoBehaviour
     {
         EventsManager.SubscribeToEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
         EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+        EventsManager.SubscribeToEvent(Event.GamePaused , new Action(OnGamePaused));
+        EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
         EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
         EventsManager.SubscribeToEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
         EventsManager.SubscribeToEvent(Event.MouseMoved , new Action(OnMouseMoved));
@@ -983,6 +995,8 @@ public class GameManager : MonoBehaviour
     {
         EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
         EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+        EventsManager.UnsubscribeFromEvent(Event.GamePaused , new Action(OnGamePaused));
+        EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
         EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
         EventsManager.UnsubscribeFromEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
         EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);

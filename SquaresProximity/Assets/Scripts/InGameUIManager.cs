@@ -19,9 +19,12 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject continueButtonObj;
     [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private GameObject gameTiedPanelObj;
+    [SerializeField] private GameObject inGameLeaderboardPanelObj;
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
     [SerializeField] private GameObject leaderboardPanelObj;
+    [SerializeField] private GameObject pauseButtonObj;
+    [SerializeField] private GameObject pauseMenuPanelObj;
     [SerializeField] private GameObject numberOfPlayersSelectionPanelObj;
     [SerializeField] private GameObject playerInputPanelObj;
     [SerializeField] private GameObject totalReceivedPanelObj;
@@ -44,7 +47,9 @@ public class InGameUIManager : MonoBehaviour
         gameOverPanelsObj.SetActive(false);
         gameTiedPanelObj.SetActive(false);
         inGameUIPanelsObj.SetActive(false);
+        inGameLeaderboardPanelObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
+        pauseMenuPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(false);
 
         _playersTotalWinsArray = new int[_numberOfPlayers];
@@ -93,6 +98,15 @@ public class InGameUIManager : MonoBehaviour
     {
         numberOfPlayersSelectionPanelObj.SetActive(true);
         playerInputPanelObj.SetActive(false);
+    }
+
+    public void BackButtonInGameLeaderboard()
+    {
+        EventsManager.Invoke(Event.GameResumed);
+        inGameLeaderboardPanelObj.SetActive(false);
+        inGameUIPanelsObj.SetActive(true);
+        pauseButtonObj.SetActive(true);
+        pauseMenuPanelObj.SetActive(false);
     }
     
     public void ConfirmButton()
@@ -233,9 +247,23 @@ public class InGameUIManager : MonoBehaviour
         playerInputPanelObj.SetActive(false);
     }
 
+    public void LeaderBoardButtonPauseMenu()
+    {
+        inGameUIPanelsObj.SetActive(false);
+        inGameLeaderboardPanelObj.SetActive(true);
+        pauseButtonObj.SetActive(false);
+    }
+
     public void OkButton()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void PauseButton()
+    {
+        EventsManager.Invoke(Event.GamePaused);
+        pauseButtonObj.SetActive(false);
+        pauseMenuPanelObj.SetActive(true);
     }
 
     public void RandomTurnsToggle()
@@ -279,6 +307,14 @@ public class InGameUIManager : MonoBehaviour
             playerNameTMPInputFields[i].text = _playerNamesArray[i];
             playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins: " + _playersTotalWinsArray[i];
         }
+    }
+
+    public void ResumeButton()
+    {
+        EventsManager.Invoke(Event.GameResumed);
+        inGameUIPanelsObj.SetActive(true);
+        pauseButtonObj.SetActive(true);
+        pauseMenuPanelObj.SetActive(false);
     }
 
     public void SetPlayersNumber()
