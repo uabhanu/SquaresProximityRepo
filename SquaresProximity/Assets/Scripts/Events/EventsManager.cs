@@ -11,6 +11,8 @@ namespace Events
         CoinPlaced,
         GameDataReset,
         GameOver,
+        GamePaused,
+        GameResumed,
         GameStarted,
         GameTied,
         HolesToggled,
