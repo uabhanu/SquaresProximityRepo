@@ -382,8 +382,12 @@ public class GameManager : MonoBehaviour
                         {
                             new (cell.x - 1 , cell.y),
                             new (cell.x + 1 , cell.y),
+                            new (cell.x - 1 , cell.y + 1),
+                            new (cell.x + 1 , cell.y + 1),
                             new (cell.x , cell.y - 1),
-                            new (cell.x , cell.y + 1)
+                            new (cell.x , cell.y + 1),
+                            new (cell.x - 1 , cell.y - 1),
+                            new (cell. x + 1 , cell.y - 1)
                         };
         
                         foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
@@ -414,8 +418,12 @@ public class GameManager : MonoBehaviour
                             {
                                 new (cell.x - 1 , cell.y),
                                 new (cell.x + 1 , cell.y),
+                                new (cell.x - 1 , cell.y + 1),
+                                new (cell.x + 1 , cell.y + 1),
                                 new (cell.x , cell.y - 1),
-                                new (cell.x , cell.y + 1)
+                                new (cell.x , cell.y + 1),
+                                new (cell.x - 1 , cell.y - 1),
+                                new (cell. x + 1 , cell.y - 1)
                             };
         
                             foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
