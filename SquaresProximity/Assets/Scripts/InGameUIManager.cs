@@ -133,23 +133,23 @@ public class InGameUIManager : MonoBehaviour
         playerInputPanelObj.SetActive(true);
 
         string[] nameKeys = new string[_numberOfPlayers];
-
+        
         for(int i = 0; i < _numberOfPlayers; i++)
         {
             nameKeys[i] = "Player" + i + "Name";
         }
-
+        
         PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
-
+        
         string[] winsKeys = new string[_numberOfPlayers];
-
+        
         for(int i = 0; i < _numberOfPlayers; i++)
         {
             winsKeys[i] = "Player" + i + "TotalWins";
         }
-
+        
         PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
-
+        
         for(int i = 0; i < _numberOfPlayers; i++)
         {
             playerNameTMPInputFields[i].text = _playerNamesArray[i];
@@ -169,30 +169,6 @@ public class InGameUIManager : MonoBehaviour
 
             winsPanelObjs[_numberOfPlayers].SetActive(false);
         }
-
-        for(int i = 0; i < _numberOfPlayers; i++)
-        {
-            playerNameTMPInputFields[i].text = _playerNamesArray[i];
-            totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
-        }
-        
-        string[] nameKeys = new string[_numberOfPlayers];
-        
-        for(int i = 0; i < _numberOfPlayers; i++)
-        {
-            nameKeys[i] = "Player" + i + "Name";
-        }
-        
-        PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
-
-        string[] winsKeys = new string[_numberOfPlayers];
-        
-        for(int i = 0; i < _numberOfPlayers; i++)
-        {
-            winsKeys[i] = "Player" + i + "TotalWins";
-        }
-        
-        PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
     }
 
     public void EnterButton()
@@ -251,6 +227,13 @@ public class InGameUIManager : MonoBehaviour
     {
         inGameUIPanelsObj.SetActive(false);
         inGameLeaderboardPanelObj.SetActive(true);
+        
+        if(_numberOfPlayers == 2)
+        {
+            leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
+            totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
+        }
+        
         pauseButtonObj.SetActive(false);
     }
 
@@ -342,6 +325,31 @@ public class InGameUIManager : MonoBehaviour
     {
         coinUIObj.SetActive(false);
         continueButtonObj.SetActive(true);
+        pauseButtonObj.SetActive(false);
+        
+        for(int i = 0; i < _numberOfPlayers; i++)
+        {
+            playerNameTMPInputFields[i].text = _playerNamesArray[i];
+            totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
+        }
+        
+        string[] nameKeys = new string[_numberOfPlayers];
+        
+        for(int i = 0; i < _numberOfPlayers; i++)
+        {
+            nameKeys[i] = "Player" + i + "Name";
+        }
+        
+        PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
+
+        string[] winsKeys = new string[_numberOfPlayers];
+        
+        for(int i = 0; i < _numberOfPlayers; i++)
+        {
+            winsKeys[i] = "Player" + i + "TotalWins";
+        }
+        
+        PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
     }
 
     private void OnGameTied()
