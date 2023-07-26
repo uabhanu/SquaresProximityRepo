@@ -19,7 +19,6 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject continueButtonObj;
     [SerializeField] private GameObject gameOverPanelsObj;
     [SerializeField] private GameObject gameTiedPanelObj;
-    [SerializeField] private GameObject inGameLeaderboardPanelObj;
     [SerializeField] private GameObject inGameUIPanelsObj;
     [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
     [SerializeField] private GameObject leaderboardPanelObj;
@@ -34,6 +33,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject[] totalReceivedPanelObjs;
     [SerializeField] private GameObject[] winsPanelObjs;
     [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
+    [SerializeField] private TMP_Text backButtonTMPText;
     [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
     [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
     [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
@@ -47,7 +47,6 @@ public class InGameUIManager : MonoBehaviour
         gameOverPanelsObj.SetActive(false);
         gameTiedPanelObj.SetActive(false);
         inGameUIPanelsObj.SetActive(false);
-        inGameLeaderboardPanelObj.SetActive(false);
         leaderboardPanelObj.SetActive(false);
         pauseMenuPanelObj.SetActive(false);
         playerInputPanelObj.SetActive(false);
@@ -90,8 +89,19 @@ public class InGameUIManager : MonoBehaviour
 
     public void BackButton()
     {
-        leaderboardPanelObj.SetActive(false);
-        playerInputPanelObj.SetActive(true);
+        if(backButtonTMPText.text == "Back")
+        {
+            leaderboardPanelObj.SetActive(false);
+            playerInputPanelObj.SetActive(true);   
+        }
+        else
+        {
+            EventsManager.Invoke(Event.GameResumed);
+            leaderboardPanelObj.SetActive(false);
+            inGameUIPanelsObj.SetActive(true);
+            pauseButtonObj.SetActive(true);
+            pauseMenuPanelObj.SetActive(false);
+        }
     }
     
     public void BackButtonMain()
@@ -100,15 +110,6 @@ public class InGameUIManager : MonoBehaviour
         playerInputPanelObj.SetActive(false);
     }
 
-    public void BackButtonInGameLeaderboard()
-    {
-        EventsManager.Invoke(Event.GameResumed);
-        inGameLeaderboardPanelObj.SetActive(false);
-        inGameUIPanelsObj.SetActive(true);
-        pauseButtonObj.SetActive(true);
-        pauseMenuPanelObj.SetActive(false);
-    }
-    
     public void ConfirmButton()
     {
         bool isAnyToggleOn = numberOfPlayersSelectionTogglesArray[0].isOn || numberOfPlayersSelectionTogglesArray[1].isOn;
@@ -249,8 +250,9 @@ public class InGameUIManager : MonoBehaviour
 
     public void LeaderBoardButtonPauseMenu()
     {
+        backButtonTMPText.text = "Back to Game";
         inGameUIPanelsObj.SetActive(false);
-        inGameLeaderboardPanelObj.SetActive(true);
+        leaderboardPanelObj.SetActive(true);
         
         if(_numberOfPlayers == 2)
         {
