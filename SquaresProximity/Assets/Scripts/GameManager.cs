@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Placed next to the lesser coin values list highest value");
         
-            List<Vector2Int> bestAdjacentCells = new List<Vector2Int>();
+            List<Vector2Int> bestAdjacentCellIndicesList = new List<Vector2Int>();
             int maxAdjacentCoins = 0;
             
             foreach(int highestCoinValue in _lesserCoinValuesList.OrderByDescending(value => value))
@@ -231,33 +231,33 @@ public class GameManager : MonoBehaviour
         
                 foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
                 {
-                    List<Vector2Int> adjacentCells = new List<Vector2Int>();
+                    List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>();
         
                     if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                     {
-                        adjacentCells.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y));
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y));
                     }
         
                     if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y))
                     {
-                        adjacentCells.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y));
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y));
                     }
         
                     if(coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y - 1))
                     {
-                        adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1));
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1));
                     }
         
                     if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
                     {
-                        adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
                     }
         
                     int adjacentCoinCount = 0;
         
-                    foreach(Vector2Int adjacentCell in adjacentCells)
+                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
                     {
-                        if(_gridManager.CoinOnTheCellData.GetValue(adjacentCell.x , adjacentCell.y) != null)
+                        if(_gridManager.CoinOnTheCellData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != null)
                         {
                             adjacentCoinCount++;
                         }
@@ -265,36 +265,36 @@ public class GameManager : MonoBehaviour
         
                     if(adjacentCoinCount > maxAdjacentCoins)
                     {
-                        bestAdjacentCells.Clear();
-                        bestAdjacentCells.AddRange(adjacentCells);
+                        bestAdjacentCellIndicesList.Clear();
+                        bestAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
                         maxAdjacentCoins = adjacentCoinCount;
                     }
                     
                     else if(adjacentCoinCount == maxAdjacentCoins)
                     {
-                        bestAdjacentCells.AddRange(adjacentCells);
+                        bestAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
                     }
                 }
                 
-                if(bestAdjacentCells.Count > 0)
+                if(bestAdjacentCellIndicesList.Count > 0)
                 {
-                    Vector2Int bestCell = bestAdjacentCells[0];
+                    Vector2Int bestCellIndex = bestAdjacentCellIndicesList[0];
                     bool foundCellWithOneNeighbor = false;
                     
-                    foreach(Vector2Int cell in bestAdjacentCells)
+                    foreach(Vector2Int cellIndex in bestAdjacentCellIndicesList)
                     {
                         int neighborCount = 0;
         
                         List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
                         {
-                            new (cell.x - 1 , cell.y),
-                            new (cell.x + 1 , cell.y),
-                            new (cell.x - 1 , cell.y + 1),
-                            new (cell.x + 1 , cell.y + 1),
-                            new (cell.x , cell.y - 1),
-                            new (cell.x , cell.y + 1),
-                            new (cell.x - 1 , cell.y - 1),
-                            new (cell. x + 1 , cell.y - 1)
+                            new (cellIndex.x - 1 , cellIndex.y),
+                            new (cellIndex.x + 1 , cellIndex.y),
+                            new (cellIndex.x - 1 , cellIndex.y + 1),
+                            new (cellIndex.x + 1 , cellIndex.y + 1),
+                            new (cellIndex.x , cellIndex.y - 1),
+                            new (cellIndex.x , cellIndex.y + 1),
+                            new (cellIndex.x - 1 , cellIndex.y - 1),
+                            new (cellIndex. x + 1 , cellIndex.y - 1)
                         };
         
                         foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
@@ -307,7 +307,7 @@ public class GameManager : MonoBehaviour
         
                         if(neighborCount == 1)
                         {
-                            bestCell = cell;
+                            bestCellIndex = cellIndex;
                             foundCellWithOneNeighbor = true;
                             break;
                         }
@@ -317,20 +317,20 @@ public class GameManager : MonoBehaviour
                     {
                         int minNeighborCount = int.MaxValue;
         
-                        foreach(Vector2Int cell in bestAdjacentCells)
+                        foreach(Vector2Int cellIndex in bestAdjacentCellIndicesList)
                         {
                             int neighborCount = 0;
         
                             List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
                             {
-                                new (cell.x - 1 , cell.y),
-                                new (cell.x + 1 , cell.y),
-                                new (cell.x - 1 , cell.y + 1),
-                                new (cell.x + 1 , cell.y + 1),
-                                new (cell.x , cell.y - 1),
-                                new (cell.x , cell.y + 1),
-                                new (cell.x - 1 , cell.y - 1),
-                                new (cell. x + 1 , cell.y - 1)
+                                new (cellIndex.x - 1 , cellIndex.y),
+                                new (cellIndex.x + 1 , cellIndex.y),
+                                new (cellIndex.x - 1 , cellIndex.y + 1),
+                                new (cellIndex.x + 1 , cellIndex.y + 1),
+                                new (cellIndex.x , cellIndex.y - 1),
+                                new (cellIndex.x , cellIndex.y + 1),
+                                new (cellIndex.x - 1 , cellIndex.y - 1),
+                                new (cellIndex. x + 1 , cellIndex.y - 1)
                             };
         
                             foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
@@ -344,24 +344,24 @@ public class GameManager : MonoBehaviour
                             if(neighborCount < minNeighborCount)
                             {
                                 minNeighborCount = neighborCount;
-                                bestCell = cell;
+                                bestCellIndex = cellIndex;
                             }
                         }
                     }
                     
-                    if(_gridManager.CoinOnTheCellData.GetValue(bestCell.x , bestCell.y) == null)
+                    if(_gridManager.CoinOnTheCellData.GetValue(bestCellIndex.x , bestCellIndex.y) == null)
                     {
-                        return bestCell;
+                        return bestCellIndex;
                     }
                 }
             }
         }
         
-        foreach(int selfValue in _lesserCoinValuesList.OrderByDescending(value => value))
+        foreach(int lesserValue in _lesserCoinValuesList.OrderByDescending(value => value))
         {
-            List<Vector2Int> selfCoinValueCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == selfValue).ToList();
+            List<Vector2Int> lesserCoinValueCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == lesserValue).ToList();
         
-            foreach(Vector2Int coinCellIndex in selfCoinValueCellIndicesList)
+            foreach(Vector2Int coinCellIndex in lesserCoinValueCellIndicesList)
             {
                 Vector2Int adjacentCellIndex = _gridManager.InvalidCellIndex;
         
@@ -396,7 +396,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Placed next to the self coin values list highest value");
         
-            List<Vector2Int> bestAdjacentCells = new List<Vector2Int>();
+            List<Vector2Int> bestAdjacentCellIndicesList = new List<Vector2Int>();
             int maxAdjacentCoins = 0;
             
             foreach(int highestCoinValue in _selfCoinValuesList.OrderByDescending(value => value))
@@ -405,33 +405,33 @@ public class GameManager : MonoBehaviour
         
                 foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
                 {
-                    List<Vector2Int> adjacentCells = new List<Vector2Int>();
+                    List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>();
         
                     if(coinCellIndex.x > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y))
                     {
-                        adjacentCells.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y));
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y));
                     }
         
                     if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y))
                     {
-                        adjacentCells.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y));
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y));
                     }
         
                     if(coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y - 1))
                     {
-                        adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1));
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y - 1));
                     }
         
                     if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
                     {
-                        adjacentCells.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
                     }
         
                     int adjacentCoinCount = 0;
         
-                    foreach(Vector2Int adjacentCell in adjacentCells)
+                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
                     {
-                        if(_gridManager.CoinOnTheCellData.GetValue(adjacentCell.x , adjacentCell.y) != null)
+                        if(_gridManager.CoinOnTheCellData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != null)
                         {
                             adjacentCoinCount++;
                         }
@@ -439,36 +439,36 @@ public class GameManager : MonoBehaviour
         
                     if(adjacentCoinCount > maxAdjacentCoins)
                     {
-                        bestAdjacentCells.Clear();
-                        bestAdjacentCells.AddRange(adjacentCells);
+                        bestAdjacentCellIndicesList.Clear();
+                        bestAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
                         maxAdjacentCoins = adjacentCoinCount;
                     }
                     
                     else if(adjacentCoinCount == maxAdjacentCoins)
                     {
-                        bestAdjacentCells.AddRange(adjacentCells);
+                        bestAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
                     }
                 }
                 
-                if(bestAdjacentCells.Count > 0)
+                if(bestAdjacentCellIndicesList.Count > 0)
                 {
-                    Vector2Int bestCell = bestAdjacentCells[0];
+                    Vector2Int bestCellIndex = bestAdjacentCellIndicesList[0];
                     bool foundCellWithOneNeighbor = false;
                     
-                    foreach(Vector2Int cell in bestAdjacentCells)
+                    foreach(Vector2Int cellIndex in bestAdjacentCellIndicesList)
                     {
                         int neighborCount = 0;
         
                         List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
                         {
-                            new (cell.x - 1 , cell.y),
-                            new (cell.x + 1 , cell.y),
-                            new (cell.x - 1 , cell.y + 1),
-                            new (cell.x + 1 , cell.y + 1),
-                            new (cell.x , cell.y - 1),
-                            new (cell.x , cell.y + 1),
-                            new (cell.x - 1 , cell.y - 1),
-                            new (cell. x + 1 , cell.y - 1)
+                            new (cellIndex.x - 1 , cellIndex.y),
+                            new (cellIndex.x + 1 , cellIndex.y),
+                            new (cellIndex.x - 1 , cellIndex.y + 1),
+                            new (cellIndex.x + 1 , cellIndex.y + 1),
+                            new (cellIndex.x , cellIndex.y - 1),
+                            new (cellIndex.x , cellIndex.y + 1),
+                            new (cellIndex.x - 1 , cellIndex.y - 1),
+                            new (cellIndex. x + 1 , cellIndex.y - 1)
                         };
         
                         foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
@@ -481,7 +481,7 @@ public class GameManager : MonoBehaviour
         
                         if(neighborCount == 1)
                         {
-                            bestCell = cell;
+                            bestCellIndex = cellIndex;
                             foundCellWithOneNeighbor = true;
                             break;
                         }
@@ -491,20 +491,20 @@ public class GameManager : MonoBehaviour
                     {
                         int minNeighborCount = int.MaxValue;
         
-                        foreach(Vector2Int cell in bestAdjacentCells)
+                        foreach(Vector2Int cellIndex in bestAdjacentCellIndicesList)
                         {
                             int neighborCount = 0;
         
                             List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
                             {
-                                new (cell.x - 1 , cell.y),
-                                new (cell.x + 1 , cell.y),
-                                new (cell.x - 1 , cell.y + 1),
-                                new (cell.x + 1 , cell.y + 1),
-                                new (cell.x , cell.y - 1),
-                                new (cell.x , cell.y + 1),
-                                new (cell.x - 1 , cell.y - 1),
-                                new (cell. x + 1 , cell.y - 1)
+                                new (cellIndex.x - 1 , cellIndex.y),
+                                new (cellIndex.x + 1 , cellIndex.y),
+                                new (cellIndex.x - 1 , cellIndex.y + 1),
+                                new (cellIndex.x + 1 , cellIndex.y + 1),
+                                new (cellIndex.x , cellIndex.y - 1),
+                                new (cellIndex.x , cellIndex.y + 1),
+                                new (cellIndex.x - 1 , cellIndex.y - 1),
+                                new (cellIndex. x + 1 , cellIndex.y - 1)
                             };
         
                             foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
@@ -518,14 +518,14 @@ public class GameManager : MonoBehaviour
                             if(neighborCount < minNeighborCount)
                             {
                                 minNeighborCount = neighborCount;
-                                bestCell = cell;
+                                bestCellIndex = cellIndex;
                             }
                         }
                     }
                     
-                    if(_gridManager.CoinOnTheCellData.GetValue(bestCell.x , bestCell.y) == null)
+                    if(_gridManager.CoinOnTheCellData.GetValue(bestCellIndex.x , bestCellIndex.y) == null)
                     {
-                        return bestCell;
+                        return bestCellIndex;
                     }
                 }
             }
@@ -612,8 +612,8 @@ public class GameManager : MonoBehaviour
 
                             if(adjacentCoinValueText  == null)
                             {
-                                int[] offsetX = { -1, 0, 1, -1, 1, -1, 0, 1 };
-                                int[] offsetY = { -1, -1, -1, 0, 0, 1, 1, 1 };
+                                int[] offsetX = { -1 , 0 , 1 , -1 , 1 , -1 , 0 , 1 };
+                                int[] offsetY = { -1 , -1 , -1 , 0 , 0 , 1 , 1 , 1 };
 
                                 for(int i = 0; i < 8; i++)
                                 {
