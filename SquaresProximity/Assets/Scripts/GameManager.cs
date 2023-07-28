@@ -252,6 +252,26 @@ public class GameManager : MonoBehaviour
                     {
                         adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
                     }
+                    
+                    if(coinCellIndex.x > 0 && coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y - 1))
+                    {
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y - 1));
+                    }
+                    
+                    if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y - 1))
+                    {
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y - 1));
+                    }
+                    
+                    if(coinCellIndex.x > 0 && coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y + 1))
+                    {
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y + 1));
+                    }
+                    
+                    if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y + 1))
+                    {
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y + 1));
+                    }
         
                     int adjacentCoinCount = 0;
         
@@ -425,6 +445,26 @@ public class GameManager : MonoBehaviour
                     if(coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x , coinCellIndex.y + 1))
                     {
                         adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x , coinCellIndex.y + 1));
+                    }
+                    
+                    if(coinCellIndex.x > 0 && coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y - 1))
+                    {
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y - 1));
+                    }
+                    
+                    if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && coinCellIndex.y > 0 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y - 1))
+                    {
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y - 1));
+                    }
+                    
+                    if(coinCellIndex.x > 0 && coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x - 1 , coinCellIndex.y + 1))
+                    {
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x - 1 , coinCellIndex.y + 1));
+                    }
+                    
+                    if(coinCellIndex.x < _gridManager.GridInfo.Cols - 1 && coinCellIndex.y < _gridManager.GridInfo.Rows - 1 && !_gridManager.IsCellBlockedData.GetValue(coinCellIndex.x + 1 , coinCellIndex.y + 1))
+                    {
+                        adjacentCellIndicesList.Add(new Vector2Int(coinCellIndex.x + 1 , coinCellIndex.y + 1));
                     }
         
                     int adjacentCoinCount = 0;
