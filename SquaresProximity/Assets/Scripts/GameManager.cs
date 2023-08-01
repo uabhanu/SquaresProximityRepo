@@ -143,49 +143,78 @@ public class GameManager : MonoBehaviour
 
         return adjacentCellIndicesList;
     }
+    
+    //Todo AI is much more improved but the lists _lesserCoinValuesList & _selfCoinValuesList of the FindBestAdjacentCell() function are not being checked correctly
+    //Todo which is why I created this function but the Debug.Log is executing twice sometimes for an unknown reason and once this is fixed, we can use that to
+    //Todo improve the consistency of the FindBestAdjacentCell() function
+    private void ListAdjacentCellsForLesserCoins()
+    {
+        if(_lesserCoinValuesList.Count > 0)
+        {
+            int highestValue = _lesserCoinValuesList.Max();
+            
+            List<Vector2Int> highestValueCoinCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == highestValue).ToList();
+
+            foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
+            {
+                List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
+
+                adjacentCellIndicesList = adjacentCellIndicesList
+                .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
+                adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
+                !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                .ToList();
+
+                Debug.Log("Highest Value: " + highestValue + " , Coin Cell Index: " + coinCellIndex + " , Unblocked Adjacent Cells: " + string.Join(" , " , adjacentCellIndicesList));
+            }
+        }
+    }
 
     private Vector2Int FindBestAdjacentCell(List<int> coinValuesList)
     {
-        List<Vector2Int> highestValueCoinCellIndicesList = new List<Vector2Int>();
-
-        if(_lesserCoinValuesList.Count > 0)
+        List<Vector2Int> validAdjacentCellIndicesList = new List<Vector2Int>();
+        
+        foreach(int coinValue in coinValuesList.OrderByDescending(x => x))
         {
-            highestValueCoinCellIndicesList = _lesserCoinsCellIndicesList
-            .Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValuesList[0])
-            .ToList();
-        }
-
-        if(_selfCoinValuesList.Count > 0)
-        {
-            List<Vector2Int> selfCoinIndices = _selfCoinsCellIndicesList
-            .Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValuesList[0])
-            .ToList();
-
-            highestValueCoinCellIndicesList.AddRange(selfCoinIndices);
-        }
-
-        foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
-        {
-            //Todo Even though we are checking if a cell is blocked, it seems that the cell that has the coin already also added to the list. You may have to set Cell Block Data to true when the coin is placed  
-            List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
-            adjacentCellIndicesList = adjacentCellIndicesList
-            .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
-            adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
-            !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-            .ToList();
-
-            //Debug.Log("Adjacent Cells available for coin at " + coinCellIndex + " : " + string.Join(" , " , adjacentCellIndicesList));
-
-            if(adjacentCellIndicesList.Count > 0)
+            List<Vector2Int> highestValueCoinCellIndicesList = new List<Vector2Int>();
+        
+            if(_lesserCoinValuesList.Count > 0 && coinValue == _lesserCoinValuesList.Max())
             {
-                int randomIndex = Random.Range(0, adjacentCellIndicesList.Count);
-                //Debug.Log("FindBestAdjacentCell() -> Selected Cell Index : " + adjacentCellIndicesList[randomIndex]);
-                return adjacentCellIndicesList[randomIndex];
+                highestValueCoinCellIndicesList.AddRange(_lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
+            }
+        
+            if(highestValueCoinCellIndicesList.Count == 0 && _selfCoinValuesList.Count > 0 && coinValue == _selfCoinValuesList.Max())
+            {
+                highestValueCoinCellIndicesList.AddRange(_selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
+            }
+        
+            foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
+            {
+                List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
+        
+                adjacentCellIndicesList = adjacentCellIndicesList
+                .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
+                adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
+                !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                .ToList();
+        
+                validAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
+            }
+        
+            if(validAdjacentCellIndicesList.Count > 0)
+            {
+                int randomIndex = Random.Range(0 , validAdjacentCellIndicesList.Count);
+                //Debug.Log("FindBestAdjacentCell() -> Selected Cell Index : " + validAdjacentCellIndicesList[randomIndex]);
+                //Debug.Log("Adjacent Cells available for coin at " + validAdjacentCellIndicesList[randomIndex] + " : " + string.Join(" , " , validAdjacentCellIndicesList));
+                return validAdjacentCellIndicesList[randomIndex];
             }
         }
+        
+        ListAdjacentCellsForLesserCoins();
 
         return _gridManager.InvalidCellIndex;
     }
+
 
     private Vector2Int FindCellToPlaceCoinOn()
     {
