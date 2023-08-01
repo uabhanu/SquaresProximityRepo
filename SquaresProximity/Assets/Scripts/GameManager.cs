@@ -87,10 +87,12 @@ public class GameManager : MonoBehaviour
         PlaceCoin();
     }
     
-    private IEnumerator AnimateCoinEffect(SpriteRenderer coinRenderer)
+    private IEnumerator AnimateCoinEffect(SpriteRenderer coinRenderer , Color? capturingColor = null)
     {
         Color originalColor = coinRenderer.color;
         float originalAlpha = originalColor.a;
+        float capturingAlpha = capturingColor.HasValue ? capturingColor.Value.a : 0f;
+
         float fadeDuration = 0.2f;
         float fadeInterval = 0.05f;
         int fadeSteps = Mathf.RoundToInt(fadeDuration / fadeInterval);
@@ -101,7 +103,7 @@ public class GameManager : MonoBehaviour
             for(int i = 0; i < fadeSteps; i++)
             {
                 float t = (float)i / fadeSteps;
-                float alpha = Mathf.Lerp(originalAlpha , 0f , t);
+                float alpha = Mathf.Lerp(originalAlpha , capturingAlpha, t);
 
                 Color newColor = new Color(originalColor.r , originalColor.g , originalColor.b , alpha);
                 coinRenderer.color = newColor;
@@ -114,7 +116,7 @@ public class GameManager : MonoBehaviour
             for(int i = 0; i < fadeSteps; i++)
             {
                 float t = (float)i / fadeSteps;
-                float alpha = Mathf.Lerp(0f , originalAlpha , t);
+                float alpha = Mathf.Lerp(capturingAlpha , originalAlpha , t);
 
                 Color newColor = new Color(originalColor.r , originalColor.g , originalColor.b , alpha);
                 coinRenderer.color = newColor;
@@ -678,6 +680,14 @@ public class GameManager : MonoBehaviour
                 default:
                     coinRenderer.color = Color.white;
                 break;
+            }
+            
+            for(int i = 0; i < _isAIArray.Length; i++)
+            {
+                if(_isAIArray[i] && i == _currentPlayerID)
+                {
+                    StartCoroutine(AnimateCoinEffect(coinRenderer , coinRenderer.color));       
+                }
             }
         }
     }
