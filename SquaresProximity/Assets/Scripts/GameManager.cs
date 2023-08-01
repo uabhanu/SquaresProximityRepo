@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     private List<List<int>> _playerNumbersList;
     private Vector2Int _cellIndexAtMousePosition;
 
+    [SerializeField] private bool isTestingMode;
     [SerializeField] private float aiCoinPlaceDelay;
     [SerializeField] private GameObject coinObj;
     [SerializeField] private GameObject trailObj;
@@ -144,34 +145,80 @@ public class GameManager : MonoBehaviour
         return adjacentCellIndicesList;
     }
     
-    //Todo AI is much more improved but the lists _lesserCoinValuesList & _selfCoinValuesList of the FindBestAdjacentCell() function are not being checked correctly
-    //Todo which is why I created this function but the Debug.Log is executing twice sometimes for an unknown reason and once this is fixed, we can use that to
-    //Todo improve the consistency of the FindBestAdjacentCell() function
     private void ListAdjacentCellsForLesserCoins()
     {
         if(_lesserCoinValuesList.Count > 0)
         {
-            int highestValue = _lesserCoinValuesList.Max();
-            
-            List<Vector2Int> highestValueCoinCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == highestValue).ToList();
+            bool foundCoinWithUnblockedCells = false;
 
-            foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
+            foreach(int coinValue in _lesserCoinValuesList.OrderByDescending(x => x))
             {
-                List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
+                if(foundCoinWithUnblockedCells) break;
 
-                adjacentCellIndicesList = adjacentCellIndicesList
-                .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
-                adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
-                !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-                .ToList();
+                List<Vector2Int> highestValueCoinCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue).ToList();
 
-                Debug.Log("Highest Value: " + highestValue + " , Coin Cell Index: " + coinCellIndex + " , Unblocked Adjacent Cells: " + string.Join(" , " , adjacentCellIndicesList));
+                foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
+                {
+                    List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
+
+                    adjacentCellIndicesList = adjacentCellIndicesList
+                    .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
+                    adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
+                    !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                    .ToList();
+
+                    if(adjacentCellIndicesList.Count > 0)
+                    {
+                        Debug.Log("Lesser Coins Highest Value: " + coinValue + " , Coin Cell Index: " + coinCellIndex + " , Unblocked Adjacent Cells: " + string.Join(" , " , adjacentCellIndicesList));
+                        foundCoinWithUnblockedCells = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    private void ListAdjacentCellsForSelfCoins()
+    {
+        if(_selfCoinValuesList.Count > 0)
+        {
+            bool foundCoinWithUnblockedCells = false;
+
+            foreach(int coinValue in _selfCoinValuesList.OrderByDescending(x => x))
+            {
+                if(foundCoinWithUnblockedCells) break;
+
+                List<Vector2Int> highestValueCoinCellIndicesList = _selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue).ToList();
+
+                foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
+                {
+                    List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
+
+                    adjacentCellIndicesList = adjacentCellIndicesList
+                        .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
+                                                    adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
+                                                    !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                        .ToList();
+
+                    if(adjacentCellIndicesList.Count > 0)
+                    {
+                        Debug.Log("Self Coins Highest Value: " + coinValue + " , Coin Cell Index: " + coinCellIndex + " , Unblocked Adjacent Cells: " + string.Join(" , " , adjacentCellIndicesList));
+                        foundCoinWithUnblockedCells = true;
+                        break;
+                    }
+                }
             }
         }
     }
 
     private Vector2Int FindBestAdjacentCell(List<int> coinValuesList)
     {
+        if(isTestingMode)
+        {
+            ListAdjacentCellsForLesserCoins();
+            ListAdjacentCellsForSelfCoins();   
+        }
+
         List<Vector2Int> validAdjacentCellIndicesList = new List<Vector2Int>();
         
         foreach(int coinValue in coinValuesList.OrderByDescending(x => x))
@@ -183,7 +230,7 @@ public class GameManager : MonoBehaviour
                 highestValueCoinCellIndicesList.AddRange(_lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
             }
         
-            if(highestValueCoinCellIndicesList.Count == 0 && _selfCoinValuesList.Count > 0 && coinValue == _selfCoinValuesList.Max())
+            else if(_selfCoinValuesList.Count > 0 && coinValue == _selfCoinValuesList.Max())
             {
                 highestValueCoinCellIndicesList.AddRange(_selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
             }
@@ -209,8 +256,6 @@ public class GameManager : MonoBehaviour
                 return validAdjacentCellIndicesList[randomIndex];
             }
         }
-        
-        ListAdjacentCellsForLesserCoins();
 
         return _gridManager.InvalidCellIndex;
     }
