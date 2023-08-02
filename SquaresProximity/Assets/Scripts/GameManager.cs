@@ -503,13 +503,9 @@ public class GameManager : MonoBehaviour
 
     private void PlaceCoin()
     {
-        //Debug.Log("PlaceCoin called for Player ID: " + _currentPlayerID);
-        
         _gridManager.CoinValueData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _coinValue);
         _gridManager.PlayerIndexData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
         _gridManager.TotalCells--;
-        
-        //Debug.Log("Total Cells : " + _gridManager.TotalCells--);
 
         EventsManager.Invoke(Event.CoinPlaced , _coinValue , _currentPlayerID);
 
@@ -521,32 +517,9 @@ public class GameManager : MonoBehaviour
             Vector2 spawnPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
             GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
             _gridManager.CoinOnTheCellData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , newCoinObj);
-            SpriteRenderer coinRenderer = newCoinObj.GetComponentInChildren<SpriteRenderer>();
-            TMP_Text coinValueTMP = newCoinObj.GetComponentInChildren<TMP_Text>();
             newCoinObj.GetComponentInChildren<TextMeshPro>().text = _coinValue.ToString();
 
-            switch(_currentPlayerID)
-            {
-                case 0:
-                    coinRenderer.color = Color.red;
-                    coinValueTMP.color = Color.yellow;
-                break;
-
-                case 1:
-                    coinRenderer.color = Color.green;
-                    coinValueTMP.color = Color.blue;
-                break;
-
-                case 2:
-                    coinRenderer.color = Color.blue;
-                    coinValueTMP.color = Color.cyan;
-                break;
-
-                default:
-                    coinRenderer.color = Color.white;
-                    coinValueTMP.color = Color.black;
-                break;
-            }
+            UpdateCoinColor(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , _currentPlayerID);
             
             for(int i = 0; i < _isAIArray.Length; i++)
             {
@@ -558,7 +531,10 @@ public class GameManager : MonoBehaviour
             
             _gridManager.IsCellBlockedData.SetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y , true);
             _isMouseMoving = false;
+            
+            UpdateCoinUIImageColors();
             UpdateTrailVisibility();
+            
             EndPlayerTurn();
             StartPlayerTurn();
         }
@@ -649,7 +625,6 @@ public class GameManager : MonoBehaviour
     private void UpdateCoinColor(int x , int y , int playerIndex)
     {
         GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
-        //Debug.Log("Name of the Adjacent Coin: " + coin.name);
 
         if(coin != null)
         {
