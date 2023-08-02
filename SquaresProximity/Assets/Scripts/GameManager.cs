@@ -56,14 +56,14 @@ public class GameManager : MonoBehaviour
 
         _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
 
-        SubscribeToEvents();
+        ToggleEventSubscription(true);
         UpdateTrailColor();
         UpdateTrailVisibility();
     }
 
     private void OnDestroy()
     {
-        UnsubscribeFromEvents();
+        ToggleEventSubscription(false);
     }
 
     private void Update()
@@ -856,32 +856,35 @@ public class GameManager : MonoBehaviour
         PlaceCoin();
     }
     
-    private void SubscribeToEvents()
+    private void ToggleEventSubscription(bool shouldSubscribe)
     {
-        EventsManager.SubscribeToEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
-        EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
-        EventsManager.SubscribeToEvent(Event.GamePaused , new Action(OnGamePaused));
-        EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
-        EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
-        EventsManager.SubscribeToEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
-        EventsManager.SubscribeToEvent(Event.MouseMoved , new Action(OnMouseMoved));
-        EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
-        EventsManager.SubscribeToEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
-        EventsManager.SubscribeToEvent(Event.TouchscreenTapped , new Action(OnTouchscreenTapped));
+        if(shouldSubscribe)
+        {
+            EventsManager.SubscribeToEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
+            EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+            EventsManager.SubscribeToEvent(Event.GamePaused , new Action(OnGamePaused));
+            EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
+            EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
+            EventsManager.SubscribeToEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
+            EventsManager.SubscribeToEvent(Event.MouseMoved , new Action(OnMouseMoved));
+            EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
+            EventsManager.SubscribeToEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
+            EventsManager.SubscribeToEvent(Event.TouchscreenTapped , new Action(OnTouchscreenTapped));
+        }
+        else
+        {
+            EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
+            EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+            EventsManager.UnsubscribeFromEvent(Event.GamePaused , new Action(OnGamePaused));
+            EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
+            EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
+            EventsManager.UnsubscribeFromEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
+            EventsManager.UnsubscribeFromEvent(Event.MouseMoved , new Action(OnMouseMoved));
+            EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
+            EventsManager.UnsubscribeFromEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
+            EventsManager.UnsubscribeFromEvent(Event.TouchscreenTapped , new Action(OnTouchscreenTapped));
+        }
     }
-    
-    private void UnsubscribeFromEvents()
-    {
-        EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
-        EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
-        EventsManager.UnsubscribeFromEvent(Event.GamePaused , new Action(OnGamePaused));
-        EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
-        EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
-        EventsManager.UnsubscribeFromEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
-        EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
-        EventsManager.UnsubscribeFromEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
-        EventsManager.UnsubscribeFromEvent(Event.TouchscreenTapped , new Action(OnTouchscreenTapped));
-    }
-    
+
     #endregion
 }
