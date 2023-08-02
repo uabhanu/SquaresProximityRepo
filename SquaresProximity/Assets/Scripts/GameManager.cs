@@ -385,14 +385,9 @@ public class GameManager : MonoBehaviour
     
     private void BuffUpAdjacentCoin()
     {
-        int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
-        int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
-        int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
-        int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
-
         _currentPlayerID = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
 
-        ProcessAdjacentCells(minX , maxX , minY , maxY , (x, y, adjacentCoinObj) =>
+        ProcessAdjacentCells((x, y, adjacentCoinObj) =>
         {
             if(adjacentCoinObj != null)
             {
@@ -413,14 +408,9 @@ public class GameManager : MonoBehaviour
 
     private void CaptureAdjacentCoin()
     {
-        int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
-        int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
-        int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
-        int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
-
         _currentPlayerID = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
 
-        ProcessAdjacentCells(minX , maxX , minY , maxY , (x, y, adjacentCoinObj) =>
+        ProcessAdjacentCells((x, y, adjacentCoinObj) =>
         {
             if(adjacentCoinObj != null)
             {
@@ -437,8 +427,13 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    private void ProcessAdjacentCells(int minX , int maxX , int minY , int maxY , Action<int , int , GameObject> processAction)
+    private void ProcessAdjacentCells(Action<int , int , GameObject> processAction)
     {
+        int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
+        int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
+        int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
+        int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
+
         for(int x = minX; x <= maxX; x++)
         {
             for(int y = minY; y <= maxY; y++)
