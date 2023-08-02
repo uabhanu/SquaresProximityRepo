@@ -383,6 +383,18 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    private int GetCurrentCoinValue()
+    {
+        int currentPlayerID = _currentPlayerID;
+        
+        if(_playerNumbersList[currentPlayerID].Count > 0)
+        {
+            return _playerNumbersList[currentPlayerID][0];
+        }
+        
+        return 0;
+    }
+    
     private void BuffUpAdjacentCoin()
     {
         _currentPlayerID = _gridManager.PlayerIndexData.GetValue(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
@@ -425,75 +437,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         });
-    }
-
-    private void ProcessAdjacentCells(Action<int , int , GameObject> processAction)
-    {
-        int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
-        int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
-        int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
-        int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
-
-        for(int x = minX; x <= maxX; x++)
-        {
-            for(int y = minY; y <= maxY; y++)
-            {
-                if(x == _cellIndexAtMousePosition.x && y == _cellIndexAtMousePosition.y) continue;
-
-                bool isCellBlocked = _gridManager.IsCellBlockedData.GetValue(x , y);
-                
-                if(isCellBlocked)
-                {
-                    GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
-                    processAction(x , y , adjacentCoinObj);
-                }
-            }
-        }
-    }
-
-    private void UpdateAdjacentCoinText(int x , int y , int newCoinValue)
-    {
-        GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
-        TMP_Text adjacentCoinValueText;
-
-        if(adjacentCoinObj != null)
-        {
-            adjacentCoinValueText = adjacentCoinObj.GetComponentInChildren<TMP_Text>();
-
-            if(adjacentCoinValueText == null)
-            {
-                int[] offsetX = { -1 , 0 , 1 , -1 , 1 , -1 , 0 , 1 };
-                int[] offsetY = { -1 , -1 , -1 , 0 , 0 , 1 , 1 , 1 };
-
-                for(int i = 0; i < 8; i++)
-                {
-                    int adjacentCellIndexX = x + offsetX[i];
-                    int adjacentCellIndexY = y + offsetY[i];
-
-                    GameObject adjacentAdjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(adjacentCellIndexX , adjacentCellIndexY);
-
-                    if(adjacentAdjacentCoinObj != null)
-                    {
-                        TMP_Text adjacentAdjacentCoinValueText = adjacentAdjacentCoinObj.GetComponentInChildren<TMP_Text>();
-
-                        if(adjacentAdjacentCoinValueText != null)
-                        {
-                            adjacentCoinValueText = adjacentAdjacentCoinValueText;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if(adjacentCoinValueText != null)
-            {
-                adjacentCoinValueText.text = newCoinValue.ToString();
-            }
-            else
-            {
-                Debug.LogWarning("Could not find adjacent cell with TMP_Text component.");
-            }
-        }
     }
 
     private void EndPlayerTurn()
@@ -539,6 +482,30 @@ public class GameManager : MonoBehaviour
             StartPlayerTurn();
         }
     }
+    
+    private void ProcessAdjacentCells(Action<int , int , GameObject> processAction)
+    {
+        int minX = Mathf.Max(_cellIndexAtMousePosition.x - 1 , 0);
+        int maxX = Mathf.Min(_cellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
+        int minY = Mathf.Max(_cellIndexAtMousePosition.y - 1 , 0);
+        int maxY = Mathf.Min(_cellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
+
+        for(int x = minX; x <= maxX; x++)
+        {
+            for(int y = minY; y <= maxY; y++)
+            {
+                if(x == _cellIndexAtMousePosition.x && y == _cellIndexAtMousePosition.y) continue;
+
+                bool isCellBlocked = _gridManager.IsCellBlockedData.GetValue(x , y);
+                
+                if(isCellBlocked)
+                {
+                    GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
+                    processAction(x , y , adjacentCoinObj);
+                }
+            }
+        }
+    }
 
     private void ResetPlayersRemaining()
     {
@@ -576,23 +543,7 @@ public class GameManager : MonoBehaviour
         int maxIterations = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
         int currentIteration = 0;
 
-        if(_playerNumbersList[_currentPlayerID].Count > 0)
-        {
-            _coinValue = _playerNumbersList[_currentPlayerID][0];
-
-            TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
-            coinUITMP.text = _coinValue.ToString();
-
-            for(int i = 0; i < _totalReceivedArray.Length; i++)
-            {
-                if(_currentPlayerID == i)
-                {
-                    _totalReceivedArray[i] += _coinValue;
-                }
-            }
-
-            _playerNumbersList[_currentPlayerID].RemoveAt(0);
-        }
+        UpdateCoinValueAfterPlacement();
 
         if(_playersRemaining.Count == 0)
         {
@@ -620,6 +571,51 @@ public class GameManager : MonoBehaviour
 
         UpdateCoinUIImageColors();
         UpdateTrailColor();
+    }
+    
+    private void UpdateAdjacentCoinText(int x , int y , int newCoinValue)
+    {
+        GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
+        TMP_Text adjacentCoinValueText;
+
+        if(adjacentCoinObj != null)
+        {
+            adjacentCoinValueText = adjacentCoinObj.GetComponentInChildren<TMP_Text>();
+
+            if(adjacentCoinValueText == null)
+            {
+                int[] offsetX = { -1 , 0 , 1 , -1 , 1 , -1 , 0 , 1 };
+                int[] offsetY = { -1 , -1 , -1 , 0 , 0 , 1 , 1 , 1 };
+
+                for(int i = 0; i < 8; i++)
+                {
+                    int adjacentCellIndexX = x + offsetX[i];
+                    int adjacentCellIndexY = y + offsetY[i];
+
+                    GameObject adjacentAdjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(adjacentCellIndexX , adjacentCellIndexY);
+
+                    if(adjacentAdjacentCoinObj != null)
+                    {
+                        TMP_Text adjacentAdjacentCoinValueText = adjacentAdjacentCoinObj.GetComponentInChildren<TMP_Text>();
+
+                        if(adjacentAdjacentCoinValueText != null)
+                        {
+                            adjacentCoinValueText = adjacentAdjacentCoinValueText;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(adjacentCoinValueText != null)
+            {
+                adjacentCoinValueText.text = newCoinValue.ToString();
+            }
+            else
+            {
+                Debug.LogWarning("Could not find adjacent cell with TMP_Text component.");
+            }
+        }
     }
 
     private void UpdateCoinColor(int x , int y , int playerIndex)
@@ -692,6 +688,28 @@ public class GameManager : MonoBehaviour
                     coinUIText.color = Color.black;
                 break;
             }
+        }
+    }
+    
+    private void UpdateCoinValueAfterPlacement()
+    {
+        int currentPlayerID = _currentPlayerID;
+        
+        if(_playerNumbersList[currentPlayerID].Count > 0)
+        {
+            _coinValue = GetCurrentCoinValue();
+            TMP_Text coinUITMP = _coinUIObj.GetComponentInChildren<TMP_Text>();
+            coinUITMP.text = _coinValue.ToString();
+
+            for(int i = 0; i < _totalReceivedArray.Length; i++)
+            {
+                if(currentPlayerID == i)
+                {
+                    _totalReceivedArray[i] += _coinValue;
+                }
+            }
+
+            _playerNumbersList[currentPlayerID].RemoveAt(0);
         }
     }
 
