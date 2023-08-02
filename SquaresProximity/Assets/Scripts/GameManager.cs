@@ -650,6 +650,7 @@ public class GameManager : MonoBehaviour
 
                 default:
                     coinRenderer.color = Color.white;
+                    coinValueTMP.color = Color.black;
                 break;
             }
             
