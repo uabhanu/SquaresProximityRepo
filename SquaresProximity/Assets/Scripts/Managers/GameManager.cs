@@ -4,7 +4,6 @@ using Interfaces;
 using Random = UnityEngine.Random;
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,9 +13,10 @@ namespace Managers
     {
         #region Constructor
     
-        public GameManager(IAIManager _iaiManager , IPlayerTurnsManager iPlayerTurnsManager)
+        public GameManager(IAIManager _iaiManager , ICoinPlacer iCoinPlacer , IPlayerTurnsManager iPlayerTurnsManager)
         {
             _iAIManager = _iaiManager;
+            _iCoinPlacer = iCoinPlacer;
             _iPlayerTurnsManager = iPlayerTurnsManager;
         }
     
@@ -25,6 +25,7 @@ namespace Managers
         #region Interfaces Declarations
 
         private IAIManager _iAIManager;
+        private ICoinPlacer _iCoinPlacer;
         private IPlayerTurnsManager _iPlayerTurnsManager;
 
         #endregion
@@ -64,11 +65,21 @@ namespace Managers
         public bool IsTestingMode => isTestingMode;
         public bool[] IsAIArray => _isAIArray;
         public float AICoinPlaceDelay => aiCoinPlaceDelay;
+        public GameObject CoinObj => coinObj;
         public GameObject CoinUIObj => _coinUIObj;
         public GameObject MouseTrailObj => _mouseTrailObj;
+        public IAIManager IAIManager => _iAIManager;
+        public ICoinPlacer ICoinPlacer => _iCoinPlacer;
+        public IPlayerTurnsManager IPlayerTurnsManager => _iPlayerTurnsManager;
         public int NumberOfPlayers => _numberOfPlayers;
         public List<List<int>> PlayerNumbersList => _playerNumbersList;
         public List<int> PlayersRemainingList => _playersRemainingList;
+        
+        public bool IsMouseMoving
+        {
+            get => _isMouseMoving;
+            set => _isMouseMoving = value;
+        }
         
         public int CoinValue
         {
@@ -196,112 +207,112 @@ namespace Managers
             return 0;
         }
     
-        private void BuffUpAdjacentCoin()
-        {
-            CurrentPlayerID = _gridManager.PlayerIndexData.GetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y);
-
-            ProcessAdjacentCells((x, y, adjacentCoinObj) =>
-            {
-                if(adjacentCoinObj != null)
-                {
-                    int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
-                    int adjacentCoinValue = _gridManager.CoinValueData.GetValue(x , y);
-
-                    if(adjacentPlayerID == CurrentPlayerID)
-                    {
-                        int newAdjacentCoinValue = adjacentCoinValue + 1;
-                        _gridManager.CoinValueData.SetValue(x , y , newAdjacentCoinValue);
-
-                        _iPlayerTurnsManager.UpdateAdjacentCoinText(x , y , newAdjacentCoinValue);
-                        EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);
-                    }
-                }
-            });
-        }
-
-        private void CaptureAdjacentCoin()
-        {
-            CurrentPlayerID = _gridManager.PlayerIndexData.GetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y);
-
-            ProcessAdjacentCells((x, y, adjacentCoinObj) =>
-            {
-                if(adjacentCoinObj != null)
-                {
-                    int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
-                    int adjacentPlayerCoinValue = _gridManager.CoinValueData.GetValue(x , y);
-
-                    if(adjacentPlayerID != CurrentPlayerID && adjacentPlayerCoinValue < CoinValue)
-                    {
-                        _gridManager.PlayerIndexData.SetValue(x , y , CurrentPlayerID);
-                        EventsManager.Invoke(Event.CoinCaptured , CurrentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
-                        _iPlayerTurnsManager.UpdateCoinColor(x , y , CurrentPlayerID);
-                    }
-                }
-            });
-        }
-
-        public void PlaceCoin()
-        {
-            _gridManager.CoinValueData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , CoinValue);
-            _gridManager.PlayerIndexData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , CurrentPlayerID);
-            _gridManager.TotalCells--;
-
-            EventsManager.Invoke(Event.CoinPlaced , CoinValue , CurrentPlayerID);
-
-            if(!_gridManager.IsCellBlockedData.GetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y))
-            {
-                BuffUpAdjacentCoin();
-                CaptureAdjacentCoin();
-
-                Vector2 spawnPos = _gridManager.CellToWorld(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y);
-                GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
-                _gridManager.CoinOnTheCellData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , newCoinObj);
-                newCoinObj.GetComponentInChildren<TextMeshPro>().text = CoinValue.ToString();
-
-                _iPlayerTurnsManager.UpdateCoinColor(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , CurrentPlayerID);
-            
-                for(int i = 0; i < IsAIArray.Length; i++)
-                {
-                    if(IsAIArray[i] && i == CurrentPlayerID)
-                    {
-                        StartCoroutine(_iAIManager.AnimateCoinEffect(newCoinObj.GetComponentInChildren<SpriteRenderer>()));       
-                    }
-                }
-            
-                _gridManager.IsCellBlockedData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , true);
-                _isMouseMoving = false;
-            
-                _iPlayerTurnsManager.UpdateCoinUIImageColors();
-                UpdateTrailVisibility();
-            
-                _iPlayerTurnsManager.EndPlayerTurn();
-                _iPlayerTurnsManager.StartPlayerTurn();
-            }
-        }
-    
-        private void ProcessAdjacentCells(Action<int , int , GameObject> processAction)
-        {
-            int minX = Mathf.Max(CellIndexAtMousePosition.x - 1 , 0);
-            int maxX = Mathf.Min(CellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
-            int minY = Mathf.Max(CellIndexAtMousePosition.y - 1 , 0);
-            int maxY = Mathf.Min(CellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
-
-            for(int x = minX; x <= maxX; x++)
-            {
-                for(int y = minY; y <= maxY; y++)
-                {
-                    if(x == CellIndexAtMousePosition.x && y == CellIndexAtMousePosition.y) continue;
-
-                    bool isCellBlocked = _gridManager.IsCellBlockedData.GetValue(x , y);
-                
-                    if(isCellBlocked)
-                    {
-                        GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
-                        processAction(x , y , adjacentCoinObj);
-                    }
-                }
-            }
-        }
+        // private void BuffUpAdjacentCoin()
+        // {
+        //     CurrentPlayerID = _gridManager.PlayerIndexData.GetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y);
+        //
+        //     ProcessAdjacentCells((x, y, adjacentCoinObj) =>
+        //     {
+        //         if(adjacentCoinObj != null)
+        //         {
+        //             int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
+        //             int adjacentCoinValue = _gridManager.CoinValueData.GetValue(x , y);
+        //
+        //             if(adjacentPlayerID == CurrentPlayerID)
+        //             {
+        //                 int newAdjacentCoinValue = adjacentCoinValue + 1;
+        //                 _gridManager.CoinValueData.SetValue(x , y , newAdjacentCoinValue);
+        //
+        //                 _iPlayerTurnsManager.UpdateAdjacentCoinText(x , y , newAdjacentCoinValue);
+        //                 EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);
+        //             }
+        //         }
+        //     });
+        // }
+        //
+        // private void CaptureAdjacentCoin()
+        // {
+        //     CurrentPlayerID = _gridManager.PlayerIndexData.GetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y);
+        //
+        //     ProcessAdjacentCells((x, y, adjacentCoinObj) =>
+        //     {
+        //         if(adjacentCoinObj != null)
+        //         {
+        //             int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
+        //             int adjacentPlayerCoinValue = _gridManager.CoinValueData.GetValue(x , y);
+        //
+        //             if(adjacentPlayerID != CurrentPlayerID && adjacentPlayerCoinValue < CoinValue)
+        //             {
+        //                 _gridManager.PlayerIndexData.SetValue(x , y , CurrentPlayerID);
+        //                 EventsManager.Invoke(Event.CoinCaptured , CurrentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
+        //                 _iPlayerTurnsManager.UpdateCoinColor(x , y , CurrentPlayerID);
+        //             }
+        //         }
+        //     });
+        // }
+        //
+        // public void PlaceCoin()
+        // {
+        //     _gridManager.CoinValueData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , CoinValue);
+        //     _gridManager.PlayerIndexData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , CurrentPlayerID);
+        //     _gridManager.TotalCells--;
+        //
+        //     EventsManager.Invoke(Event.CoinPlaced , CoinValue , CurrentPlayerID);
+        //
+        //     if(!_gridManager.IsCellBlockedData.GetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y))
+        //     {
+        //         BuffUpAdjacentCoin();
+        //         CaptureAdjacentCoin();
+        //
+        //         Vector2 spawnPos = _gridManager.CellToWorld(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y);
+        //         GameObject newCoinObj = Instantiate(coinObj , spawnPos , Quaternion.identity , gameObject.transform);
+        //         _gridManager.CoinOnTheCellData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , newCoinObj);
+        //         newCoinObj.GetComponentInChildren<TextMeshPro>().text = CoinValue.ToString();
+        //
+        //         _iPlayerTurnsManager.UpdateCoinColor(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , CurrentPlayerID);
+        //     
+        //         for(int i = 0; i < IsAIArray.Length; i++)
+        //         {
+        //             if(IsAIArray[i] && i == CurrentPlayerID)
+        //             {
+        //                 StartCoroutine(_iAIManager.AnimateCoinEffect(newCoinObj.GetComponentInChildren<SpriteRenderer>()));       
+        //             }
+        //         }
+        //     
+        //         _gridManager.IsCellBlockedData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , true);
+        //         _isMouseMoving = false;
+        //     
+        //         _iPlayerTurnsManager.UpdateCoinUIImageColors();
+        //         UpdateTrailVisibility();
+        //     
+        //         _iPlayerTurnsManager.EndPlayerTurn();
+        //         _iPlayerTurnsManager.StartPlayerTurn();
+        //     }
+        // }
+        //
+        // private void ProcessAdjacentCells(Action<int , int , GameObject> processAction)
+        // {
+        //     int minX = Mathf.Max(CellIndexAtMousePosition.x - 1 , 0);
+        //     int maxX = Mathf.Min(CellIndexAtMousePosition.x + 1 , _gridManager.GridInfo.Cols - 1);
+        //     int minY = Mathf.Max(CellIndexAtMousePosition.y - 1 , 0);
+        //     int maxY = Mathf.Min(CellIndexAtMousePosition.y + 1 , _gridManager.GridInfo.Rows - 1);
+        //
+        //     for(int x = minX; x <= maxX; x++)
+        //     {
+        //         for(int y = minY; y <= maxY; y++)
+        //         {
+        //             if(x == CellIndexAtMousePosition.x && y == CellIndexAtMousePosition.y) continue;
+        //
+        //             bool isCellBlocked = _gridManager.IsCellBlockedData.GetValue(x , y);
+        //         
+        //             if(isCellBlocked)
+        //             {
+        //                 GameObject adjacentCoinObj = _gridManager.CoinOnTheCellData.GetValue(x , y);
+        //                 processAction(x , y , adjacentCoinObj);
+        //             }
+        //         }
+        //     }
+        // }
 
         public void ResetPlayersRemaining()
         {
@@ -325,9 +336,9 @@ namespace Managers
             }
         }
 
-        private void UpdateTrailVisibility()
+        public void UpdateTrailVisibility()
         {
-            MouseTrailObj.SetActive(_isMouseMoving);
+            MouseTrailObj.SetActive(IsMouseMoving);
         }
     
         #endregion
@@ -359,11 +370,12 @@ namespace Managers
             _isGameStarted = true;
 
             _gridManager = FindObjectOfType<GridManager>();
-
+            
             _iAIManager = new AIManager(this , _gridManager);
-            _iPlayerTurnsManager = new PlayerTurnsManager(this , _gridManager , _iAIManager);
-        
-            _iPlayerTurnsManager.UpdateTrailColor();
+            _iPlayerTurnsManager = new PlayerTurnsManager(this , _gridManager);
+            _iCoinPlacer = new CoinPlacer(this , _gridManager);
+
+            IPlayerTurnsManager.UpdateTrailColor();
 
             _playersListsCapacity = _gridManager.TotalCells / NumberOfPlayers;
 
@@ -399,7 +411,7 @@ namespace Managers
                 }
             }
         
-            _iPlayerTurnsManager.StartPlayerTurn();
+            IPlayerTurnsManager.StartPlayerTurn();
         }
 
         private void OnMouseLeftClicked()
@@ -419,7 +431,7 @@ namespace Managers
                 return;
             }
 
-            PlaceCoin();
+            ICoinPlacer.PlaceCoin(CellIndexAtMousePosition);
         }
 
         private void OnMouseMoved()
@@ -434,7 +446,7 @@ namespace Managers
                 }
             }
 
-            _isMouseMoving = true;
+            IsMouseMoving = true;
 
             Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
             mouseScreenPos.z = Camera.main.nearClipPlane;
@@ -476,7 +488,7 @@ namespace Managers
                 return;
             }
 
-            PlaceCoin();
+            ICoinPlacer.PlaceCoin(CellIndexAtMousePosition);
         }
     
         private void ToggleEventSubscription(bool shouldSubscribe)

@@ -7,17 +7,25 @@ namespace Managers
 {
     public class PlayerTurnsManager : IPlayerTurnsManager
     {
-        private GameManager _gameManager;
-        private GridManager _gridManager;
-        private IAIManager _iAIManager;
-
-        public PlayerTurnsManager(GameManager gameManager , GridManager gridManager , IAIManager iaiManager)
+        #region Constructor
+        
+        public PlayerTurnsManager(GameManager gameManager , GridManager gridManager)
         {
             _gameManager = gameManager;
             _gridManager = gridManager;
-            _iAIManager = iaiManager;
         }
-    
+        
+        #endregion
+
+        #region Variables Declarations
+        
+        private GameManager _gameManager;
+        private GridManager _gridManager;
+        
+        #endregion
+
+        #region Functions
+        
         private void UpdateCoinValueAfterPlacement()
         {
             int currentPlayerID = _gameManager.CurrentPlayerID;
@@ -72,11 +80,11 @@ namespace Managers
                 {
                     if(_gameManager.IsAIArray[i] && _gameManager.CurrentPlayerID == i)
                     {
-                        _gameManager.CellIndexAtMousePosition = _iAIManager.FindCellToPlaceCoinOn();
+                        _gameManager.CellIndexAtMousePosition = _gameManager.IAIManager.FindCellToPlaceCoinOn();
 
                         if(_gameManager.CellIndexAtMousePosition != _gridManager.InvalidCellIndex)
                         {
-                            _gameManager.StartCoroutine(_iAIManager.AIPlaceCoinCoroutine());
+                            _gameManager.StartCoroutine(_gameManager.IAIManager.AIPlaceCoinCoroutine());
                             foundUnblockedCell = true;
                         }
                     }
@@ -148,29 +156,29 @@ namespace Managers
                     case 0:
                         coinRenderer.color = Color.red;
                         coinValueTMP.color = Color.yellow;
-                        break;
+                    break;
 
                     case 1:
                         coinRenderer.color = Color.green;
                         coinValueTMP.color = Color.blue;
-                        break;
+                    break;
 
                     case 2:
                         coinRenderer.color = Color.blue;
                         coinValueTMP.color = Color.cyan;
-                        break;
+                    break;
 
                     default:
                         coinRenderer.color = Color.white;
                         coinValueTMP.color = Color.black;
-                        break;
+                    break;
                 }
             
                 for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
                 {
                     if(_gameManager.IsAIArray[i] && i == _gameManager.CurrentPlayerID)
                     {
-                        _gameManager.StartCoroutine(_iAIManager.AnimateCoinEffect(coinRenderer , coinRenderer.color));       
+                        _gameManager.StartCoroutine(_gameManager.IAIManager.AnimateCoinEffect(coinRenderer , coinRenderer.color));       
                     }
                 }
             }
@@ -190,19 +198,19 @@ namespace Managers
                 {
                     case 0:
                         coinUIText.color = Color.yellow;
-                        break;
+                    break;
 
                     case 1:
                         coinUIText.color = Color.blue;
-                        break;
+                    break;
 
                     case 2:
                         coinUIText.color = Color.cyan;
-                        break;
+                    break;
 
                     default:
                         coinUIText.color = Color.black;
-                        break;
+                    break;
                 }
             }
         }
@@ -218,5 +226,7 @@ namespace Managers
                 trailRenderer.color = playerColor;
             }
         }
+        
+        #endregion
     }
 }
