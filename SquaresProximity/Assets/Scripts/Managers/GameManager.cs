@@ -1,14 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using Event = Events.Event;
 using Events;
 using Interfaces;
+using Random = UnityEngine.Random;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Event = Events.Event;
-using Random = UnityEngine.Random;
 
 namespace Managers
 {
@@ -16,8 +14,9 @@ namespace Managers
     {
         #region Constructor
     
-        public GameManager(IPlayerTurnsManager iPlayerTurnsManager)
+        public GameManager(IAIManager _iaiManager , IPlayerTurnsManager iPlayerTurnsManager)
         {
+            _iAIManager = _iaiManager;
             _iPlayerTurnsManager = iPlayerTurnsManager;
         }
     
@@ -25,6 +24,7 @@ namespace Managers
     
         #region Interfaces Declarations
 
+        private IAIManager _iAIManager;
         private IPlayerTurnsManager _iPlayerTurnsManager;
 
         #endregion
@@ -60,14 +60,16 @@ namespace Managers
         [SerializeField] private GameObject coinObj;
         [SerializeField] private GameObject trailObj;
 
-        public bool[] IsAIArray => _isAIArray;
         public bool IsRandomTurns => _isRandomTurns;
+        public bool IsTestingMode => isTestingMode;
+        public bool[] IsAIArray => _isAIArray;
+        public float AICoinPlaceDelay => aiCoinPlaceDelay;
         public GameObject CoinUIObj => _coinUIObj;
         public GameObject MouseTrailObj => _mouseTrailObj;
         public int NumberOfPlayers => _numberOfPlayers;
         public List<List<int>> PlayerNumbersList => _playerNumbersList;
         public List<int> PlayersRemainingList => _playersRemainingList;
-
+        
         public int CoinValue
         {
             get => _coinValue;
@@ -84,6 +86,48 @@ namespace Managers
         {
             get => _totalReceivedArray;
             set => _totalReceivedArray = value;
+        }
+        
+        public List<int> LesserCoinValuesList
+        {
+            get => _lesserCoinValuesList;
+            set => _lesserCoinValuesList = value;
+        }
+        
+        public List<int> OtherPlayerCoinValuesList
+        {
+            get => _otherPlayerCoinValuesList;
+            set => _otherPlayerCoinValuesList = value;
+        }
+        
+        public List<int> SelfCoinValuesList
+        {
+            get => _selfCoinValuesList;
+            set => _selfCoinValuesList = value;
+        }
+        
+        public List<Vector2Int> LesserCoinsCellIndicesList
+        {
+            get => _lesserCoinsCellIndicesList;
+            set => _lesserCoinsCellIndicesList = value;
+        }
+        
+        public List<Vector2Int> OtherPlayerCoinsCellIndicesList
+        {
+            get => _otherPlayerCoinsCellIndicesList;
+            set => _otherPlayerCoinsCellIndicesList = value;
+        }
+        
+        public List<Vector2Int> SelfCoinsCellIndicesList
+        {
+            get => _selfCoinsCellIndicesList;
+            set => _selfCoinsCellIndicesList = value;
+        }
+        
+        public List<Vector2Int> UnblockedCellIndicesList
+        {
+            get => _unblockedCellIndicesList;
+            set => _unblockedCellIndicesList = value;
         }
 
         public Vector2Int CellIndexAtMousePosition
@@ -122,297 +166,6 @@ namespace Managers
             {
                 EventsManager.Invoke(Event.GameOver);
                 EventsManager.Invoke(Event.PlayerTotalReceived , TotalReceivedArray);
-            }
-        }
-    
-        #endregion
-
-        #region AI Functions
-
-        public IEnumerator AIPlaceCoinCoroutine()
-        {
-            yield return new WaitForSeconds(aiCoinPlaceDelay);
-            PlaceCoin();
-        }
-    
-        public IEnumerator AnimateCoinEffect(SpriteRenderer coinRenderer , Color? capturingColor = null)
-        {
-            Color originalColor = coinRenderer.color;
-            float originalAlpha = originalColor.a;
-            float capturingAlpha = capturingColor.HasValue ? capturingColor.Value.a : 0f;
-
-            float fadeDuration = 0.2f;
-            float fadeInterval = 0.05f;
-            int fadeSteps = Mathf.RoundToInt(fadeDuration / fadeInterval);
-            int fadeCycles = 3;
-
-            for(int cycle = 0; cycle < fadeCycles; cycle++)
-            {
-                for(int i = 0; i < fadeSteps; i++)
-                {
-                    float t = (float)i / fadeSteps;
-                    float alpha = Mathf.Lerp(originalAlpha , capturingAlpha, t);
-
-                    Color newColor = new Color(originalColor.r , originalColor.g , originalColor.b , alpha);
-                    coinRenderer.color = newColor;
-
-                    yield return new WaitForSeconds(fadeInterval);
-                }
-
-                yield return new WaitForSeconds(0.1f);
-
-                for(int i = 0; i < fadeSteps; i++)
-                {
-                    float t = (float)i / fadeSteps;
-                    float alpha = Mathf.Lerp(capturingAlpha , originalAlpha , t);
-
-                    Color newColor = new Color(originalColor.r , originalColor.g , originalColor.b , alpha);
-                    coinRenderer.color = newColor;
-
-                    yield return new WaitForSeconds(fadeInterval);
-                }
-
-                yield return new WaitForSeconds(0.1f);
-            }
-
-            coinRenderer.color = new Color(originalColor.r , originalColor.g , originalColor.b , originalAlpha);
-        }
-
-        private List<Vector2Int> GetAdjacentCellIndices(Vector2Int coinCellIndex)
-        {
-            List<Vector2Int> adjacentCellIndicesList = new List<Vector2Int>
-            {
-                new(coinCellIndex.x - 1 , coinCellIndex.y),
-                new(coinCellIndex.x + 1 , coinCellIndex.y),
-                new(coinCellIndex.x - 1 , coinCellIndex.y + 1),
-                new(coinCellIndex.x + 1 , coinCellIndex.y + 1),
-                new(coinCellIndex.x , coinCellIndex.y - 1),
-                new(coinCellIndex.x , coinCellIndex.y + 1),
-                new(coinCellIndex.x - 1 , coinCellIndex.y - 1),
-                new(coinCellIndex.x + 1 , coinCellIndex.y - 1)
-            };
-
-            return adjacentCellIndicesList;
-        }
-    
-        private void ListAdjacentCellsForLesserCoins()
-        {
-            if(_lesserCoinValuesList.Count > 0)
-            {
-                bool foundCoinWithUnblockedCells = false;
-
-                foreach(int coinValue in _lesserCoinValuesList.OrderByDescending(x => x))
-                {
-                    if(foundCoinWithUnblockedCells) break;
-
-                    List<Vector2Int> highestValueCoinCellIndicesList = _lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue).ToList();
-
-                    foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
-                    {
-                        List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
-
-                        adjacentCellIndicesList = adjacentCellIndicesList
-                            .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
-                                                        adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
-                                                        !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-                            .ToList();
-
-                        if(adjacentCellIndicesList.Count > 0)
-                        {
-                            Debug.Log("Lesser Coins Highest Value: " + coinValue + " , Coin Cell Index: " + coinCellIndex + " , Unblocked Adjacent Cells: " + string.Join(" , " , adjacentCellIndicesList));
-                            foundCoinWithUnblockedCells = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    
-        private void ListAdjacentCellsForSelfCoins()
-        {
-            if(_selfCoinValuesList.Count > 0)
-            {
-                bool foundCoinWithUnblockedCells = false;
-
-                foreach(int coinValue in _selfCoinValuesList.OrderByDescending(x => x))
-                {
-                    if(foundCoinWithUnblockedCells) break;
-
-                    List<Vector2Int> highestValueCoinCellIndicesList = _selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue).ToList();
-
-                    foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
-                    {
-                        List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
-
-                        adjacentCellIndicesList = adjacentCellIndicesList
-                            .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
-                                                        adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
-                                                        !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-                            .ToList();
-
-                        if(adjacentCellIndicesList.Count > 0)
-                        {
-                            Debug.Log("Self Coins Highest Value: " + coinValue + " , Coin Cell Index: " + coinCellIndex + " , Unblocked Adjacent Cells: " + string.Join(" , " , adjacentCellIndicesList));
-                            foundCoinWithUnblockedCells = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        private Vector2Int FindBestAdjacentCell(List<int> coinValuesList)
-        {
-            if(isTestingMode)
-            {
-                ListAdjacentCellsForLesserCoins();
-                ListAdjacentCellsForSelfCoins();   
-            }
-
-            List<Vector2Int> validAdjacentCellIndicesList = new List<Vector2Int>();
-        
-            foreach(int coinValue in coinValuesList.OrderByDescending(x => x))
-            {
-                List<Vector2Int> highestValueCoinCellIndicesList = new List<Vector2Int>();
-        
-                if(_lesserCoinValuesList.Count > 0 && coinValue == _lesserCoinValuesList.Max())
-                {
-                    highestValueCoinCellIndicesList.AddRange(_lesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
-                }
-        
-                else if(_selfCoinValuesList.Count > 0 && coinValue == _selfCoinValuesList.Max())
-                {
-                    highestValueCoinCellIndicesList.AddRange(_selfCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
-                }
-        
-                foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
-                {
-                    List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
-        
-                    adjacentCellIndicesList = adjacentCellIndicesList
-                        .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
-                                                    adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
-                                                    !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-                        .ToList();
-        
-                    validAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
-                }
-        
-                if(validAdjacentCellIndicesList.Count > 0)
-                {
-                    int randomIndex = Random.Range(0 , validAdjacentCellIndicesList.Count);
-                    //Debug.Log("FindBestAdjacentCell() -> Selected Cell Index : " + validAdjacentCellIndicesList[randomIndex]);
-                    //Debug.Log("Adjacent Cells available for coin at " + validAdjacentCellIndicesList[randomIndex] + " : " + string.Join(" , " , validAdjacentCellIndicesList));
-                    return validAdjacentCellIndicesList[randomIndex];
-                }
-            }
-
-            return _gridManager.InvalidCellIndex;
-        }
-
-
-        public Vector2Int FindCellToPlaceCoinOn()
-        {
-            ClearLists();
-            PopulateLists();
-
-            Vector2Int targetCellIndex = _gridManager.InvalidCellIndex;
-        
-            if(_lesserCoinValuesList.Count > 0)
-            {
-                //Debug.Log("Attack");
-            
-                _lesserCoinValuesList.Sort((a, b) => b.CompareTo(a));
-                targetCellIndex = FindBestAdjacentCell(_lesserCoinValuesList);
-            
-                //Debug.Log("FindCellToPlaceCoinOn() Attack Block -> Target Cell Index : " + targetCellIndex);
-    
-                if(targetCellIndex != _gridManager.InvalidCellIndex)
-                {
-                    return targetCellIndex;
-                }
-            }
-
-            if(_selfCoinValuesList.Count > 0)
-            {
-                //Debug.Log("Buff Up");
-            
-                _selfCoinValuesList.Sort((a, b) => b.CompareTo(a));
-                targetCellIndex = FindBestAdjacentCell(_selfCoinValuesList);
-            
-                //Debug.Log("FindCellToPlaceCoinOn() Buff Up Block -> Target Cell Index : " + targetCellIndex);
-            
-                if(targetCellIndex != _gridManager.InvalidCellIndex)
-                {
-                    return targetCellIndex;
-                }
-            }
-
-            if(_unblockedCellIndicesList.Count > 0)
-            {
-                //Debug.Log("Random cell");
-            
-                int index = Random.Range(0 , _unblockedCellIndicesList.Count);
-                targetCellIndex = _unblockedCellIndicesList[index];
-            
-                //Debug.Log("FindCellToPlaceCoinOn() Random Block -> Target Cell Index : " + targetCellIndex);
-            
-                if(targetCellIndex != _gridManager.InvalidCellIndex)
-                {
-                    return targetCellIndex;
-                }
-            }
-
-            return _gridManager.InvalidCellIndex;
-        }
-    
-        private void ClearLists()
-        {
-            _lesserCoinsCellIndicesList.Clear();
-            _lesserCoinValuesList.Clear();
-            _selfCoinsCellIndicesList.Clear();
-            _selfCoinValuesList.Clear();
-            _otherPlayerCoinsCellIndicesList.Clear();
-            _otherPlayerCoinValuesList.Clear();
-            _unblockedCellIndicesList.Clear();
-        }
-    
-        private void PopulateLists()
-        {
-            for(int x = 0; x < _gridManager.GridInfo.Cols; x++)
-            {
-                for(int y = 0; y < _gridManager.GridInfo.Rows; y++)
-                {
-                    if(!_gridManager.IsCellBlockedData.GetValue(x , y))
-                    {
-                        _unblockedCellIndicesList.Add(new Vector2Int(x , y));
-                    }
-                
-                    else if(_gridManager.IsCellBlockedData.GetValue(x , y))
-                    {
-                        GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
-
-                        if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) != CurrentPlayerID)
-                        {
-                            _otherPlayerCoinsCellIndicesList.Add(new Vector2Int(x , y));
-                            int coinValue = _gridManager.CoinValueData.GetValue(x , y);
-                            _otherPlayerCoinValuesList.Add(coinValue);
-
-                            if(coinValue < CoinValue)
-                            {
-                                _lesserCoinsCellIndicesList.Add(new Vector2Int(x , y));
-                                _lesserCoinValuesList.Add(coinValue);
-                            }
-                        }
-
-                        if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == CurrentPlayerID)
-                        {
-                            _selfCoinsCellIndicesList.Add(new Vector2Int(x , y));
-                            int coinValue = _gridManager.CoinValueData.GetValue(x , y);
-                            _selfCoinValuesList.Add(coinValue);
-                        }
-                    }
-                }
             }
         }
     
@@ -487,7 +240,7 @@ namespace Managers
             });
         }
 
-        private void PlaceCoin()
+        public void PlaceCoin()
         {
             _gridManager.CoinValueData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , CoinValue);
             _gridManager.PlayerIndexData.SetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y , CurrentPlayerID);
@@ -511,7 +264,7 @@ namespace Managers
                 {
                     if(IsAIArray[i] && i == CurrentPlayerID)
                     {
-                        StartCoroutine(AnimateCoinEffect(newCoinObj.GetComponentInChildren<SpriteRenderer>()));       
+                        StartCoroutine(_iAIManager.AnimateCoinEffect(newCoinObj.GetComponentInChildren<SpriteRenderer>()));       
                     }
                 }
             
@@ -606,20 +359,21 @@ namespace Managers
             _isGameStarted = true;
 
             _gridManager = FindObjectOfType<GridManager>();
-        
-            _iPlayerTurnsManager = new PlayerTurnsManager(this , _gridManager);
+
+            _iAIManager = new AIManager(this , _gridManager);
+            _iPlayerTurnsManager = new PlayerTurnsManager(this , _gridManager , _iAIManager);
         
             _iPlayerTurnsManager.UpdateTrailColor();
 
             _playersListsCapacity = _gridManager.TotalCells / NumberOfPlayers;
 
-            _selfCoinsCellIndicesList = new List<Vector2Int>();
-            _selfCoinValuesList = new List<int>();
-            _lesserCoinsCellIndicesList = new List<Vector2Int>();
-            _lesserCoinValuesList = new List<int>();
-            _otherPlayerCoinsCellIndicesList = new List<Vector2Int>();
-            _otherPlayerCoinValuesList = new List<int>();
-            _unblockedCellIndicesList = new List<Vector2Int>();
+            SelfCoinsCellIndicesList = new List<Vector2Int>();
+            SelfCoinValuesList = new List<int>();
+            LesserCoinsCellIndicesList = new List<Vector2Int>();
+            LesserCoinValuesList = new List<int>();
+            OtherPlayerCoinsCellIndicesList = new List<Vector2Int>();
+            OtherPlayerCoinValuesList = new List<int>();
+            UnblockedCellIndicesList = new List<Vector2Int>();
             _playerNumbersList = new List<List<int>>();
             _playersRemainingList = new List<int>();
 
