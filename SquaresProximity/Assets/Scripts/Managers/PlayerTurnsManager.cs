@@ -9,11 +9,13 @@ namespace Managers
     {
         private GameManager _gameManager;
         private GridManager _gridManager;
+        private IAIManager _iAIManager;
 
-        public PlayerTurnsManager(GameManager gameManager , GridManager gridManager)
+        public PlayerTurnsManager(GameManager gameManager , GridManager gridManager , IAIManager iaiManager)
         {
             _gameManager = gameManager;
             _gridManager = gridManager;
+            _iAIManager = iaiManager;
         }
     
         private void UpdateCoinValueAfterPlacement()
@@ -70,11 +72,11 @@ namespace Managers
                 {
                     if(_gameManager.IsAIArray[i] && _gameManager.CurrentPlayerID == i)
                     {
-                        _gameManager.CellIndexAtMousePosition = _gameManager.FindCellToPlaceCoinOn();
+                        _gameManager.CellIndexAtMousePosition = _iAIManager.FindCellToPlaceCoinOn();
 
                         if(_gameManager.CellIndexAtMousePosition != _gridManager.InvalidCellIndex)
                         {
-                            _gameManager.StartCoroutine(_gameManager.AIPlaceCoinCoroutine());
+                            _gameManager.StartCoroutine(_iAIManager.AIPlaceCoinCoroutine());
                             foundUnblockedCell = true;
                         }
                     }
@@ -168,7 +170,7 @@ namespace Managers
                 {
                     if(_gameManager.IsAIArray[i] && i == _gameManager.CurrentPlayerID)
                     {
-                        _gameManager.StartCoroutine(_gameManager.AnimateCoinEffect(coinRenderer , coinRenderer.color));       
+                        _gameManager.StartCoroutine(_iAIManager.AnimateCoinEffect(coinRenderer , coinRenderer.color));       
                     }
                 }
             }
