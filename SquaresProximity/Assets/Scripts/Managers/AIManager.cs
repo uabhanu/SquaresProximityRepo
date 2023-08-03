@@ -140,7 +140,7 @@ namespace Managers
         public IEnumerator AIPlaceCoinCoroutine()
         {
             yield return new WaitForSeconds(_gameManager.AICoinPlaceDelay);
-            _gameManager.ICoinPlacer.PlaceCoin(_gameManager.CellIndexAtMousePosition);
+            _gameManager.ICoinPlacer.PlaceCoin(_gameManager.CellIndexToUse);
         }
 
         public IEnumerator AnimateCoinEffect(SpriteRenderer coinRenderer , Color? capturingColor = null)

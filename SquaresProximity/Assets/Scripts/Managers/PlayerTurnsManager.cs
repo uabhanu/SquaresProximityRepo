@@ -58,7 +58,7 @@ namespace Managers
             if(_gameManager.IsRandomTurns)
             {
                 int remainingPlayersCount = _gameManager.PlayersRemainingList.Count;
-                int randomIndex = Random.Range(0, remainingPlayersCount);
+                int randomIndex = Random.Range(0 , remainingPlayersCount);
                 _gameManager.CurrentPlayerID = _gameManager.PlayersRemainingList[randomIndex];
                 _gameManager.PlayersRemainingList.RemoveAt(randomIndex);
             }
@@ -80,9 +80,9 @@ namespace Managers
                 {
                     if(_gameManager.IsAIArray[i] && _gameManager.CurrentPlayerID == i)
                     {
-                        _gameManager.CellIndexAtMousePosition = _gameManager.IAIManager.FindCellToPlaceCoinOn();
+                        _gameManager.CellIndexToUse = _gameManager.IAIManager.FindCellToPlaceCoinOn();
 
-                        if(_gameManager.CellIndexAtMousePosition != _gridManager.InvalidCellIndex)
+                        if(_gameManager.CellIndexToUse != _gridManager.InvalidCellIndex)
                         {
                             _gameManager.StartCoroutine(_gameManager.IAIManager.AIPlaceCoinCoroutine());
                             foundUnblockedCell = true;

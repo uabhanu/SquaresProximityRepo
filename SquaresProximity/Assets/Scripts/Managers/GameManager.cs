@@ -55,14 +55,13 @@ namespace Managers
         private List<int> _playersRemainingList;
         private List<List<int>> _playerNumbersList;
         private Vector2Int _cellIndexAtMousePosition;
-
-        [SerializeField] private bool isTestingMode;
+        private Vector2Int _cellIndexToUse;
+        
         [SerializeField] private float aiCoinPlaceDelay;
         [SerializeField] private GameObject coinObj;
         [SerializeField] private GameObject trailObj;
 
         public bool IsRandomTurns => _isRandomTurns;
-        public bool IsTestingMode => isTestingMode;
         public bool[] IsAIArray => _isAIArray;
         public float AICoinPlaceDelay => aiCoinPlaceDelay;
         public GameObject CoinObj => coinObj;
@@ -141,10 +140,10 @@ namespace Managers
             set => _unblockedCellIndicesList = value;
         }
 
-        public Vector2Int CellIndexAtMousePosition
+        public Vector2Int CellIndexToUse
         {
-            get => _cellIndexAtMousePosition;
-            set => _cellIndexAtMousePosition = value;
+            get => _cellIndexToUse;
+            set => _cellIndexToUse = value;
         }
 
         #endregion
@@ -205,6 +204,16 @@ namespace Managers
             }
         
             return 0;
+        }
+        
+        private Vector2Int GetPlayerCellIndex()
+        {
+            if(IsAIArray[CurrentPlayerID])
+            {
+                return _iAIManager.FindCellToPlaceCoinOn();
+            }
+
+            return _cellIndexAtMousePosition;
         }
         
         public void ResetPlayersRemaining()
@@ -319,18 +328,20 @@ namespace Managers
                 }
             }
 
-            if(CellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y))
+            CellIndexToUse = GetPlayerCellIndex();
+
+            if(CellIndexToUse == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexToUse.x , CellIndexToUse.y))
             {
                 return;
             }
 
-            ICoinPlacer.PlaceCoin(CellIndexAtMousePosition);
+            ICoinPlacer.PlaceCoin(CellIndexToUse);
         }
 
         private void OnMouseMoved()
         {
             if(!_isGameStarted) return;
-        
+
             for(int i = 0; i < IsAIArray.Length; i++)
             {
                 if(IsAIArray[i] && CurrentPlayerID == i)
@@ -345,11 +356,11 @@ namespace Managers
             mouseScreenPos.z = Camera.main.nearClipPlane;
 
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
-            CellIndexAtMousePosition = _gridManager.WorldToCell(mouseWorldPos);
+            _cellIndexAtMousePosition = _gridManager.WorldToCell(mouseWorldPos); 
         
-            if(CellIndexAtMousePosition != _gridManager.InvalidCellIndex)
+            if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
             {
-                Vector2 snapPos = _gridManager.CellToWorld(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y);
+                Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
                 MouseTrailObj.transform.position = snapPos;
             }
             else
@@ -376,12 +387,22 @@ namespace Managers
         {
             if(!_isGameStarted) return;
 
-            if(CellIndexAtMousePosition == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexAtMousePosition.x , CellIndexAtMousePosition.y))
+            for(int i = 0; i < IsAIArray.Length; i++)
+            {
+                if(IsAIArray[i] && CurrentPlayerID == i)
+                {
+                    return;
+                }
+            }
+
+            CellIndexToUse = GetPlayerCellIndex();
+
+            if(CellIndexToUse == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexToUse.x , CellIndexToUse.y))
             {
                 return;
             }
 
-            ICoinPlacer.PlaceCoin(CellIndexAtMousePosition);
+            ICoinPlacer.PlaceCoin(CellIndexToUse);
         }
     
         private void ToggleEventSubscription(bool shouldSubscribe)
