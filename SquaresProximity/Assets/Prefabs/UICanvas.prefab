@@ -7183,13 +7183,15 @@ MonoBehaviour:
   - {fileID: 2561551179081926638}
   - {fileID: 4921818586766482093}
   - {fileID: 1596449877754723051}
-  numberOfPlayersSelectionTogglesArray:
-  - {fileID: 5908917880805072194}
-  - {fileID: 5184507460762128455}
+  holesToggle: {fileID: 6969716086969030775}
+  randomTurnsToggle: {fileID: 3226794260343823204}
   aiHumanTogglesArray:
   - {fileID: 4563720629489141825}
   - {fileID: 838066222367575166}
   - {fileID: 6940601874941429448}
+  numberOfPlayersSelectionTogglesArray:
+  - {fileID: 5908917880805072194}
+  - {fileID: 5184507460762128455}
 --- !u!1 &6056266090565472135
 GameObject:
   m_ObjectHideFlags: 0

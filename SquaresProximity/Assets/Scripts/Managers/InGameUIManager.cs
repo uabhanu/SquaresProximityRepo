@@ -12,7 +12,12 @@ namespace Managers
     {
         #region Variable Declarations
 
-        private bool[] _aiHumanSelections;
+        private const string HolesKey = "Holes";
+        private const string RandomTurnsKey = "Random Turns";
+
+        private bool _holesToggleBool;
+        private bool _randomTurnsToggleBool;
+        private bool[] _aiHumanSelectionsBoolArray;
         private int _highestScorePlayerID;
         private int _numberOfPlayers;
         private int[] _playersTotalWinsArray;
@@ -42,9 +47,11 @@ namespace Managers
         [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
         [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
         [SerializeField] private TMP_Text[] coinScoreTMPTexts;
-        [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
+        [SerializeField] private Toggle holesToggle;
+        [SerializeField] private Toggle randomTurnsToggle;
         [SerializeField] private Toggle[] aiHumanTogglesArray;
-        
+        [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
+
         #endregion
     
         #region MonoBehaviour Functions
@@ -66,6 +73,12 @@ namespace Managers
             {
                 numberOfPlayersSelectionTogglesArray[i].isOn = false;
             }
+            
+            PlayerPrefsManager.LoadData(ref _holesToggleBool , HolesKey);
+            holesToggle.isOn = _holesToggleBool;
+            
+            PlayerPrefsManager.LoadData(ref _randomTurnsToggleBool , RandomTurnsKey);
+            randomTurnsToggle.isOn = _randomTurnsToggleBool;
 
             for(int i = 0; i < winsPanelObjs.Length; i++)
             {
@@ -95,7 +108,7 @@ namespace Managers
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 bool isAI = aiHumanTogglesArray[i].isOn;
-                _aiHumanSelections[i] = isAI;
+                _aiHumanSelectionsBoolArray[i] = isAI;
                 EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
             }
         }
@@ -131,6 +144,11 @@ namespace Managers
             {
                 _numberOfPlayers = 2;
                 numberOfPlayersSelectionTogglesArray[0].isOn = true;
+                
+                for(int i = 0; i < aiHumanTogglesArray.Length; i++)
+                {
+                    aiHumanTogglesArray[0].isOn = true;
+                }
             }
         
             else if(numberOfPlayersSelectionTogglesArray[0].isOn && numberOfPlayersSelectionTogglesArray[1].isOn)
@@ -141,31 +159,32 @@ namespace Managers
             else
             {
                 _numberOfPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
+                
+                string[] aiKeys = new string[_numberOfPlayers];
+                
+                for(int i = 0; i < _numberOfPlayers; i++)
+                {
+                    aiKeys[i] = "Player" + i + "AI";
+                    PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
+                    aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
+                }
             }
         
             numberOfPlayersSelectionPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(true);
-
-            string[] aiKeys = new string[_numberOfPlayers];
+            
             string[] nameKeys = new string[_numberOfPlayers];
             string[] winsKeys = new string[_numberOfPlayers];
         
             for(int i = 0; i < _numberOfPlayers; i++)
             {
-                aiKeys[i] = "Player" + i + "AI";
                 nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
-        
-            PlayerPrefsManager.LoadData(ref _aiHumanSelections , aiKeys);
+            
             PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
             PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
-            
-            for(int i = 0; i < aiHumanTogglesArray.Length; i++)
-            {
-                aiHumanTogglesArray[i].isOn = _aiHumanSelections[i];
-            }
-        
+
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 playerNameTMPInputFields[i].text = _playerNamesArray[i];
@@ -203,7 +222,7 @@ namespace Managers
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
-            PlayerPrefsManager.SaveData(_aiHumanSelections , aiKeys);
+            PlayerPrefsManager.SaveData(_aiHumanSelectionsBoolArray , aiKeys);
             PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
             PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
         }
@@ -245,6 +264,8 @@ namespace Managers
         public void HolesToggle()
         {
             EventsManager.Invoke(Event.HolesToggled);
+            _holesToggleBool = holesToggle.isOn;
+            PlayerPrefsManager.SaveData(_holesToggleBool , HolesKey);
         }
 
         public void LeaderboardButton()
@@ -290,6 +311,8 @@ namespace Managers
         public void RandomTurnsToggle()
         {
             EventsManager.Invoke(Event.RandomTurnsToggled);
+            _randomTurnsToggleBool = randomTurnsToggle.isOn;
+            PlayerPrefsManager.SaveData(_randomTurnsToggleBool , RandomTurnsKey);
         }
 
         public void ResetButton()
@@ -316,7 +339,7 @@ namespace Managers
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
-            PlayerPrefsManager.LoadData(ref _aiHumanSelections , aiKeys);
+            PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
             PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
             PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
             
@@ -340,7 +363,7 @@ namespace Managers
             if(numberOfPlayersSelectionTogglesArray[0].isOn)
             {
                 _numberOfPlayers = 2;
-                _aiHumanSelections = new bool[_numberOfPlayers];
+                _aiHumanSelectionsBoolArray = new bool[_numberOfPlayers];
                 _playerNamesArray = new string[_numberOfPlayers];
                 _playersTotalWinsArray = new int[_numberOfPlayers];
                 _totalReceivedArray = new int[_numberOfPlayers];
@@ -351,7 +374,7 @@ namespace Managers
             else if(numberOfPlayersSelectionTogglesArray[1].isOn)
             {
                 _numberOfPlayers = 3;
-                _aiHumanSelections = new bool[_numberOfPlayers];
+                _aiHumanSelectionsBoolArray = new bool[_numberOfPlayers];
                 _playerNamesArray = new string[_numberOfPlayers];
                 _playersTotalWinsArray = new int[_numberOfPlayers];
                 _totalReceivedArray = new int[_numberOfPlayers];
