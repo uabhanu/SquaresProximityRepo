@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Data
+namespace Managers
 {
     public static class PlayerPrefsManager
     {
