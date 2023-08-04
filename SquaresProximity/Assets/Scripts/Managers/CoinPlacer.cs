@@ -1,9 +1,10 @@
+using Event = Events.Event;
 using Events;
 using Interfaces;
+using Object = UnityEngine.Object;
 using System;
 using TMPro;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Managers
 {
@@ -45,7 +46,7 @@ namespace Managers
                         _gridManager.CoinValueData.SetValue(x , y , newAdjacentCoinValue);
 
                         _gameManager.IPlayerTurnsManager.UpdateAdjacentCoinText(x , y , newAdjacentCoinValue);
-                        EventsManager.Invoke(Events.Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);
+                        EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);
                     }
                 }
             });
@@ -65,7 +66,7 @@ namespace Managers
                     if(adjacentPlayerID != currentPlayerID && adjacentPlayerCoinValue < _gameManager.CoinValue)
                     {
                         _gridManager.PlayerIndexData.SetValue(x , y , currentPlayerID);
-                        EventsManager.Invoke(Events.Event.CoinCaptured , currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
+                        EventsManager.Invoke(Event.CoinCaptured , currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
                         _gameManager.IPlayerTurnsManager.UpdateCoinColor(x , y , currentPlayerID);
                     }
                 }
