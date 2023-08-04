@@ -1,7 +1,7 @@
+using Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Interfaces;
 using UnityEngine;
 
 namespace Managers
@@ -25,7 +25,7 @@ namespace Managers
         
         #endregion
 
-        #region Custom Functions
+        #region User Defined Functions
         
         private List<Vector2Int> GetAdjacentCellIndices(Vector2Int coinCellIndex)
         {
@@ -195,12 +195,12 @@ namespace Managers
         
             if(_gameManager.LesserCoinValuesList.Count > 0)
             {
-                //Debug.Log("Attack");
+                Debug.Log("Attack");
             
                 _gameManager.LesserCoinValuesList.Sort((a, b) => b.CompareTo(a));
                 targetCellIndex = FindBestAdjacentCell(_gameManager.LesserCoinValuesList);
             
-                //Debug.Log("FindCellToPlaceCoinOn() Attack Block -> Target Cell Index : " + targetCellIndex);
+                Debug.Log("FindCellToPlaceCoinOn() Attack Block -> Target Cell Index : " + targetCellIndex);
     
                 if(targetCellIndex != _gridManager.InvalidCellIndex)
                 {
@@ -210,12 +210,12 @@ namespace Managers
 
             if(_gameManager.SelfCoinValuesList.Count > 0)
             {
-                //Debug.Log("Buff Up");
+                Debug.Log("Buff Up");
             
                 _gameManager.SelfCoinValuesList.Sort((a, b) => b.CompareTo(a));
                 targetCellIndex = FindBestAdjacentCell(_gameManager.SelfCoinValuesList);
             
-                //Debug.Log("FindCellToPlaceCoinOn() Buff Up Block -> Target Cell Index : " + targetCellIndex);
+                Debug.Log("FindCellToPlaceCoinOn() Buff Up Block -> Target Cell Index : " + targetCellIndex);
             
                 if(targetCellIndex != _gridManager.InvalidCellIndex)
                 {
