@@ -104,6 +104,11 @@ namespace Managers
             {
                 for(int y = 0; y < _gridManager.GridInfo.Rows; y++)
                 {
+                    bool hasAdjacentUnblockedCell = GetAdjacentCellIndices(new Vector2Int(x , y)).Any(adjacentIndex =>
+                    adjacentIndex.x >= 0 && adjacentIndex.x < _gridManager.GridInfo.Cols &&
+                    adjacentIndex.y >= 0 && adjacentIndex.y < _gridManager.GridInfo.Rows &&
+                    !_gridManager.IsCellBlockedData.GetValue(adjacentIndex.x , adjacentIndex.y));
+                    
                     if(!_gridManager.IsCellBlockedData.GetValue(x , y))
                     {
                         _gameManager.UnblockedCellIndicesList.Add(new Vector2Int(x , y));
@@ -112,21 +117,21 @@ namespace Managers
                     else if(_gridManager.IsCellBlockedData.GetValue(x , y))
                     {
                         GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
-
+        
                         if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) != _gameManager.CurrentPlayerID)
                         {
                             _gameManager.OtherPlayerCoinsCellIndicesList.Add(new Vector2Int(x , y));
                             int coinValue = _gridManager.CoinValueData.GetValue(x , y);
                             _gameManager.OtherPlayerCoinValuesList.Add(coinValue);
 
-                            if(coinValue < _gameManager.CoinValue)
+                            if(coinValue < _gameManager.CoinValue && hasAdjacentUnblockedCell)
                             {
                                 _gameManager.LesserCoinsCellIndicesList.Add(new Vector2Int(x , y));
                                 _gameManager.LesserCoinValuesList.Add(coinValue);
                             }
                         }
-
-                        if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _gameManager.CurrentPlayerID)
+        
+                        if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _gameManager.CurrentPlayerID && hasAdjacentUnblockedCell)
                         {
                             _gameManager.SelfCoinsCellIndicesList.Add(new Vector2Int(x , y));
                             int coinValue = _gridManager.CoinValueData.GetValue(x , y);
@@ -195,12 +200,12 @@ namespace Managers
         
             if(_gameManager.LesserCoinValuesList.Count > 0)
             {
-                Debug.Log("Attack");
+                //Debug.Log("Attack");
             
                 _gameManager.LesserCoinValuesList.Sort((a, b) => b.CompareTo(a));
                 targetCellIndex = FindBestAdjacentCell(_gameManager.LesserCoinValuesList);
             
-                Debug.Log("FindCellToPlaceCoinOn() Attack Block -> Target Cell Index : " + targetCellIndex);
+                //Debug.Log("FindCellToPlaceCoinOn() Attack Block -> Target Cell Index : " + targetCellIndex);
     
                 if(targetCellIndex != _gridManager.InvalidCellIndex)
                 {
@@ -210,12 +215,12 @@ namespace Managers
 
             if(_gameManager.SelfCoinValuesList.Count > 0)
             {
-                Debug.Log("Buff Up");
+                //Debug.Log("Buff Up");
             
                 _gameManager.SelfCoinValuesList.Sort((a, b) => b.CompareTo(a));
                 targetCellIndex = FindBestAdjacentCell(_gameManager.SelfCoinValuesList);
             
-                Debug.Log("FindCellToPlaceCoinOn() Buff Up Block -> Target Cell Index : " + targetCellIndex);
+                //Debug.Log("FindCellToPlaceCoinOn() Buff Up Block -> Target Cell Index : " + targetCellIndex);
             
                 if(targetCellIndex != _gridManager.InvalidCellIndex)
                 {
