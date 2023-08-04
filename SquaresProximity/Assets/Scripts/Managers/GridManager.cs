@@ -1,15 +1,15 @@
+using Event = Events.Event;
+using Events;
+using Random = UnityEngine.Random;
 using System;
 using System.Collections.Generic;
-using Events;
 using UnityEngine;
-using Event = Events.Event;
-using Random = UnityEngine.Random;
 
 namespace Managers
 {
     public class GridManager : MonoBehaviour
     {
-        private bool _shouldGenerateEmptyCells;
+        private bool _shouldGenerateEmptyCellsBool;
         private int _holeCellsCount;
         private int _totalCells;
         private GridData<bool> _isCellBlockedData;
@@ -141,7 +141,7 @@ namespace Managers
                 }
             }
 
-            if(_shouldGenerateEmptyCells)
+            if(_shouldGenerateEmptyCellsBool)
             {
                 TotalCells -= _holeCellsCount;
 
@@ -184,7 +184,7 @@ namespace Managers
 
         private void OnHolesToggled()
         {
-            _shouldGenerateEmptyCells = !_shouldGenerateEmptyCells;
+            _shouldGenerateEmptyCellsBool = !_shouldGenerateEmptyCellsBool;
         }
     
         private void SubscribeToEvents()
