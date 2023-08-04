@@ -145,21 +145,15 @@ namespace Managers
             playerInputPanelObj.SetActive(true);
 
             string[] nameKeys = new string[_numberOfPlayers];
-        
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                nameKeys[i] = "Player" + i + "Name";
-            }
-        
-            PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
-        
             string[] winsKeys = new string[_numberOfPlayers];
         
             for(int i = 0; i < _numberOfPlayers; i++)
             {
+                nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
+            PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
             PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
         
             for(int i = 0; i < _numberOfPlayers; i++)
@@ -189,21 +183,15 @@ namespace Managers
             }
         
             string[] nameKeys = new string[_numberOfPlayers];
-        
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                nameKeys[i] = "Player" + i + "Name";
-            }
-        
-            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
-
             string[] winsKeys = new string[_numberOfPlayers];
         
             for(int i = 0; i < _numberOfPlayers; i++)
             {
+                nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
+            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
             PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
         }
 
@@ -211,9 +199,9 @@ namespace Managers
         {
             string[] defaultPlayerNames =
             {
-                "Red",
-                "Green",
-                "Blue"
+                "AI",
+                "AI",
+                "AI"
             };
 
             if(_numberOfPlayers == 2)
@@ -305,23 +293,17 @@ namespace Managers
             }
         
             string[] nameKeys = new string[_numberOfPlayers];
+            string[] winsKeys = new string[_numberOfPlayers];
 
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 nameKeys[i] = "Player" + i + "Name";
-            }
-        
-            PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
-        
-            string[] winsKeys = new string[_numberOfPlayers];
-        
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
+            PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
             PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
-        
+            
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 playerNameTMPInputFields[i].text = _playerNamesArray[i];
@@ -390,21 +372,15 @@ namespace Managers
             winsPanelObjs[_highestScorePlayerID].SetActive(true);
         
             string[] nameKeys = new string[_numberOfPlayers];
-        
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                nameKeys[i] = "Player" + i + "Name";
-            }
-        
-            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
-
             string[] winsKeys = new string[_numberOfPlayers];
         
             for(int i = 0; i < _numberOfPlayers; i++)
             {
+                nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
+            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
             PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
         }
 
