@@ -1,16 +1,17 @@
-using System;
-using Data;
+using Event = Events.Event;
 using Events;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Event = Events.Event;
 
 namespace Managers
 {
     public class InGameUIManager : MonoBehaviour
     {
+        #region Variable Declarations
+        
         private int _highestScorePlayerID;
         private int _numberOfPlayers;
         private int[] _playersTotalWinsArray;
@@ -42,7 +43,11 @@ namespace Managers
         [SerializeField] private TMP_Text[] coinScoreTMPTexts;
         [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
         [SerializeField] private Toggle[] aiHumanTogglesArray;
+        
+        #endregion
     
+        #region MonoBehaviour Functions
+        
         private void Start()
         {
             continueButtonObj.SetActive(false);
@@ -66,14 +71,18 @@ namespace Managers
                 winsPanelObjs[i].SetActive(false);
             }
 
-            SubscribeToEvents();
+            ToggleEventSubscription(true);
         }
 
         private void OnDestroy()
         {
-            UnsubscribeFromEvents();
+            ToggleEventSubscription(false);
         }
+        
+        #endregion
 
+        #region User Defined Functions
+        
         private void UpdateInGamePlayerNames(int playerID)
         {
             string playerName = playerNameTMPInputFields[playerID].text;
@@ -348,7 +357,11 @@ namespace Managers
                 EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
             }
         }
+        
+        #endregion
 
+        #region Events Related Functions
+        
         private void OnGameOver()
         {
             coinUIObj.SetActive(false);
@@ -407,23 +420,27 @@ namespace Managers
         {
             _totalReceivedArray = totalReceivedArray;
         }
-    
-        private void SubscribeToEvents()
+
+        private void ToggleEventSubscription(bool shouldSubscribe)
         {
-            EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
-            EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
-            EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
-            EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
-            EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
+            if(shouldSubscribe)
+            {
+                EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+                EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
+                EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
+                EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
+                EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);    
+            }
+            else
+            {
+                EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+                EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
+                EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
+                EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
+                EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
+            }
         }
 
-        private void UnsubscribeFromEvents()
-        {
-            EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
-            EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
-            EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
-            EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
-            EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
-        }
+        #endregion
     }
 }
