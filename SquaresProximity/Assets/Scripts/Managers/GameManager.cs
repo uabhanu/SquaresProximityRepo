@@ -181,7 +181,7 @@ namespace Managers
     
         #endregion
 
-        #region Other Custom Functions
+        #region User Defined Functions
     
         public Color GetPlayerColor(int playerIndex)
         {
