@@ -231,9 +231,9 @@ namespace Managers
         {
             string[] defaultPlayerNames =
             {
-                "AI",
-                "AI",
-                "AI"
+                "Player 1",
+                "Player 2",
+                "Player 3"
             };
 
             if(_numberOfPlayers == 2)
@@ -320,9 +320,20 @@ namespace Managers
             PlayerPrefsManager.DeleteAll();
         
             EventsManager.Invoke(Event.GameDataReset);
+
+            for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+            {
+                numberOfPlayersSelectionTogglesArray[i].isOn = false;
+            }
         
             for(int i = 0; i < _numberOfPlayers; i++)
             {
+                _aiHumanSelectionsBoolArray[i] = false;
+                aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
+                _holesToggleBool = false;
+                holesToggle.isOn = _holesToggleBool;
+                _randomTurnsToggleBool = false;
+                randomTurnsToggle.isOn = _randomTurnsToggleBool;
                 playerNameTMPInputFields[i].text = "";
                 _playersTotalWinsArray[i] = 0;
                 playerTotalWinsLabelsTMPTexts[i].text = "";
@@ -331,18 +342,21 @@ namespace Managers
             string[] aiKeys = new string[_numberOfPlayers];
             string[] nameKeys = new string[_numberOfPlayers];
             string[] winsKeys = new string[_numberOfPlayers];
-
+            
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 aiKeys[i] = "Player" + i + "AI";
                 nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
+                
+                PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
+                PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
+                PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
             }
-        
-            PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
-            PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
-            PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
             
+            PlayerPrefsManager.LoadData(ref _holesToggleBool , HolesKey);
+            PlayerPrefsManager.LoadData(ref _randomTurnsToggleBool , RandomTurnsKey);
+
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 playerNameTMPInputFields[i].text = _playerNamesArray[i];
