@@ -1,3 +1,5 @@
+using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Managers
@@ -25,6 +27,21 @@ namespace Managers
         {
             PlayerPrefs.DeleteAll();
         }
+        
+        public static void LoadData<T>([NotNull] ref T data , string key)
+        {
+            if(data == null) throw new ArgumentNullException(nameof(data));
+            
+            if(PlayerPrefs.HasKey(key))
+            {
+                string serializedData = PlayerPrefs.GetString(key);
+                data = Deserialize<T>(serializedData);
+            }
+            else
+            {
+                data = default!;
+            }
+        }
 
         public static void LoadData<T>(ref T[] dataArray , string[] keys)
         {
@@ -40,6 +57,13 @@ namespace Managers
                     dataArray[i] = default;
                 }
             }
+        }
+        
+        public static void SaveData<T>(T data , string key)
+        {
+            string serializedData = Serialize(data);
+            PlayerPrefs.SetString(key , serializedData);
+            PlayerPrefs.Save();
         }
 
         public static void SaveData<T>(T[] dataArray , string[] keys)
