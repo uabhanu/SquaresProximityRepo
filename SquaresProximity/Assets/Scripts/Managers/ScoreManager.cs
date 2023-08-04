@@ -1,44 +1,37 @@
-using System;
-using Events;
-using UnityEngine;
 using Event = Events.Event;
+using Events;
+using System;
+using UnityEngine;
 
 namespace Managers
 {
     public class ScoreManager : MonoBehaviour
     {
+        #region Variables Declarations
+        
         private int _numberOfPlayers;
         private int[] _coinScoreValuesArray;
         private string[] _playerNamesArray;
+        
+        #endregion
 
+        #region MonoBehaviour Functions
+        
         private void Start()
         {
-            SubscribeToEvents();
+            ToggleEventSubscription(true);
             EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
         }
 
         private void OnDestroy()
         {
-            UnsubscribeFromEvents();
+            ToggleEventSubscription(false);
         }
+        
+        #endregion
 
-        private void CoinBuffedUpScore(int buffedUpCoinPlayerID , int buffedUpCoinIncrement)
-        {
-            _coinScoreValuesArray[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
-            EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
-        }
-
-        private void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
-        {
-            _coinScoreValuesArray[capturingPlayerID] += capturedCoinValue;
-
-            if(_coinScoreValuesArray[capturedPlayerID] > 0)
-            {
-                _coinScoreValuesArray[capturedPlayerID] -= capturedCoinValue;
-                EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);   
-            }
-        }
-    
+        #region User Defined Functions
+        
         private int GetHighestScorePlayer()
         {
             int highestScore = int.MinValue;
@@ -55,7 +48,28 @@ namespace Managers
 
             return highestScorePlayerID;
         }
+        
+        private void CoinBuffedUpScore(int buffedUpCoinPlayerID , int buffedUpCoinIncrement)
+        {
+            _coinScoreValuesArray[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
+            EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
+        }
 
+        private void CoinCapturedScore(int capturingPlayerID , int capturedPlayerID , int capturedCoinValue)
+        {
+            _coinScoreValuesArray[capturingPlayerID] += capturedCoinValue;
+
+            if(_coinScoreValuesArray[capturedPlayerID] > 0)
+            {
+                _coinScoreValuesArray[capturedPlayerID] -= capturedCoinValue;
+                EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);   
+            }
+        }
+        
+        #endregion
+
+        #region Events Related Functions
+        
         private void OnCoinBuffedUp(int playerID , int coinValue)
         {
             CoinBuffedUpScore(playerID , coinValue);
@@ -112,25 +126,29 @@ namespace Managers
             _playerNamesArray[playerID] = playerName;
             EventsManager.Invoke(Event.ScoreUpdated , _coinScoreValuesArray);
         }
-
-        private void SubscribeToEvents()
+        
+        private void ToggleEventSubscription(bool shouldSubscribe)
         {
-            EventsManager.SubscribeToEvent(Event.CoinBuffedUp , (Action<int , int>)OnCoinBuffedUp);
-            EventsManager.SubscribeToEvent(Event.CoinCaptured , (Action<int , int , int>)OnCoinCaptured);
-            EventsManager.SubscribeToEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
-            EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
-            EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
-            EventsManager.SubscribeToEvent(Event.PlayerNamesUpdated , (Action<int , string>)OnPlayerNamesUpdated);
+            if(shouldSubscribe)
+            {
+                EventsManager.SubscribeToEvent(Event.CoinBuffedUp , (Action<int , int>)OnCoinBuffedUp);
+                EventsManager.SubscribeToEvent(Event.CoinCaptured , (Action<int , int , int>)OnCoinCaptured);
+                EventsManager.SubscribeToEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
+                EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+                EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
+                EventsManager.SubscribeToEvent(Event.PlayerNamesUpdated , (Action<int , string>)OnPlayerNamesUpdated);
+            }
+            else
+            {
+                EventsManager.UnsubscribeFromEvent(Event.CoinBuffedUp , (Action<int , int>)OnCoinBuffedUp);
+                EventsManager.UnsubscribeFromEvent(Event.CoinCaptured , (Action<int , int , int>)OnCoinCaptured);
+                EventsManager.UnsubscribeFromEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
+                EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+                EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
+                EventsManager.UnsubscribeFromEvent(Event.PlayerNamesUpdated , (Action<int , string>)OnPlayerNamesUpdated);
+            }
         }
-
-        private void UnsubscribeFromEvents()
-        {
-            EventsManager.UnsubscribeFromEvent(Event.CoinBuffedUp , (Action<int , int>)OnCoinBuffedUp);
-            EventsManager.UnsubscribeFromEvent(Event.CoinCaptured , (Action<int , int , int>)OnCoinCaptured);
-            EventsManager.UnsubscribeFromEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
-            EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
-            EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
-            EventsManager.UnsubscribeFromEvent(Event.PlayerNamesUpdated , (Action<int , string>)OnPlayerNamesUpdated);
-        }
+        
+        #endregion
     }
 }
