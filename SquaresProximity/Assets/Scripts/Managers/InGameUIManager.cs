@@ -11,7 +11,8 @@ namespace Managers
     public class InGameUIManager : MonoBehaviour
     {
         #region Variable Declarations
-        
+
+        private bool[] _aiHumanSelections;
         private int _highestScorePlayerID;
         private int _numberOfPlayers;
         private int[] _playersTotalWinsArray;
@@ -94,6 +95,7 @@ namespace Managers
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 bool isAI = aiHumanTogglesArray[i].isOn;
+                _aiHumanSelections[i] = isAI;
                 EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
             }
         }
@@ -144,17 +146,25 @@ namespace Managers
             numberOfPlayersSelectionPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(true);
 
+            string[] aiKeys = new string[_numberOfPlayers];
             string[] nameKeys = new string[_numberOfPlayers];
             string[] winsKeys = new string[_numberOfPlayers];
         
             for(int i = 0; i < _numberOfPlayers; i++)
             {
+                aiKeys[i] = "Player" + i + "AI";
                 nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
+            PlayerPrefsManager.LoadData(ref _aiHumanSelections , aiKeys);
             PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
             PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
+            
+            for(int i = 0; i < aiHumanTogglesArray.Length; i++)
+            {
+                aiHumanTogglesArray[i].isOn = _aiHumanSelections[i];
+            }
         
             for(int i = 0; i < _numberOfPlayers; i++)
             {
@@ -182,15 +192,18 @@ namespace Managers
                 totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
             }
         
+            string[] aiKeys = new string[_numberOfPlayers];
             string[] nameKeys = new string[_numberOfPlayers];
             string[] winsKeys = new string[_numberOfPlayers];
         
             for(int i = 0; i < _numberOfPlayers; i++)
             {
+                aiKeys[i] = "Player" + i + "AI";
                 nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
+            PlayerPrefsManager.SaveData(_aiHumanSelections , aiKeys);
             PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
             PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
         }
@@ -292,15 +305,18 @@ namespace Managers
                 playerTotalWinsLabelsTMPTexts[i].text = "";
             }
         
+            string[] aiKeys = new string[_numberOfPlayers];
             string[] nameKeys = new string[_numberOfPlayers];
             string[] winsKeys = new string[_numberOfPlayers];
 
             for(int i = 0; i < _numberOfPlayers; i++)
             {
+                aiKeys[i] = "Player" + i + "AI";
                 nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
         
+            PlayerPrefsManager.LoadData(ref _aiHumanSelections , aiKeys);
             PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
             PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
             
@@ -324,8 +340,10 @@ namespace Managers
             if(numberOfPlayersSelectionTogglesArray[0].isOn)
             {
                 _numberOfPlayers = 2;
+                _aiHumanSelections = new bool[_numberOfPlayers];
                 _playerNamesArray = new string[_numberOfPlayers];
                 _playersTotalWinsArray = new int[_numberOfPlayers];
+                _totalReceivedArray = new int[_numberOfPlayers];
                 playerNameTMPInputFields[_numberOfPlayers].gameObject.SetActive(false);
                 EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
             }
@@ -333,8 +351,10 @@ namespace Managers
             else if(numberOfPlayersSelectionTogglesArray[1].isOn)
             {
                 _numberOfPlayers = 3;
+                _aiHumanSelections = new bool[_numberOfPlayers];
                 _playerNamesArray = new string[_numberOfPlayers];
                 _playersTotalWinsArray = new int[_numberOfPlayers];
+                _totalReceivedArray = new int[_numberOfPlayers];
                 playerNameTMPInputFields[_numberOfPlayers - 1].gameObject.SetActive(true);
                 EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
             }
@@ -371,17 +391,17 @@ namespace Managers
             playerWinsLabelsTMPTexts[_highestScorePlayerID].text = playerNameTMPInputFields[_highestScorePlayerID].text + " Wins!!!";
             winsPanelObjs[_highestScorePlayerID].SetActive(true);
         
-            string[] nameKeys = new string[_numberOfPlayers];
-            string[] winsKeys = new string[_numberOfPlayers];
-        
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                nameKeys[i] = "Player" + i + "Name";
-                winsKeys[i] = "Player" + i + "TotalWins";
-            }
-        
-            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
-            PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
+            // string[] nameKeys = new string[_numberOfPlayers];
+            // string[] winsKeys = new string[_numberOfPlayers];
+            //
+            // for(int i = 0; i < _numberOfPlayers; i++)
+            // {
+            //     nameKeys[i] = "Player" + i + "Name";
+            //     winsKeys[i] = "Player" + i + "TotalWins";
+            // }
+            //
+            // PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
+            // PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
         }
 
         private void OnScoreUpdated(int[] coinScoresArray)
