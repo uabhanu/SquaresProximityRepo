@@ -9,6 +9,8 @@ namespace Managers
 {
     public class GridManager : MonoBehaviour
     {
+        #region Variables Declarations
+        
         private bool _shouldGenerateEmptyCellsBool;
         private int _holeCellsCount;
         private int _totalCells;
@@ -25,7 +27,11 @@ namespace Managers
         [HideInInspector] [SerializeField] private GridInfo gridInfo;
         [SerializeField] private int columns;
         [SerializeField] private int rows;
+        
+        #endregion
 
+        #region Helper Properties
+        
         public GridData<bool> IsCellBlockedData
         {
             get => _isCellBlockedData;
@@ -65,7 +71,11 @@ namespace Managers
         }
 
         public Vector2Int InvalidCellIndex => _invalidCellIndex;
+        
+        #endregion
 
+        #region MonoBehaviour Functions
+        
         private void Awake()
         {
             if(isTestingMode)
@@ -87,14 +97,18 @@ namespace Managers
             IsCellBlockedData = new GridData<bool>(GridInfo);
             PlayerIndexData = new GridData<int>(GridInfo);
             TotalCells = GridInfo.Cols * GridInfo.Rows;
-            SubscribeToEvents();
+            ToggleEventSubscription(true);
         }
 
         private void OnDestroy()
         {
-            UnsubscribeFromEvents();
+            ToggleEventSubscription(false);
         }
+        
+        #endregion
     
+        #region User Defined Functions
+        
         private int GetRandomDivisibleNumber(int minValue , int maxValue , int divisor1 , int divisor2)
         {
             int randomValue = Random.Range(minValue , maxValue + 1);
@@ -176,7 +190,11 @@ namespace Managers
                 CoinOnTheCellData.SetValue(cellIndex.x , cellIndex.y , cell);
             }
         }
+        
+        #endregion
     
+        #region Events Related Functions
+        
         private void OnGameStarted()
         {
             GenerateGrid();
@@ -186,17 +204,21 @@ namespace Managers
         {
             _shouldGenerateEmptyCellsBool = !_shouldGenerateEmptyCellsBool;
         }
-    
-        private void SubscribeToEvents()
-        {
-            EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
-            EventsManager.SubscribeToEvent(Event.HolesToggled , new Action(OnHolesToggled));
-        }
 
-        private void UnsubscribeFromEvents()
+        private void ToggleEventSubscription(bool shouldSubscribe)
         {
-            EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
-            EventsManager.UnsubscribeFromEvent(Event.HolesToggled , new Action(OnHolesToggled));
+            if(shouldSubscribe)
+            {
+                EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
+                EventsManager.SubscribeToEvent(Event.HolesToggled , new Action(OnHolesToggled));
+            }
+            else
+            {
+                EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
+                EventsManager.UnsubscribeFromEvent(Event.HolesToggled , new Action(OnHolesToggled));
+            }
         }
+        
+        #endregion
     }
 }
