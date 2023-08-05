@@ -95,19 +95,19 @@ namespace Managers
                     foreach (Vector2Int coinCellIndex in selfCoinCellIndicesList)
                     {
                         List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
-
+        
                         adjacentCellIndicesList = adjacentCellIndicesList
                         .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
                         adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
                         !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
                         .ToList();
-
+        
                         if(adjacentCellIndicesList.Count == 1 && _gameManager.CoinValue <= coinValue)
                         {
                             bestAdjacentCell = adjacentCellIndicesList[0];
                             return bestAdjacentCell;
                         }
-
+        
                         validAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
                     }
                 }
@@ -126,14 +126,14 @@ namespace Managers
                     {
                         Vector2Int adjacentCell = adjacentCellIndicesList[0];
                         int adjacentCellValue = _gridManager.CoinValueData.GetValue(adjacentCell.x , adjacentCell.y);
-
+        
                         if(adjacentCellValue < _gameManager.CoinValue || _gameManager.SelfCoinValuesList.Contains(adjacentCellValue))
                         {
                             bestAdjacentCell = adjacentCell;
                             return bestAdjacentCell;
                         }
                     }
-
+        
                     if(adjacentCellIndicesList.Count == 2 && bestAdjacentCell == default)
                     {
                         bool hasBetterOptions = validAdjacentCellIndicesList.Any(cellIndex =>
@@ -141,13 +141,13 @@ namespace Managers
                             int adjacentCoinValuesSum = GetAdjacentCoinValues(cellIndex);
                             return adjacentCoinValuesSum > highestAdjacentCoinValuesSum;
                         });
-
+        
                         if(!hasBetterOptions)
                         {
                             bestAdjacentCell = adjacentCellIndicesList[0];
                         }
                     }
-
+        
                     validAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
                 }
             }
@@ -163,14 +163,19 @@ namespace Managers
                 
                 if(adjacentCoinValuesSum > highestAdjacentCoinValuesSum)
                 {
-                    highestAdjacentCoinValuesSum = adjacentCoinValuesSum;
-                    bestAdjacentCell = cellIndex;
+                    for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
+                    {
+                        if(!_gameManager.IsAIArray[i])
+                        {
+                            highestAdjacentCoinValuesSum = adjacentCoinValuesSum;
+                            bestAdjacentCell = cellIndex;       
+                        }
+                    }
                 }
             }
             
             return bestAdjacentCell;
         }
-
 
         private void ClearLists()
         {
