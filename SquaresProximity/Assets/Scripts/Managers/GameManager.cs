@@ -56,6 +56,7 @@ namespace Managers
         private Vector2Int _cellIndexToUse;
         
         [SerializeField] private float aiCoinPlaceDelay;
+        [SerializeField] private int maxDifference;
         [SerializeField] private GameObject coinObj;
         [SerializeField] private GameObject trailObj;
 
@@ -67,6 +68,7 @@ namespace Managers
         public GameObject MouseTrailObj => _mouseTrailObj;
         public IAIManager IAIManager => _iAIManager;
         public ICoinPlacer ICoinPlacer => _iCoinPlacer;
+        public int MaxDifference => maxDifference;
         public IPlayerTurnsManager IPlayerTurnsManager => _iPlayerTurnsManager;
         public int NumberOfPlayers => _numberOfPlayers;
         public List<List<int>> PlayerNumbersList => _playerNumbersList;
