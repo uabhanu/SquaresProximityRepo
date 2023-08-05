@@ -176,7 +176,7 @@ namespace Managers
             
                 for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
                 {
-                    if(_gameManager.IsAIArray[i] && i == _gameManager.CurrentPlayerID)
+                    if(_gameManager.IsAIArray[i])
                     {
                         _gameManager.StartCoroutine(_gameManager.IAIManager.AnimateCoinEffect(coinRenderer , coinRenderer.color));       
                     }
