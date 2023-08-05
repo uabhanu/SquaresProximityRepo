@@ -57,6 +57,7 @@ namespace Managers
         
         [SerializeField] private float aiCoinPlaceDelay;
         [SerializeField] private int maxDifference;
+        [SerializeField] private int minCoinValue;
         [SerializeField] private GameObject coinObj;
         [SerializeField] private GameObject trailObj;
 
@@ -69,8 +70,9 @@ namespace Managers
         public IAIManager IAIManager => _iAIManager;
         public ICoinPlacer ICoinPlacer => _iCoinPlacer;
         public int MaxDifference => maxDifference;
-        public IPlayerTurnsManager IPlayerTurnsManager => _iPlayerTurnsManager;
+        public int MinCoinValue => minCoinValue;
         public int NumberOfPlayers => _numberOfPlayers;
+        public IPlayerTurnsManager IPlayerTurnsManager => _iPlayerTurnsManager;
         public List<List<int>> PlayerNumbersList => _playerNumbersList;
         public List<int> PlayersRemainingList => _playersRemainingList;
         
