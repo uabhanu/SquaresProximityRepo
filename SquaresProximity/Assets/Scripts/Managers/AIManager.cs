@@ -76,7 +76,7 @@ namespace Managers
                 
                 if(_gameManager.LesserCoinValuesList.Contains(coinValue))
                 {
-                    if(_gameManager.CoinValue - coinValue > _gameManager.MaxDifference)
+                    if(_gameManager.CoinValue - coinValue > _gameManager.MaxDifferenceAttack)
                     {
                         // This will print all the highest values in the list which is correct behavior.
                         // Debug.Log("FindBestAdjacentCell() -> Attack Block -> Current Coin Value : " + _gameManager.CoinValue + " & Highest Coin Value : " + coinValue);
@@ -160,20 +160,17 @@ namespace Managers
             foreach(Vector2Int cellIndex in validAdjacentCellIndicesList)
             {
                 int adjacentCoinValuesSum = GetAdjacentCoinValues(cellIndex);
-                
-                if(adjacentCoinValuesSum > highestAdjacentCoinValuesSum)
+                bool isHumanPlayer = !_gameManager.IsAIArray[_gridManager.PlayerIndexData.GetValue(cellIndex.x , cellIndex.y)];
+
+                if(adjacentCoinValuesSum > highestAdjacentCoinValuesSum ||
+                (isHumanPlayer && adjacentCoinValuesSum >= highestAdjacentCoinValuesSum &&
+                adjacentCoinValuesSum - highestAdjacentCoinValuesSum <= _gameManager.MaxDifferenceAIHumanPoints))
                 {
-                    for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
-                    {
-                        if(!_gameManager.IsAIArray[i])
-                        {
-                            highestAdjacentCoinValuesSum = adjacentCoinValuesSum;
-                            bestAdjacentCell = cellIndex;       
-                        }
-                    }
+                    highestAdjacentCoinValuesSum = adjacentCoinValuesSum;
+                    bestAdjacentCell = cellIndex;
                 }
             }
-            
+
             return bestAdjacentCell;
         }
 
