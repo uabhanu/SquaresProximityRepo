@@ -1,5 +1,3 @@
-using Event = Events.Event;
-using Events;
 using Interfaces;
 using Random = UnityEngine.Random;
 using System;

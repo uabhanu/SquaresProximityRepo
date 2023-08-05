@@ -1,5 +1,4 @@
-using Event = Events.Event;
-using Events;
+using Event = Managers.Event;
 using Interfaces;
 using Object = UnityEngine.Object;
 using System;
@@ -79,7 +78,7 @@ namespace Managers
             _gridManager.PlayerIndexData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , _gameManager.CurrentPlayerID);
             _gridManager.TotalCells--;
 
-            EventsManager.Invoke(Events.Event.CoinPlaced , _gameManager.CoinValue , _gameManager.CurrentPlayerID);
+            EventsManager.Invoke(Event.CoinPlaced , _gameManager.CoinValue , _gameManager.CurrentPlayerID);
 
             if(!_gridManager.IsCellBlockedData.GetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y))
             {

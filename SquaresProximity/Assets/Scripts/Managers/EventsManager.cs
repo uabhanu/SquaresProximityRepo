@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Events
+namespace Managers
 {
     public enum Event
     {

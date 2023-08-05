@@ -1,5 +1,5 @@
-using Event = Events.Event;
-using Events;
+using Managers;
+using Event = Managers.Event;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

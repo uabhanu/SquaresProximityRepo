@@ -1,5 +1,3 @@
-using Event = Events.Event;
-using Events;
 using Random = UnityEngine.Random;
 using System;
 using System.Collections.Generic;

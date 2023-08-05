@@ -1,5 +1,3 @@
-using Event = Events.Event;
-using Events;
 using System;
 using TMPro;
 using UnityEngine;
