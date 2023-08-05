@@ -76,7 +76,15 @@ namespace Managers
 
                 if(_gameManager.LesserCoinValuesList.Contains(coinValue))
                 {
-                    highestValueCoinCellIndicesList.AddRange(_gameManager.LesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
+                    if(_gameManager.CoinValue - coinValue > _gameManager.MaxDifference || _gameManager.CoinValue < _gameManager.MinCoinValue)
+                    {
+                        //This will print all the highest values in the list which is correct behaviour.
+                        //Debug.Log("FindBestAdjacentCell() -> Attack Block -> Current Coin Value : " + _gameManager.CoinValue + " & Highest Coin Value : " + coinValue);
+                    }
+                    else
+                    {
+                        highestValueCoinCellIndicesList.AddRange(_gameManager.LesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
+                    }
                 }
                 
                 else if(_gameManager.SelfCoinValuesList.Contains(coinValue))
@@ -240,7 +248,7 @@ namespace Managers
         
             if(_gameManager.LesserCoinValuesList.Count > 0)
             {
-                //Debug.Log("Attack");
+                Debug.Log("Attack");
             
                 _gameManager.LesserCoinValuesList.Sort((a, b) => b.CompareTo(a));
                 targetCellIndex = FindBestAdjacentCell(_gameManager.LesserCoinValuesList);
@@ -255,7 +263,7 @@ namespace Managers
 
             if(_gameManager.SelfCoinValuesList.Count > 0)
             {
-                //Debug.Log("Buff Up");
+                Debug.Log("Buff Up");
             
                 _gameManager.SelfCoinValuesList.Sort((a, b) => b.CompareTo(a));
                 targetCellIndex = FindBestAdjacentCell(_gameManager.SelfCoinValuesList);
