@@ -95,7 +95,7 @@ namespace Managers
                 
                 if(_gameManager.LesserCoinValuesList.Contains(coinValue))
                 {
-                    if((_gameManager.CoinValue - coinValue) < _gameManager.MaxDifferenceAttack)
+                    if((_gameManager.CoinValue - coinValue) <= _gameManager.MaxDifferenceAttack || (_gameManager.CoinValue >= 14 && (_gameManager.CoinValue - coinValue) <= 1))
                     {
                         coinCellIndicesList = _gameManager.LesserCoinsCellIndicesList
                         .Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue)
@@ -110,7 +110,7 @@ namespace Managers
                     .ToList();
                 }
 
-                foreach(Vector2Int coinCellIndex in coinCellIndicesList)
+                foreach (Vector2Int coinCellIndex in coinCellIndicesList)
                 {
                     List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
 
@@ -128,14 +128,21 @@ namespace Managers
 
                     if(bestAdjacentCell == default && coinValue < _gameManager.MaxCoinValue)
                     {
-                        Vector2Int highestUnder20Cell = adjacentCellIndicesList
-                        .Where(adjacentCellIndex => _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) < _gameManager.MaxCoinValue)
-                        .OrderByDescending(adjacentCellIndex => _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-                        .FirstOrDefault();
-
-                        if(highestUnder20Cell != default)
+                        int highestAdjacentValue = 0;
+                        int highestAdjacentSum = 0;
+                        
+                        foreach(Vector2Int adjacentCell in adjacentCellIndicesList)
                         {
-                            bestAdjacentCell = highestUnder20Cell;
+                            int adjacentCellValue = _gridManager.CoinValueData.GetValue(adjacentCell.x , adjacentCell.y);
+                            int adjacentSum = GetAdjacentCoinValues(adjacentCell);
+                            
+                            if(adjacentCellValue > highestAdjacentValue || 
+                            (adjacentCellValue == highestAdjacentValue && adjacentSum > highestAdjacentSum))
+                            {
+                                highestAdjacentValue = adjacentCellValue;
+                                highestAdjacentSum = adjacentSum;
+                                bestAdjacentCell = adjacentCell;
+                            }
                         }
                     }
 
