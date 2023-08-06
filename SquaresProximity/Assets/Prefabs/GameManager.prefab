@@ -45,7 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiCoinPlaceDelay: 1
+  maxCoinValue: 20
   maxDifferenceAIHumanPoints: 6
   maxDifferenceAttack: 5
+  minCoinValue: 10
+  minHigherCoinValue: 14
   coinObj: {fileID: 4578332380355879588, guid: a9395e2cc0376484f9984ad964da4539, type: 3}
   trailObj: {fileID: 4578332380355879588, guid: 9fa96010692363d48b945885160fe75a, type: 3}
