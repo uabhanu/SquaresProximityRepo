@@ -86,13 +86,14 @@ namespace Managers
                         highestValueCoinCellIndicesList.AddRange(_gameManager.LesserCoinsCellIndicesList.Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue));
                     }
                 }
+                
                 else if(_gameManager.SelfCoinValuesList.Contains(coinValue))
                 {
                     List<Vector2Int> selfCoinCellIndicesList = _gameManager.SelfCoinsCellIndicesList
                     .Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue)
                     .ToList();
                     
-                    foreach (Vector2Int coinCellIndex in selfCoinCellIndicesList)
+                    foreach(Vector2Int coinCellIndex in selfCoinCellIndicesList)
                     {
                         List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
         
