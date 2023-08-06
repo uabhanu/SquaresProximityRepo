@@ -110,7 +110,7 @@ namespace Managers
                     .ToList();
                 }
 
-                foreach (Vector2Int coinCellIndex in coinCellIndicesList)
+                foreach(Vector2Int coinCellIndex in coinCellIndicesList)
                 {
                     List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
 
@@ -128,20 +128,34 @@ namespace Managers
 
                     if(bestAdjacentCell == default && coinValue < _gameManager.MaxCoinValue)
                     {
-                        int highestAdjacentValue = 0;
-                        int highestAdjacentSum = 0;
-                        
+                        int highestAdjacentValueUnder20 = 0;
+                        int highestAdjacentSumUnder20 = 0;
+
+                        int highestAdjacentValue20OrMore = 0;
+                        int highestAdjacentSum20OrMore = 0;
+
                         foreach(Vector2Int adjacentCell in adjacentCellIndicesList)
                         {
                             int adjacentCellValue = _gridManager.CoinValueData.GetValue(adjacentCell.x , adjacentCell.y);
                             int adjacentSum = GetAdjacentCoinValues(adjacentCell);
-                            
-                            if(adjacentCellValue > highestAdjacentValue || 
-                            (adjacentCellValue == highestAdjacentValue && adjacentSum > highestAdjacentSum))
+
+                            if(adjacentCellValue < _gameManager.MaxCoinValue)
                             {
-                                highestAdjacentValue = adjacentCellValue;
-                                highestAdjacentSum = adjacentSum;
-                                bestAdjacentCell = adjacentCell;
+                                if(adjacentCellValue > highestAdjacentValueUnder20 || (adjacentCellValue == highestAdjacentValueUnder20 && adjacentSum > highestAdjacentSumUnder20))
+                                {
+                                    highestAdjacentValueUnder20 = adjacentCellValue;
+                                    highestAdjacentSumUnder20 = adjacentSum;
+                                    bestAdjacentCell = adjacentCell;
+                                }
+                            }
+                            else
+                            {
+                                if(adjacentCellValue > highestAdjacentValue20OrMore || (adjacentCellValue == highestAdjacentValue20OrMore && adjacentSum > highestAdjacentSum20OrMore))
+                                {
+                                    highestAdjacentValue20OrMore = adjacentCellValue;
+                                    highestAdjacentSum20OrMore = adjacentSum;
+                                    bestAdjacentCell = adjacentCell;
+                                }
                             }
                         }
                     }
