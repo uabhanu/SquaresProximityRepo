@@ -97,7 +97,7 @@ namespace Managers
                     foreach(Vector2Int coinCellIndex in selfCoinCellIndicesList)
                     {
                         List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
-        
+
                         adjacentCellIndicesList = adjacentCellIndicesList
                         .Where(adjacentCellIndex => adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
                         adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
@@ -109,11 +109,24 @@ namespace Managers
                             bestAdjacentCell = adjacentCellIndicesList[0];
                             return bestAdjacentCell;
                         }
-        
+                        
+                        if(bestAdjacentCell == default && coinValue < _gameManager.MaxCoinValue)
+                        {
+                            Vector2Int highestUnder20Cell = adjacentCellIndicesList
+                            .Where(adjacentCellIndex => _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) < _gameManager.MaxCoinValue)
+                            .OrderByDescending(adjacentCellIndex => _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                            .FirstOrDefault();
+
+                            if(highestUnder20Cell != default)
+                            {
+                                bestAdjacentCell = highestUnder20Cell;
+                            }
+                        }
+
                         validAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
                     }
                 }
-                
+
                 foreach(Vector2Int coinCellIndex in highestValueCoinCellIndicesList)
                 {
                     List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(coinCellIndex);
