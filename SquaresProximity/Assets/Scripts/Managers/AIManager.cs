@@ -79,6 +79,7 @@ namespace Managers
                     if(_gameManager.CoinValue - coinValue > _gameManager.MaxDifferenceAttack)
                     {
                         // This will print all the highest values in the list which is correct behavior.
+                        // Debug.Log("FindBestAdjacentCell() -> Attack Block -> Skip Attack & Buff Up Instead);
                         // Debug.Log("FindBestAdjacentCell() -> Attack Block -> Current Coin Value : " + _gameManager.CoinValue + " & Highest Coin Value : " + coinValue);
                     }
                     else
