@@ -175,7 +175,7 @@ namespace Managers
                             bestAdjacentCell = adjacentCellIndicesList[0];
                         }
                         
-                        if (coinValue < 10 && GetUnblockedAdjacentCellsCount(bestAdjacentCell) == 1)
+                        if(coinValue < _gameManager.MaxCoinValue && GetUnblockedAdjacentCellsCount(bestAdjacentCell) == 1)
                         {
                             return bestAdjacentCell;
                         }
