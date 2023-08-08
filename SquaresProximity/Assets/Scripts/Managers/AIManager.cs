@@ -27,17 +27,32 @@ namespace Managers
 
         #region User Defined Functions
         
-        private int GetAdjacentCoinValues(Vector2Int cellIndex)
+        private int GetAdjacentCoinValues(Vector2Int cellIndex , bool isAttacking)
         {
             int sum = 0;
-            
+    
             List<Vector2Int> adjacentCellIndices = GetAdjacentCellIndices(cellIndex);
 
             foreach(Vector2Int adjacentIndex in adjacentCellIndices)
             {
                 if(adjacentIndex.x >= 0 && adjacentIndex.x < _gridManager.GridInfo.Cols && adjacentIndex.y >= 0 && adjacentIndex.y < _gridManager.GridInfo.Rows)
                 {
-                    sum += _gridManager.CoinValueData.GetValue(adjacentIndex.x , adjacentIndex.y);
+                    int adjacentCellValue = _gridManager.CoinValueData.GetValue(adjacentIndex.x , adjacentIndex.y);
+            
+                    if(isAttacking)
+                    {
+                        if(_gameManager.LesserCoinValuesList.Contains(adjacentCellValue))
+                        {
+                            sum += adjacentCellValue;
+                        }
+                    }
+                    else
+                    {
+                        if(_gameManager.SelfCoinValuesList.Contains(adjacentCellValue))
+                        {
+                            sum += adjacentCellValue;
+                        }
+                    }
                 }
             }
 
@@ -115,18 +130,28 @@ namespace Managers
                         int highestAdjacentValue20OrMore = 0;
                         int highestAdjacentSum20OrMore = 0;
 
-                        foreach(Vector2Int adjacentCell in adjacentCellIndicesList)
+                        foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
                         {
-                            int adjacentCellValue = _gridManager.CoinValueData.GetValue(adjacentCell.x , adjacentCell.y);
-                            int adjacentSum = GetAdjacentCoinValues(adjacentCell);
+                            int adjacentCellValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
+                            int adjacentSum = 0;
 
+                            if(_gameManager.LesserCoinValuesList.Contains(coinValue))
+                            {
+                                adjacentSum = GetAdjacentCoinValues(adjacentCellIndex , true);
+                            }
+                            
+                            else if(_gameManager.SelfCoinValuesList.Contains(coinValue))
+                            {
+                                adjacentSum = GetAdjacentCoinValues(adjacentCellIndex , false);
+                            }
+                            
                             if(adjacentCellValue < _gameManager.MaxCoinValue)
                             {
                                 if(adjacentCellValue > highestAdjacentValueUnder20 || (adjacentCellValue == highestAdjacentValueUnder20 && adjacentSum > highestAdjacentSumUnder20))
                                 {
                                     highestAdjacentValueUnder20 = adjacentCellValue;
                                     highestAdjacentSumUnder20 = adjacentSum;
-                                    bestAdjacentCell = adjacentCell;
+                                    bestAdjacentCell = adjacentCellIndex;
                                 }
                             }
                             else
@@ -135,7 +160,7 @@ namespace Managers
                                 {
                                     highestAdjacentValue20OrMore = adjacentCellValue;
                                     highestAdjacentSum20OrMore = adjacentSum;
-                                    bestAdjacentCell = adjacentCell;
+                                    bestAdjacentCell = adjacentCellIndex;
                                 }
                             }
                         }
@@ -152,7 +177,7 @@ namespace Managers
             
             foreach(Vector2Int cellIndex in validAdjacentCellIndicesList)
             {
-                int adjacentCoinValuesSum = GetAdjacentCoinValues(cellIndex);
+                int adjacentCoinValuesSum = GetAdjacentCoinValues(cellIndex , false);
                 bool isHumanPlayer = !_gameManager.IsAIArray[_gridManager.PlayerIndexData.GetValue(cellIndex.x , cellIndex.y)];
 
                 if(adjacentCoinValuesSum > highestAdjacentCoinValuesSum ||
