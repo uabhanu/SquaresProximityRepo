@@ -43,25 +43,6 @@ namespace Managers
 
             return sum;
         }
-        
-        private int GetUnblockedAdjacentCellsCount(Vector2Int cellIndex)
-        {
-            int count = 0;
-            List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndices(cellIndex);
-
-            foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
-            {
-                if(adjacentCellIndex.x >= 0 && adjacentCellIndex.x < _gridManager.GridInfo.Cols &&
-                adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
-                !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-                {
-                    count++;
-                }
-            }
-
-            return count;
-        }
-
 
         private List<Vector2Int> GetAdjacentCellIndices(Vector2Int coinCellIndex)
         {
@@ -95,7 +76,7 @@ namespace Managers
                 
                 if(_gameManager.LesserCoinValuesList.Contains(coinValue))
                 {
-                    if((_gameManager.CoinValue - coinValue) <= _gameManager.MaxDifferenceAttack || (_gameManager.CoinValue >= 14 && (_gameManager.CoinValue - coinValue) <= 1))
+                    if((_gameManager.CoinValue - coinValue) <= _gameManager.MaxDifferenceAttack || (_gameManager.CoinValue >= _gameManager.MinHigherCoinValue && (_gameManager.CoinValue - coinValue) <= 1))
                     {
                         coinCellIndicesList = _gameManager.LesserCoinsCellIndicesList
                         .Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue)
