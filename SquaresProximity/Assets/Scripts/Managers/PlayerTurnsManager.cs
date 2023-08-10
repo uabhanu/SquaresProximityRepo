@@ -21,7 +21,7 @@ namespace Managers
         
         private GameManager _gameManager;
         private GridManager _gridManager;
-        
+
         #endregion
 
         #region Functions
@@ -142,7 +142,7 @@ namespace Managers
             }
         }
 
-        public void UpdateCoinColor(int x, int y, int playerIndex)
+        public void UpdateCoinColor(int x , int y , int playerIndex)
         {
             GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
 
