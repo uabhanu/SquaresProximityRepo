@@ -28,7 +28,7 @@ namespace Managers
 
         #endregion
     
-        # region Variables Declarations
+        #region Variables Declarations
     
         private bool _isGameStarted;
         private bool _isMouseMoving;
@@ -54,11 +54,14 @@ namespace Managers
         private List<List<int>> _playerNumbersList;
         private Vector2Int _cellIndexAtMousePosition;
         private Vector2Int _cellIndexToUse;
-        
+
+        [SerializeField] private bool isTestingMode;
         [SerializeField] private float aiCoinPlaceDelay;
+        [SerializeField] [Range(1 , 20)] [Tooltip("This is for testing only")] private int coinValueForTesting;
         [SerializeField] private int maxCoinValue;
         [SerializeField] private int maxDifferenceAIHumanPoints;
         [SerializeField] private int maxDifferenceAttack;
+        [SerializeField] private int maxHigherCoinValue;
         [SerializeField] private int minCoinValue;
         [SerializeField] private int minHigherCoinValue;
         [SerializeField] private GameObject coinObj;
@@ -75,6 +78,7 @@ namespace Managers
         public int MaxCoinValue => maxCoinValue;
         public int MaxDifferenceAIHumanPoints => maxDifferenceAIHumanPoints;
         public int MaxDifferenceAttack => maxDifferenceAttack;
+        public int MaxHigherCoinValue => maxHigherCoinValue;
         public int MinCoinValue => minCoinValue;
 
         public int MinHigherCoinValue => minHigherCoinValue;
@@ -309,10 +313,19 @@ namespace Managers
             {
                 List<int> randomNumbers = new List<int>(_playersListsCapacity);
 
-                for(int j = 0; j < _playersListsCapacity; j++)
+                if(isTestingMode)
                 {
-                    int randomValue = Random.Range(1 , 21);
-                    randomNumbers.Add(randomValue);
+                    CoinValue = coinValueForTesting;
+                    randomNumbers.Add(CoinValue);
+                }
+                else
+                {
+                    for(int j = 0; j < _playersListsCapacity; j++)
+                    {
+                        int randomValue = Random.Range(1 , 21);
+                        CoinValue = randomValue;
+                        randomNumbers.Add(CoinValue);
+                    }   
                 }
 
                 for(i = 0; i < NumberOfPlayers; i++)
