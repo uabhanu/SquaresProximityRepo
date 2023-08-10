@@ -1,5 +1,6 @@
 using Managers;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 namespace Utils
@@ -8,8 +9,7 @@ namespace Utils
     {
         private GridManager _gridManager;
         private Vector2Int _currentIndex;
-
-        [SerializeField] private bool isTestingMode;
+        
         [SerializeField] private GameObject indexLabelTMPObj;
         [SerializeField] private TextMeshPro indexLabelTextTMP;
 
@@ -20,16 +20,20 @@ namespace Utils
 
         private void Update()
         {
-            _currentIndex = _gridManager.WorldToCell(transform.position);
+            #if UNITY_EDITOR
+            
+                _currentIndex = _gridManager.WorldToCell(transform.position);
+                
+                if(EditorApplication.isPlaying)
+                {
+                    indexLabelTMPObj.SetActive(true);
+                    indexLabelTextTMP.text = _currentIndex.ToString();
 
-            if(isTestingMode)
-            {
-                indexLabelTMPObj.SetActive(true);
-                indexLabelTextTMP.text = _currentIndex.ToString();
-
-                Color cellColor = GetCellColor(_currentIndex);
-                indexLabelTextTMP.color = GetContrastingColor(cellColor);
-            }
+                    Color cellColor = GetCellColor(_currentIndex);
+                    indexLabelTextTMP.color = GetContrastingColor(cellColor);
+                }
+            
+            #endif
         }
 
         private Color GetCellColor(Vector2Int cellIndex)
