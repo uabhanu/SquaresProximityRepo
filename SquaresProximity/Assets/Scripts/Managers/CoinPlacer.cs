@@ -1,4 +1,3 @@
-using Event = Managers.Event;
 using Interfaces;
 using Object = UnityEngine.Object;
 using System;
