@@ -164,17 +164,17 @@ namespace Managers
                                 }
                             }
                         }
+                        
+                        if(coinValue >= _gameManager.MinHigherCoinValue && coinValue <= _gameManager.MaxHigherCoinValue && adjacentCellIndicesList.Count <= 3)
+                        {
+                            Debug.Log("Prioritizing placing coin with value " + coinValue + " on a cell with 3 or fewer unblocked adjacent cells.");
+                        }
                     }
 
                     validAdjacentCellIndicesList.AddRange(adjacentCellIndicesList);
                 }
             }
-            
-            if(validAdjacentCellIndicesList.Count == 0)
-            {
-                return _gridManager.InvalidCellIndex;
-            }
-            
+
             foreach(Vector2Int cellIndex in validAdjacentCellIndicesList)
             {
                 int adjacentCoinValuesSum = GetAdjacentCoinValues(cellIndex , false);
@@ -187,6 +187,11 @@ namespace Managers
                     highestAdjacentCoinValuesSum = adjacentCoinValuesSum;
                     bestAdjacentCell = cellIndex;
                 }
+            }
+            
+            if(validAdjacentCellIndicesList.Count == 0)
+            {
+                return _gridManager.InvalidCellIndex;
             }
 
             return bestAdjacentCell;
@@ -302,7 +307,7 @@ namespace Managers
             PopulateLists();
 
             Vector2Int targetCellIndex = _gridManager.InvalidCellIndex;
-        
+
             if(_gameManager.LesserCoinValuesList.Count > 0)
             {
                 Debug.Log("Attack");
