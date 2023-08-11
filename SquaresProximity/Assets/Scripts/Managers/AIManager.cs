@@ -273,6 +273,22 @@ namespace Managers
 
                 if(targetCellIndex != _gridManager.InvalidCellIndex)
                 {
+                    // Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex);
+                    //
+                    // List<Vector2Int> adjacentCells = GetAdjacentCellIndicesList(targetCellIndex);
+                    //
+                    // List<Vector2Int> unblockedAdjacentCells = adjacentCells.Where(adjacentCell => adjacentCell != _gridManager.InvalidCellIndex && 
+                    // !_gridManager.IsCellBlockedData.GetValue(adjacentCell.x , adjacentCell.y))
+                    // .ToList();
+                    //
+                    // Debug.Log("Attack Block -> Total adjacent cells are " + unblockedAdjacentCells.Count);
+                    //
+                    // if(unblockedAdjacentCells.Count > 0)
+                    // {
+                    //     string unblockedAdjacentIndices = string.Join(" , " , unblockedAdjacentCells);
+                    //     Debug.Log("Attack Block -> Adjacent Unblocked Cell Indices: " + unblockedAdjacentIndices);
+                    // }
+    
                     return targetCellIndex;
                 }
             }
@@ -313,6 +329,22 @@ namespace Managers
 
                 if(targetCellIndex != _gridManager.InvalidCellIndex)
                 {
+                    // Debug.Log("Buff Up Block -> Chosen Cell Index: " + targetCellIndex);
+                    //
+                    // List<Vector2Int> adjacentCells = GetAdjacentCellIndicesList(targetCellIndex);
+                    //
+                    // List<Vector2Int> unblockedAdjacentCells = adjacentCells.Where(adjacentCell => adjacentCell != _gridManager.InvalidCellIndex && 
+                    // !_gridManager.IsCellBlockedData.GetValue(adjacentCell.x , adjacentCell.y))
+                    // .ToList();
+                    //
+                    // Debug.Log("Buff Up Block -> Total adjacent cells are " + unblockedAdjacentCells.Count);
+                    //
+                    // if(unblockedAdjacentCells.Count > 0)
+                    // {
+                    //     string unblockedAdjacentIndices = string.Join(" , " , unblockedAdjacentCells);
+                    //     Debug.Log("Buff Up Block -> Adjacent Unblocked Cell Indices: " + unblockedAdjacentIndices);
+                    // }
+    
                     return targetCellIndex;
                 }
             }
@@ -323,9 +355,25 @@ namespace Managers
 
                 int index = Random.Range(0 , _gameManager.UnblockedCellIndicesList.Count);
                 targetCellIndex = _gameManager.UnblockedCellIndicesList[index];
-
+                
                 if(targetCellIndex != _gridManager.InvalidCellIndex)
                 {
+                    // Debug.Log("Random Block -> Chosen Cell Index: " + targetCellIndex);
+                    //
+                    // List<Vector2Int> adjacentCells = GetAdjacentCellIndicesList(targetCellIndex);
+                    //
+                    // List<Vector2Int> unblockedAdjacentCells = adjacentCells.Where(adjacentCell => adjacentCell != _gridManager.InvalidCellIndex && 
+                    // !_gridManager.IsCellBlockedData.GetValue(adjacentCell.x , adjacentCell.y))
+                    // .ToList();
+                    //
+                    // Debug.Log("Random Block -> Total adjacent cells are " + unblockedAdjacentCells.Count);
+                    //
+                    // if(unblockedAdjacentCells.Count > 0)
+                    // {
+                    //     string unblockedAdjacentIndices = string.Join(" , " , unblockedAdjacentCells);
+                    //     Debug.Log("Random Block -> Adjacent Unblocked Cell Indices: " + unblockedAdjacentIndices);
+                    // }
+    
                     return targetCellIndex;
                 }
             }
