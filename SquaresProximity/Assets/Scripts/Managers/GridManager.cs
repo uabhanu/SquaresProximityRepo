@@ -129,18 +129,18 @@ namespace Managers
         public Vector2Int WorldToCell(Vector3 worldPosition)
         {
             Vector2 localPosition = (worldPosition / GridInfo.CellSize - transform.position);
-        
+
             int col = Mathf.FloorToInt(localPosition.x);
             int row = Mathf.FloorToInt(localPosition.y);
-        
-            if(col < 0 || col >= GridInfo.Cols || row < 0 || row >= GridInfo.Rows)
+
+            if(col >= 0 && col < GridInfo.Cols && row >= 0 && row < GridInfo.Rows)
             {
-                return InvalidCellIndex;
+                return new Vector2Int(col , row);
             }
 
-            return new Vector2Int(col , row);
+            return InvalidCellIndex;
         }
-    
+
         private void GenerateGrid()
         {
             List<Vector2Int> cellIndices = new List<Vector2Int>();
