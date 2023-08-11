@@ -44,10 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b5c109c193b76d4ea4bf2e2ec266640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTestingMode: 0
   aiCoinPlaceDelay: 1
+  coinValueForTesting: 0
   maxCoinValue: 20
   maxDifferenceAIHumanPoints: 6
   maxDifferenceAttack: 5
+  maxHigherCoinValue: 16
   minCoinValue: 10
   minHigherCoinValue: 14
   coinObj: {fileID: 4578332380355879588, guid: a9395e2cc0376484f9984ad964da4539, type: 3}
