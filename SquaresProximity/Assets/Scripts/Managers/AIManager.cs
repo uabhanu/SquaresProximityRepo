@@ -91,12 +91,9 @@ namespace Managers
                 
                 if(_gameManager.LesserCoinValuesList.Contains(coinValue))
                 {
-                    if((_gameManager.CoinValue - coinValue) <= _gameManager.MaxDifferenceAttack || (_gameManager.CoinValue >= _gameManager.MinHigherCoinValue && (_gameManager.CoinValue - coinValue) <= 1))
-                    {
-                        coinCellIndicesList = _gameManager.LesserCoinsCellIndicesList
-                        .Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue)
-                        .ToList();
-                    }
+                    coinCellIndicesList = _gameManager.LesserCoinsCellIndicesList
+                    .Where(position => _gridManager.CoinValueData.GetValue(position.x , position.y) == coinValue)
+                    .ToList();
                 }
                 
                 else if(_gameManager.SelfCoinValuesList.Contains(coinValue))
@@ -115,12 +112,6 @@ namespace Managers
                     adjacentCellIndex.y >= 0 && adjacentCellIndex.y < _gridManager.GridInfo.Rows &&
                     !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
                     .ToList();
-
-                    if(adjacentCellIndicesList.Count == 1 && _gameManager.CoinValue <= coinValue)
-                    {
-                        bestAdjacentCell = adjacentCellIndicesList[0];
-                        return bestAdjacentCell;
-                    }
 
                     if(bestAdjacentCell == default && coinValue < _gameManager.MaxCoinValue)
                     {
@@ -163,11 +154,6 @@ namespace Managers
                                     bestAdjacentCell = adjacentCellIndex;
                                 }
                             }
-                        }
-                        
-                        if(coinValue >= _gameManager.MinHigherCoinValue && coinValue <= _gameManager.MaxHigherCoinValue && adjacentCellIndicesList.Count <= 3)
-                        {
-                            Debug.Log("Prioritizing placing coin with value " + coinValue + " on a cell with 3 or fewer unblocked adjacent cells.");
                         }
                     }
 
@@ -305,12 +291,12 @@ namespace Managers
         {
             ClearLists();
             PopulateLists();
-
+            
             Vector2Int targetCellIndex = _gridManager.InvalidCellIndex;
 
             if(_gameManager.LesserCoinValuesList.Count > 0)
             {
-                Debug.Log("Attack");
+                //Debug.Log("Attack");
             
                 _gameManager.LesserCoinValuesList.Sort((a, b) => b.CompareTo(a));
                 targetCellIndex = FindBestAdjacentCell(_gameManager.LesserCoinValuesList);
@@ -325,7 +311,7 @@ namespace Managers
 
             if(_gameManager.SelfCoinValuesList.Count > 0)
             {
-                Debug.Log("Buff Up");
+                //Debug.Log("Buff Up");
             
                 _gameManager.SelfCoinValuesList.Sort((a, b) => b.CompareTo(a));
                 targetCellIndex = FindBestAdjacentCell(_gameManager.SelfCoinValuesList);
