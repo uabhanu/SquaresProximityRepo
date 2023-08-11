@@ -57,7 +57,7 @@ namespace Managers
 
         [SerializeField] private bool isTestingMode;
         [SerializeField] private float aiCoinPlaceDelay;
-        [Range(1 , 20)][Tooltip("This is for testing only")][SerializeField] private int coinValueForTesting;
+        [Tooltip("Please do not select the value below 1 and above 20")] [SerializeField] private int coinValueForTesting;
         [SerializeField] private int maxCoinValue;
         [SerializeField] private int maxDifferenceAIHumanPoints;
         [SerializeField] private int maxDifferenceAttack;
@@ -282,8 +282,6 @@ namespace Managers
     
         private void OnGameStarted()
         {
-            CoinValue = coinValueForTesting;
-            
             _isGameStarted = true;
 
             _gridManager = FindObjectOfType<GridManager>();
@@ -317,7 +315,7 @@ namespace Managers
 
                 if(isTestingMode)
                 {
-                    //CoinValue = 1;
+                    CoinValue = coinValueForTesting;
                     numbers.Add(CoinValue);
                 }
                 else
