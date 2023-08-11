@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTestingMode: 0
   aiCoinPlaceDelay: 1
-  coinValueForTesting: 0
+  coinValueForTesting: 15
   maxCoinValue: 20
   maxDifferenceAIHumanPoints: 6
   maxDifferenceAttack: 5
