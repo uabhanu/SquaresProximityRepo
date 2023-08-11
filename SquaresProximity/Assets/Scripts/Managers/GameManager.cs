@@ -57,7 +57,7 @@ namespace Managers
 
         [SerializeField] private bool isTestingMode;
         [SerializeField] private float aiCoinPlaceDelay;
-        [SerializeField] [Range(1 , 20)] [Tooltip("This is for testing only")] private int coinValueForTesting;
+        [Range(1 , 20)][Tooltip("This is for testing only")][SerializeField] private int coinValueForTesting;
         [SerializeField] private int maxCoinValue;
         [SerializeField] private int maxDifferenceAIHumanPoints;
         [SerializeField] private int maxDifferenceAttack;
@@ -282,6 +282,8 @@ namespace Managers
     
         private void OnGameStarted()
         {
+            CoinValue = coinValueForTesting;
+            
             _isGameStarted = true;
 
             _gridManager = FindObjectOfType<GridManager>();
@@ -311,12 +313,12 @@ namespace Managers
 
             for(int i = 0; i < NumberOfPlayers; i++)
             {
-                List<int> randomNumbers = new List<int>(_playersListsCapacity);
+                List<int> numbers = new List<int>(_playersListsCapacity);
 
                 if(isTestingMode)
                 {
-                    CoinValue = coinValueForTesting;
-                    randomNumbers.Add(CoinValue);
+                    //CoinValue = 1;
+                    numbers.Add(CoinValue);
                 }
                 else
                 {
@@ -324,14 +326,14 @@ namespace Managers
                     {
                         int randomValue = Random.Range(1 , 21);
                         CoinValue = randomValue;
-                        randomNumbers.Add(CoinValue);
+                        numbers.Add(CoinValue);
                     }   
                 }
 
                 for(i = 0; i < NumberOfPlayers; i++)
                 {
-                    ShuffleList(randomNumbers);
-                    PlayerNumbersList.Add(new List<int>(randomNumbers));
+                    ShuffleList(numbers);
+                    PlayerNumbersList.Add(new List<int>(numbers));
                 }
             }
         
