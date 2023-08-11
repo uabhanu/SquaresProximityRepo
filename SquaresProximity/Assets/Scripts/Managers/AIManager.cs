@@ -225,34 +225,25 @@ namespace Managers
             PopulateLists();
 
             Vector2Int targetCellIndex = _gridManager.InvalidCellIndex;
-            
+            List<Vector2Int> retrievedCellIndicesList = new List<Vector2Int>();
+
             if(_gameManager.LesserCoinValuesList.Count > 0)
             {
-                _gameManager.LesserCoinValuesList.Sort((a, b) => b.CompareTo(a));
-                List<Vector2Int> retrievedCellIndicesList = FindAdjacentCellIndicesList(_gameManager.LesserCoinValuesList);
-
-                if(retrievedCellIndicesList.Count > 0)
-                {
-                    int index = Random.Range(0 , retrievedCellIndicesList.Count);
-                    targetCellIndex = retrievedCellIndicesList[index];
-                    return targetCellIndex;
-                }
+                retrievedCellIndicesList = FindAdjacentCellIndicesList(_gameManager.LesserCoinValuesList);
             }
             
-            if(_gameManager.SelfCoinValuesList.Count > 0)
+            else if(_gameManager.SelfCoinValuesList.Count > 0)
             {
-                _gameManager.SelfCoinValuesList.Sort((a, b) => b.CompareTo(a));
-                List<Vector2Int> retrievedCellIndicesList = FindAdjacentCellIndicesList(_gameManager.SelfCoinValuesList);
+                retrievedCellIndicesList = FindAdjacentCellIndicesList(_gameManager.SelfCoinValuesList);
+            }
 
-                if(retrievedCellIndicesList.Count > 0)
-                {
-                    int index = Random.Range(0 , retrievedCellIndicesList.Count);
-                    targetCellIndex = retrievedCellIndicesList[index];
-                    return targetCellIndex;
-                }
+            if(retrievedCellIndicesList.Count > 0)
+            {
+                int index = Random.Range(0 , retrievedCellIndicesList.Count);
+                targetCellIndex = retrievedCellIndicesList[index];
             }
             
-            if(_gameManager.UnblockedCellIndicesList.Count > 0)
+            else if(_gameManager.UnblockedCellIndicesList.Count > 0)
             {
                 int index = Random.Range(0 , _gameManager.UnblockedCellIndicesList.Count);
                 targetCellIndex = _gameManager.UnblockedCellIndicesList[index];
