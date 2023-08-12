@@ -243,9 +243,10 @@ namespace Managers
 
             if(attackCellIndicesList.Count > 0)
             {
-                //Debug.Log("Attack");
+                Debug.Log("Attack");
+
                 int highestValue = int.MinValue;
-                Vector2Int highestValueCellIndex = Vector2Int.zero;
+                Vector2Int highestValueCellIndex = _gridManager.InvalidCellIndex;
 
                 foreach(Vector2Int cellIndex in attackCellIndicesList)
                 {
@@ -255,38 +256,54 @@ namespace Managers
                     {
                         highestValue = coinValue;
                         highestValueCellIndex = cellIndex;
-                        //Debug.Log("FindCellToPlaceCoinOn() -> Attack -> Highest Value Cell Index : " + highestValueCellIndex);
                     }
                 }
 
-                List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(highestValueCellIndex);
-                int highestAdjacentSum = int.MinValue;
-
-                foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+                if(highestValueCellIndex != _gridManager.InvalidCellIndex)
                 {
-                    //Debug.Log("FindCellToPlaceCoinOn() -> Attack -> First Adjacent Cell Index from the Adjacent Cell Indices List : " + targetCellIndex);
-                    
-                    int adjacentSum = GetAdjacentCoinValues(adjacentCellIndex);
+                    Debug.Log("Highest Value Coin of LesserCoinValuesList Found at Cell Index : " + _gameManager.LesserCoinsCellIndicesList[0]);
 
-                    if(adjacentSum > highestAdjacentSum && !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                    List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(_gameManager.LesserCoinsCellIndicesList[0]);
+
+                    int totalAdjacentSum = 0;
+                    int highestAdjacentSum = int.MinValue;
+                    targetCellIndex = _gridManager.InvalidCellIndex;
+
+                    Debug.Log("Total Adjacent Unblocked Cells of Highest Value Coin : " + adjacentCellIndicesList.Count);
+
+                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
                     {
-                        highestAdjacentSum = adjacentSum;
-                        targetCellIndex = adjacentCellIndex;
-                        //Debug.Log("FindCellToPlaceCoinOn() -> Attack -> Target Cell Index : " + targetCellIndex);
+                        if(!_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) && adjacentCellIndex != _gridManager.InvalidCellIndex)
+                        {
+                            Debug.Log(adjacentCellIndex);
+                            totalAdjacentSum++;
+                        }
                     }
-                }
 
-                if(targetCellIndex != _gridManager.InvalidCellIndex)
-                {
-                    return targetCellIndex;
+                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+                    {
+                        int adjacentSum = GetAdjacentCoinValues(adjacentCellIndex);
+
+                        if(adjacentSum > highestAdjacentSum && !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                        {
+                            highestAdjacentSum = adjacentSum;
+                            targetCellIndex = adjacentCellIndex;
+                        }
+                    }
+
+                    if(targetCellIndex != _gridManager.InvalidCellIndex)
+                    {
+                        return targetCellIndex;
+                    }
                 }
             }
+
 
             if(buffUpCellIndicesList.Count > 0)
             {
                 //Debug.Log("Buff Up");
                 int highestValue = int.MinValue;
-                Vector2Int highestValueCellIndex = Vector2Int.zero;
+                Vector2Int highestValueCellIndex = _gridManager.InvalidCellIndex;
             
                 foreach(Vector2Int cellIndex in buffUpCellIndicesList)
                 {
