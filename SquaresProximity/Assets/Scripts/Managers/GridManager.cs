@@ -16,7 +16,7 @@ namespace Managers
         private GridData<GameObject> _coinOnTheCellData;
         private GridData<GameObject> _cellPrefabData;
         private GridData<int> _coinValueData;
-        private GridData<int> _playerIndexData;
+        private GridData<int> _playerIDData;
         private GridData<SpriteRenderer> _cellSpriteRenderersData;
         private readonly Vector2Int _invalidCellIndex = new (-1 , -1);
 
@@ -48,10 +48,10 @@ namespace Managers
             set => _coinValueData = value;
         }
     
-        public GridData<int> PlayerIndexData
+        public GridData<int> PlayerIDData
         {
-            get => _playerIndexData;
-            set => _playerIndexData = value;
+            get => _playerIDData;
+            set => _playerIDData = value;
         }
 
         public GridData<SpriteRenderer> CellSpriteRenderersData
@@ -93,7 +93,7 @@ namespace Managers
             CoinValueData = new GridData<int>(GridInfo);
             _holeCellsCount = GetRandomDivisibleNumber(18 , 30 , 2 , 3);
             IsCellBlockedData = new GridData<bool>(GridInfo);
-            PlayerIndexData = new GridData<int>(GridInfo);
+            PlayerIDData = new GridData<int>(GridInfo);
             TotalCells = GridInfo.Cols * GridInfo.Rows;
             ToggleEventSubscription(true);
         }

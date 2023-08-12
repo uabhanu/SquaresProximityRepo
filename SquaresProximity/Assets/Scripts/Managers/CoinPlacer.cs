@@ -29,13 +29,13 @@ namespace Managers
         
         public void BuffUpAdjacentCoin(Vector2Int cellIndexAtMousePosition)
         {
-            int currentPlayerID = _gridManager.PlayerIndexData.GetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y);
+            int currentPlayerID = _gridManager.PlayerIDData.GetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y);
 
             ProcessAdjacentCells(cellIndexAtMousePosition , (x, y, adjacentCoinObj) =>
             {
                 if(adjacentCoinObj != null)
                 {
-                    int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
+                    int adjacentPlayerID = _gridManager.PlayerIDData.GetValue(x , y);
                     int adjacentCoinValue = _gridManager.CoinValueData.GetValue(x , y);
 
                     if(adjacentPlayerID == currentPlayerID)
@@ -52,18 +52,18 @@ namespace Managers
 
         public void CaptureAdjacentCoin(Vector2Int cellIndexAtMousePosition)
         {
-            int currentPlayerID = _gridManager.PlayerIndexData.GetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y);
+            int currentPlayerID = _gridManager.PlayerIDData.GetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y);
 
             ProcessAdjacentCells(cellIndexAtMousePosition, (x, y, adjacentCoinObj) =>
             {
                 if(adjacentCoinObj != null)
                 {
-                    int adjacentPlayerID = _gridManager.PlayerIndexData.GetValue(x , y);
+                    int adjacentPlayerID = _gridManager.PlayerIDData.GetValue(x , y);
                     int adjacentPlayerCoinValue = _gridManager.CoinValueData.GetValue(x , y);
 
                     if(adjacentPlayerID != currentPlayerID && adjacentPlayerCoinValue < _gameManager.CoinValue)
                     {
-                        _gridManager.PlayerIndexData.SetValue(x , y , currentPlayerID);
+                        _gridManager.PlayerIDData.SetValue(x , y , currentPlayerID);
                         EventsManager.Invoke(Event.CoinCaptured , currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
                         _gameManager.IPlayerTurnsManager.UpdateCoinColor(x , y , currentPlayerID);
                     }
@@ -74,7 +74,7 @@ namespace Managers
         public void PlaceCoin(Vector2Int cellIndexAtMousePosition)
         {
             _gridManager.CoinValueData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , _gameManager.CoinValue);
-            _gridManager.PlayerIndexData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , _gameManager.CurrentPlayerID);
+            _gridManager.PlayerIDData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , _gameManager.CurrentPlayerID);
             _gridManager.TotalCells--;
 
             EventsManager.Invoke(Event.CoinPlaced , _gameManager.CoinValue , _gameManager.CurrentPlayerID);
