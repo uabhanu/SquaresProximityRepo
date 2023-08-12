@@ -280,12 +280,12 @@ namespace Managers
                         if(!_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) && adjacentCellIndex != _gridManager.InvalidCellIndex)
                         {
                             adjacentCellIndicesSum++;
-                            Debug.Log(adjacentCellIndex);
-                            
-                            int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
-                            sumOfAdjacentCellCoins += adjacentCellCoinValue;
-                            Debug.Log("Coin Value of the Coin adjacent to this highest value coin : " + adjacentCellCoinValue);
+                            Debug.Log("(" + adjacentCellIndex.x + " , " + adjacentCellIndex.y + ")");
                         }
+                        
+                        int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
+                        sumOfAdjacentCellCoins += adjacentCellCoinValue;
+                        Debug.Log("Coin Value of the Coin adjacent to this highest value coin : " + adjacentCellCoinValue);
                     }
                     
                     Debug.Log("Sum of LesserCoinValuesList Adjacent Cell Choices : " + sumOfAdjacentCellCoins);
@@ -349,12 +349,12 @@ namespace Managers
                         if(!_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) && adjacentCellIndex != _gridManager.InvalidCellIndex)
                         {
                             adjacentCellIndicesSum++;
-                            Debug.Log(adjacentCellIndex);
-                            
-                            int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
-                            sumOfAdjacentCellCoins += adjacentCellCoinValue;
-                            Debug.Log("Coin Value of the Coin adjacent to this highest value coin : " + adjacentCellCoinValue);
+                            Debug.Log("(" + adjacentCellIndex.x + " , " + adjacentCellIndex.y + ")");
                         }
+                        
+                        int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
+                        sumOfAdjacentCellCoins += adjacentCellCoinValue;
+                        Debug.Log("Coin Value of the Coin adjacent to this highest value coin : " + adjacentCellCoinValue);
                     }
                     
                     Debug.Log("Sum of SelfCoinValuesList Adjacent Cell Choices : " + sumOfAdjacentCellCoins);
