@@ -143,7 +143,7 @@ namespace Managers
                     {
                         GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
         
-                        if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) != _gameManager.CurrentPlayerID)
+                        if(coin != null && _gridManager.PlayerIDData.GetValue(x , y) != _gameManager.CurrentPlayerID)
                         {
                             _gameManager.OtherPlayerCoinsCellIndicesList.Add(new Vector2Int(x , y));
                             int coinValue = _gridManager.CoinValueData.GetValue(x , y);
@@ -159,7 +159,7 @@ namespace Managers
                             }
                         }
         
-                        if(coin != null && _gridManager.PlayerIndexData.GetValue(x , y) == _gameManager.CurrentPlayerID && hasAdjacentUnblockedCell)
+                        if(coin != null && _gridManager.PlayerIDData.GetValue(x , y) == _gameManager.CurrentPlayerID && hasAdjacentUnblockedCell)
                         {
                             _gameManager.SelfCoinsCellIndicesList.Add(new Vector2Int(x , y));
                             int coinValue = _gridManager.CoinValueData.GetValue(x , y);
