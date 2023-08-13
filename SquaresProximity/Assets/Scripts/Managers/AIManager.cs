@@ -27,26 +27,6 @@ namespace Managers
 
         #region User Defined Functions
         
-        private int GetAdjacentCoinValues(Vector2Int cellIndex)
-        {
-            int sum = 0;
-            
-            //Debug.Log("GetAdjacentCoinValues() -> Cell Index Passed In : " + cellIndex);
-
-            if(cellIndex != _gridManager.InvalidCellIndex)
-            {
-                List<Vector2Int> adjacentCellIndices = GetAdjacentCellIndicesList(cellIndex);
-
-                foreach(Vector2Int adjacentIndex in adjacentCellIndices)
-                {
-                    int adjacentCellValue = _gridManager.CoinValueData.GetValue(adjacentIndex.x , adjacentIndex.y);
-                    sum += adjacentCellValue;
-                }
-            }
-            
-            return sum;
-        }
-
         private List<Vector2Int> GetAdjacentCellIndicesList(Vector2Int coinCellIndex)
         {
             if(coinCellIndex != _gridManager.InvalidCellIndex)
@@ -227,7 +207,7 @@ namespace Managers
             ClearLists();
             PopulateLists();
 
-            Vector2Int targetCellIndex = _gridManager.InvalidCellIndex;
+            Vector2Int targetCellIndex  ;
             List<Vector2Int> attackCellIndicesList = new List<Vector2Int>();
             List<Vector2Int> buffUpCellIndicesList = new List<Vector2Int>();
 
@@ -244,7 +224,7 @@ namespace Managers
             if(attackCellIndicesList.Count > 0)
             {
                 Debug.Log("Attack");
-                
+
                 int highestValue = int.MinValue;
                 int highestValueIndex = -1;
 
@@ -258,56 +238,53 @@ namespace Managers
                         highestValueIndex = i;
                     }
                 }
-                
+
                 if(highestValueIndex != -1)
                 {
-                    var highestValueCellIndex = _gameManager.LesserCoinsCellIndicesList[highestValueIndex];
                     int highestValueCoinValue = _gameManager.LesserCoinValuesList[highestValueIndex];
-                    
-                    Debug.Log("Highest Value Coin of LesserCoinValuesList Found at Cell Index : " + highestValueCellIndex);
+
+                    List<Vector2Int> highestValueCellIndicesList = new List<Vector2Int>();
+
+                    for(int i = 0; i < _gameManager.LesserCoinsCellIndicesList.Count; i++)
+                    {
+                        Vector2Int highestValueCoinCellIndex = _gameManager.LesserCoinsCellIndicesList[i];
+
+                        int coinValue = _gridManager.CoinValueData.GetValue(highestValueCoinCellIndex.x , highestValueCoinCellIndex.y);
+
+                        if(coinValue == highestValueCoinValue)
+                        {
+                            highestValueCellIndicesList.Add(highestValueCoinCellIndex);
+                        }
+                    }
+
+                    highestValueCellIndicesList.Sort((a, b) =>
+                    {
+                        int coinValueA = _gridManager.CoinValueData.GetValue(a.x , a.y);
+                        int coinValueB = _gridManager.CoinValueData.GetValue(b.x , b.y);
+                        return coinValueB.CompareTo(coinValueA);
+                    });
+
                     Debug.Log("Coin Value of the Highest Value Coin of the LesserCoinValuesList : " + highestValueCoinValue);
 
-                    List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(highestValueCellIndex);
-                    
-                    int adjacentCellIndicesSum = 0;
-                    int highestAdjacentSum = int.MinValue;
                     targetCellIndex = _gridManager.InvalidCellIndex;
-                    
-                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
-                    {
-                        if(adjacentCellIndex != _gridManager.InvalidCellIndex)
-                        {
-                            if(!_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-                            {
-                                adjacentCellIndicesSum++;
-                            }
-                        
-                            int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
-                        
-                            if(adjacentCellCoinValue == 0)
-                            {
-                                Debug.Log("This adjacent cell " + "(" + adjacentCellIndex.x + " , " + adjacentCellIndex.y + ")" + " has no coin on it");   
-                            }
-                            else
-                            {
-                                Debug.Log("The coin value of the coin on this adjacent cell " + adjacentCellIndex + " is : " + adjacentCellCoinValue);
-                            }   
-                        }
-                    }
-                    
-                    Debug.Log("Total Adjacent Unblocked Cells of Highest Value Coin : " + adjacentCellIndicesSum);
 
-                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+                    foreach(Vector2Int cellIndex in highestValueCellIndicesList)
                     {
-                        int adjacentSum = GetAdjacentCoinValues(adjacentCellIndex);
-            
-                        if(adjacentSum > highestAdjacentSum && !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                        Debug.Log("Highest Value Coin of LesserCoinValuesList Found at Cell Index : " + cellIndex);
+
+                        List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(cellIndex);
+
+                        foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
                         {
-                            highestAdjacentSum = adjacentSum;
-                            targetCellIndex = adjacentCellIndex;
+                            if(adjacentCellIndex != _gridManager.InvalidCellIndex)
+                            {
+                                int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
+                                Debug.Log("The coin value of the coin on this adjacent cell " + adjacentCellIndex + " is : " + adjacentCellCoinValue);
+                                targetCellIndex = adjacentCellIndex;
+                            }
                         }
                     }
-                    
+
                     if(targetCellIndex != _gridManager.InvalidCellIndex)
                     {
                         return targetCellIndex;
@@ -318,7 +295,7 @@ namespace Managers
             if(buffUpCellIndicesList.Count > 0)
             {
                 Debug.Log("Buff Up");
-                
+
                 int highestValue = int.MinValue;
                 int highestValueIndex = -1;
 
@@ -332,56 +309,53 @@ namespace Managers
                         highestValueIndex = i;
                     }
                 }
-                
+
                 if(highestValueIndex != -1)
                 {
-                    var highestValueCellIndex = _gameManager.SelfCoinsCellIndicesList[highestValueIndex];
                     int highestValueCoinValue = _gameManager.SelfCoinValuesList[highestValueIndex];
-                    
-                    Debug.Log("Highest Value Coin of SelfCoinValuesList Found at Cell Index : " + highestValueCellIndex);
-                    Debug.Log("Coin Value of the Highest Value Coin of the SelfCoinValuesList : " + highestValueCoinValue);
-            
-                    List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(highestValueCellIndex);
-                    
-                    int adjacentCellIndicesSum = 0;
-                    int highestAdjacentSum = int.MinValue;
+
+                    List<Vector2Int> highestValueCellIndicesList = new List<Vector2Int>();
+
+                    for(int i = 0; i < _gameManager.SelfCoinsCellIndicesList.Count; i++)
+                    {
+                        Vector2Int highestValueCoinCellIndex = _gameManager.SelfCoinsCellIndicesList[i];
+
+                        int coinValue = _gridManager.CoinValueData.GetValue(highestValueCoinCellIndex.x , highestValueCoinCellIndex.y);
+
+                        if(coinValue == highestValueCoinValue)
+                        {
+                            highestValueCellIndicesList.Add(highestValueCoinCellIndex);
+                        }
+                    }
+
+                    highestValueCellIndicesList.Sort((a, b) =>
+                    {
+                        int coinValueA = _gridManager.CoinValueData.GetValue(a.x , a.y);
+                        int coinValueB = _gridManager.CoinValueData.GetValue(b.x , b.y);
+                        return coinValueB.CompareTo(coinValueA);
+                    });
+
+                    Debug.Log("Coin Value of the Highest Value Coin of the LesserCoinValuesList : " + highestValueCoinValue);
+
                     targetCellIndex = _gridManager.InvalidCellIndex;
-                    
-                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+
+                    foreach(Vector2Int cellIndex in highestValueCellIndicesList)
                     {
-                        if(adjacentCellIndex != _gridManager.InvalidCellIndex)
+                        Debug.Log("Highest Value Coin of LesserCoinValuesList Found at Cell Index : " + cellIndex);
+
+                        List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(cellIndex);
+
+                        foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
                         {
-                            if(!_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                            if(adjacentCellIndex != _gridManager.InvalidCellIndex)
                             {
-                                adjacentCellIndicesSum++;
-                            }
-                        
-                            int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
-                        
-                            if(adjacentCellCoinValue == 0)
-                            {
-                                Debug.Log("This adjacent cell " + "(" + adjacentCellIndex.x + " , " + adjacentCellIndex.y + ")" + " has no coin on it");   
-                            }
-                            else
-                            {
+                                int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
                                 Debug.Log("The coin value of the coin on this adjacent cell " + adjacentCellIndex + " is : " + adjacentCellCoinValue);
-                            }   
+                                targetCellIndex = adjacentCellIndex;
+                            }
                         }
                     }
-                    
-                    Debug.Log("Total Adjacent Unblocked Cells of Highest Value Coin : " + adjacentCellIndicesSum);
-            
-                    foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
-                    {
-                        int adjacentSum = GetAdjacentCoinValues(adjacentCellIndex);
-            
-                        if(adjacentSum > highestAdjacentSum && !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
-                        {
-                            highestAdjacentSum = adjacentSum;
-                            targetCellIndex = adjacentCellIndex;
-                        }
-                    }
-                    
+
                     if(targetCellIndex != _gridManager.InvalidCellIndex)
                     {
                         return targetCellIndex;
