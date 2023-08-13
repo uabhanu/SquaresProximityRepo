@@ -223,7 +223,7 @@ namespace Managers
 
             if(attackCellIndicesList.Count > 0)
             {
-                Debug.Log("Attack");
+                //Debug.Log("Attack");
 
                 int highestValue = int.MinValue;
                 int highestValueIndex = -1;
@@ -264,11 +264,11 @@ namespace Managers
                         return coinValueB.CompareTo(coinValueA);
                     });
 
-                    Debug.Log("Coin Value of the Highest Value Coin of the LesserCoinValuesList : " + highestValueCoinValue);
+                    Debug.Log("Attack Block -> Coin Value of the Highest Value Coin of the LesserCoinValuesList : " + highestValueCoinValue);
 
                     foreach(Vector2Int cellIndex in highestValueCellIndicesList)
                     {
-                        Debug.Log("Highest Value Coin of LesserCoinValuesList Found at Cell Index : " + cellIndex);
+                        Debug.Log("Attack Block -> Highest Value Coin of LesserCoinValuesList Found at Cell Index : " + cellIndex);
 
                         List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(cellIndex);
 
@@ -277,7 +277,7 @@ namespace Managers
                             if(adjacentCellIndex != _gridManager.InvalidCellIndex && !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
                             {
                                 int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
-                                Debug.Log("The coin value of the coin on this adjacent cell " + adjacentCellIndex + " is : " + adjacentCellCoinValue);
+                                Debug.Log("Attack Block -> The coin value of the coin on this adjacent cell " + adjacentCellIndex + " is : " + adjacentCellCoinValue);
 
                                 if((_gameManager.CoinValue - highestValueCoinValue) <= _gameManager.MaxDifferenceAttack)
                                 {
@@ -302,7 +302,7 @@ namespace Managers
             
             if(buffUpCellIndicesList.Count > 0)
             {
-                Debug.Log("Buff Up");
+                //Debug.Log("Buff Up");
             
                 int highestValue = int.MinValue;
                 int highestValueIndex = -1;
@@ -343,11 +343,11 @@ namespace Managers
                         return coinValueB.CompareTo(coinValueA);
                     });
             
-                    Debug.Log("Coin Value of the Highest Value Coin of the LesserCoinValuesList : " + highestValueCoinValue);
+                    Debug.Log("Buff Up Block -> Coin Value of the Highest Value Coin of the SelfCoinValuesList : " + highestValueCoinValue);
             
                     foreach(Vector2Int cellIndex in highestValueCellIndicesList)
                     {
-                        Debug.Log("Highest Value Coin of LesserCoinValuesList Found at Cell Index : " + cellIndex);
+                        Debug.Log("Buff Up Block -> Highest Value Coin of SelfCoinValuesList Found at Cell Index : " + cellIndex);
             
                         List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(cellIndex);
             
@@ -356,14 +356,26 @@ namespace Managers
                             if(adjacentCellIndex != _gridManager.InvalidCellIndex && !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
                             {
                                 int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
-                                Debug.Log("The coin value of the coin on this adjacent cell " + adjacentCellIndex + " is : " + adjacentCellCoinValue);
-                                targetCellIndex = adjacentCellIndex;
+                                Debug.Log("Buff Up Block -> The coin value of the coin on this adjacent cell " + adjacentCellIndex + " is : " + adjacentCellCoinValue);
+
+                                if(highestValueCoinValue < _gameManager.MaxCoinValue && highestValueCoinValue >= _gameManager.MinHigherCoinValue)
+                                {
+                                    targetCellIndex = adjacentCellIndex;   
+                                }
+                                else
+                                {
+                                    targetCellIndex = _gridManager.InvalidCellIndex;
+                                }
                             }
                         }
                     }
                     
                     Debug.Log("Buff Up Block -> Chosen Cell Index: " + targetCellIndex);
-                    return targetCellIndex;
+                    
+                    if(targetCellIndex != _gridManager.InvalidCellIndex)
+                    {
+                        return targetCellIndex;   
+                    }
                 }
             }
 
@@ -391,7 +403,7 @@ namespace Managers
                 
                 if(targetCellIndex != _gridManager.InvalidCellIndex)
                 {
-                    //Debug.Log("Random Block -> Chosen Cell Index: " + targetCellIndex);
+                    Debug.Log("Random Block -> Chosen Cell Index: " + targetCellIndex);
                     return targetCellIndex;
                 }
             }
