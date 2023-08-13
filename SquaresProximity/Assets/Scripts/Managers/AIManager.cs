@@ -278,13 +278,25 @@ namespace Managers
                             {
                                 int adjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y);
                                 Debug.Log("The coin value of the coin on this adjacent cell " + adjacentCellIndex + " is : " + adjacentCellCoinValue);
-                                targetCellIndex = adjacentCellIndex;
+
+                                if((_gameManager.CoinValue - highestValueCoinValue) <= _gameManager.MaxDifferenceAttack)
+                                {
+                                    targetCellIndex = adjacentCellIndex;   
+                                }
+                                else
+                                {
+                                    targetCellIndex = _gridManager.InvalidCellIndex;
+                                }
                             }
                         }
                     }
                     
                     Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex);
-                    return targetCellIndex;
+
+                    if(targetCellIndex != _gridManager.InvalidCellIndex)
+                    {
+                        return targetCellIndex;   
+                    }
                 }
             }
             
