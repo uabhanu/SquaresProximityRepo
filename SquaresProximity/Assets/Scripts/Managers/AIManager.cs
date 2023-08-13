@@ -223,8 +223,6 @@ namespace Managers
 
             if(attackCellIndicesList.Count > 0)
             {
-                //Debug.Log("Attack");
-
                 int highestValue = int.MinValue;
                 int highestValueIndex = -1;
 
@@ -290,11 +288,10 @@ namespace Managers
                             }
                         }
                     }
-                    
-                    Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex);
 
                     if(targetCellIndex != _gridManager.InvalidCellIndex)
                     {
+                        Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex);
                         return targetCellIndex;   
                     }
                 }
@@ -302,8 +299,6 @@ namespace Managers
             
             if(buffUpCellIndicesList.Count > 0)
             {
-                //Debug.Log("Buff Up");
-            
                 int highestValue = int.MinValue;
                 int highestValueIndex = -1;
             
@@ -369,11 +364,10 @@ namespace Managers
                             }
                         }
                     }
-                    
-                    Debug.Log("Buff Up Block -> Chosen Cell Index: " + targetCellIndex);
-                    
+
                     if(targetCellIndex != _gridManager.InvalidCellIndex)
                     {
+                        Debug.Log("Buff Up Block -> Chosen Cell Index: " + targetCellIndex);
                         return targetCellIndex;   
                     }
                 }
@@ -381,8 +375,6 @@ namespace Managers
 
             if(_gameManager.UnblockedCellIndicesList.Count > 0)
             {
-                //Debug.Log("Random Cell");
-                
                 foreach(Vector2Int cellIndex in _gameManager.UnblockedCellIndicesList)
                 {
                     List<Vector2Int> adjacentCells = GetAdjacentCellIndicesList(cellIndex);
@@ -392,9 +384,10 @@ namespace Managers
 
                     if(unblockedAdjacentCount <= 3 &&(_gameManager.CoinValue >= _gameManager.MinHigherCoinValue && _gameManager.CoinValue <= _gameManager.MaxHigherCoinValue))
                     {
-                        //Debug.Log("Current Coin Value : " + _gameManager.CoinValue);
-                        //Debug.Log("Random Block -> Cell Index : " + cellIndex + " -> Total adjacent unblocked cells : " + unblockedAdjacentCount);
-                        return cellIndex;
+                        //Debug.Log("Random Block -> Current Coin Value : " + _gameManager.CoinValue);
+                        targetCellIndex = cellIndex;
+                        Debug.Log("Random Block -> Chosen Cell Index: " + targetCellIndex);
+                        return targetCellIndex;
                     }
                 }
 
