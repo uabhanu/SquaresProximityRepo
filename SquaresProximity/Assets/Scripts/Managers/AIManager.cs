@@ -271,13 +271,24 @@ namespace Managers
                                         {
                                             if(_gameManager.CoinValue > _gameManager.MinCoinValue)
                                             {
+                                                if(_gameManager.IsAIArray[i])
+                                                {
+                                                    Debug.Log("Attack Block -> Coin Value is greater than or equal to " + _gameManager.MinCoinValue + " and Player is Human");
+                                                    Debug.Log("Attack Block -> Difference between Coin Value and Highest Coin Value of the list is less than or equal to  " + _gameManager.MaxDifferenceAttack + " and Player is Human");
+                                                
+                                                    targetCellIndex = adjacentCellIndex;
+                                                    Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex + " because this has maximum points and Player is Human");
+                                                
+                                                    return targetCellIndex;   
+                                                }
+
                                                 Debug.Log("Attack Block -> Coin Value is greater than or equal to " + _gameManager.MinCoinValue);
                                                 Debug.Log("Attack Block -> Difference between Coin Value and Highest Coin Value of the list is less than or equal to  " + _gameManager.MaxDifferenceAttack);
                                                 
                                                 targetCellIndex = adjacentCellIndex;
                                                 Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex + " because this has maximum points");
                                                 
-                                                return targetCellIndex;   
+                                                return targetCellIndex;
                                             }
                                         }
                                     }
