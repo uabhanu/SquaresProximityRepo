@@ -227,6 +227,8 @@ namespace Managers
 
         public void EnterButton()
         {
+            string defaultAIPlayerName = "AI";
+            
             string[] defaultPlayerNames =
             {
                 "Player 1",
@@ -248,9 +250,19 @@ namespace Managers
 
                 if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
                 {
-                    _playerNamesArray[i] = defaultPlayerNames[i];
-                    playerNameTMPInputFields[i].text = _playerNamesArray[i];
-                    aiHumanTogglesArray[0].isOn = true;
+                    if(!aiHumanTogglesArray[i].isOn)
+                    {
+                        _playerNamesArray[i] = defaultPlayerNames[i];
+                        playerNameTMPInputFields[i].text = _playerNamesArray[i];
+                        aiHumanTogglesArray[0].isOn = true;   
+                    }
+                    
+                    if(aiHumanTogglesArray[i].isOn)
+                    {
+                        _playerNamesArray[i] = defaultAIPlayerName;
+                        playerNameTMPInputFields[i].text = _playerNamesArray[i];
+                        aiHumanTogglesArray[0].isOn = true;
+                    }
                 }
             }
         
