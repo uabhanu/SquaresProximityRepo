@@ -271,22 +271,24 @@ namespace Managers
                                         {
                                             if(_gameManager.CoinValue > _gameManager.MinCoinValue)
                                             {
-                                                if(_gameManager.IsAIArray[i])
+                                                if(!_gameManager.IsAIArray[i] && _gridManager.PlayerIDData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y) != _gameManager.CurrentPlayerID)
                                                 {
                                                     Debug.Log("Attack Block -> Coin Value is greater than or equal to " + _gameManager.MinCoinValue + " and Player is Human");
-                                                    Debug.Log("Attack Block -> Difference between Coin Value and Highest Coin Value of the list is less than or equal to  " + _gameManager.MaxDifferenceAttack + " and Player is Human");
+                                                    Debug.Log("Attack Block -> Difference between Coin Value and Highest Coin Value of the list is less than or equal to  " + _gameManager.MaxDifferenceAttack + " and Player is AI Boolean Value is : " + _gameManager.IsAIArray[i]);
                                                 
                                                     targetCellIndex = adjacentCellIndex;
                                                     Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex + " because this has maximum points and Player is Human");
                                                 
                                                     return targetCellIndex;   
                                                 }
+                                                
+                                                Debug.Log("Player is AI Boolean Value is : " + _gameManager.IsAIArray[i]);
 
                                                 Debug.Log("Attack Block -> Coin Value is greater than or equal to " + _gameManager.MinCoinValue);
                                                 Debug.Log("Attack Block -> Difference between Coin Value and Highest Coin Value of the list is less than or equal to  " + _gameManager.MaxDifferenceAttack);
                                                 
                                                 targetCellIndex = adjacentCellIndex;
-                                                Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex + " because this has maximum points");
+                                                Debug.Log("Attack Block -> Chosen Cell Index: " + targetCellIndex + " because the sum is : " + currentSum + " which is maximum points");
                                                 
                                                 return targetCellIndex;
                                             }
@@ -371,7 +373,7 @@ namespace Managers
                         {
                             if(coinValue <= _gameManager.MaxCoinValue && coinValue >= _gameManager.MinHigherCoinValue)
                             {
-                                if(bestAdjacentCellIndex == _gridManager.InvalidCellIndex)
+                                if(bestAdjacentCellIndex != _gridManager.InvalidCellIndex)
                                 {
                                     bestAdjacentCellIndex = adjacentCellIndex;
                                     Debug.Log("Buff Up Block -> Chosen this Cell Index : " + bestAdjacentCellIndex + " because this has maximum points and priority went to numbers below 20 but 20 may still be adjacent");
@@ -390,8 +392,8 @@ namespace Managers
                 
                                 if(totalBuffedCoins > totalBuffedCoinsForBestCell)
                                 {
-                                    Debug.Log("Buff Up Block -> Chosen this Cell Index : " + bestAdjacentCellIndex + " because this has maximum points");
                                     bestAdjacentCellIndex = adjacentCellIndex;
+                                    Debug.Log("Buff Up Block -> Chosen this Cell Index : " + bestAdjacentCellIndex + " because this has maximum points");
                                     return bestAdjacentCellIndex;
                                 }
                             }
@@ -437,7 +439,7 @@ namespace Managers
                     if((unblockedAdjacentCount <= 1 && _gameManager.CoinValue >= _gameManager.MinCoinValue && _gameManager.CoinValue <= 13) || _gameManager.CoinValue == 18 || _gameManager.CoinValue == 19)
                     {
                         targetCellIndex = cellIndex;
-                        Debug.Log("Random Block -> Chosen Cell Index: " + targetCellIndex + " because the number of unblocked adjacent cells are 1 or less and " + _gameManager.CoinValue + " is between " + _gameManager.MinCoinValue + " & 13 or 18 or 19");
+                        Debug.Log("Random Block -> Chosen Cell Index: " + targetCellIndex + " because the number of unblocked adjacent cells are 1 or less and " + _gameManager.CoinValue + " is equal to or between " + _gameManager.MinCoinValue + " & 13 or 18 or 19");
                         return targetCellIndex;
                     }
                     
