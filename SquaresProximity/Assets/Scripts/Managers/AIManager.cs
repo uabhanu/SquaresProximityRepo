@@ -290,7 +290,13 @@ namespace Managers
                             }
                         }
 
-                        if(currentSum > maxSum)
+                        if(currentSum > maxSum && _gameManager.CoinValue <= highestValueCoin && highestValueCoin < _gameManager.MaxCoinValue)
+                        {
+                            maxSum = currentSum;
+                            bestAdjacentCellIndex = adjacentCellIndex;
+                        }
+                        
+                        if(currentSum > maxSum && _gameManager.CoinValue <= highestValueCoin)
                         {
                             maxSum = currentSum;
                             bestAdjacentCellIndex = adjacentCellIndex;
