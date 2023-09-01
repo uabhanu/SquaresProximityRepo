@@ -283,28 +283,22 @@ namespace Managers
                         foreach(Vector2Int adjacentAdjacentCellIndex in adjacentAdjacentCellIndicesList)
                         {
                             int adjacentAdjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentAdjacentCellIndex.x , adjacentAdjacentCellIndex.y);
-                            currentSum += adjacentAdjacentCellCoinValue;
+
+                            if(_gameManager.CurrentPlayerID == _gridManager.PlayerIDData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                            {
+                                currentSum += adjacentAdjacentCellCoinValue;   
+                            }
                         }
 
                         if(currentSum > maxSum)
                         {
                             maxSum = currentSum;
                             bestAdjacentCellIndex = adjacentCellIndex;
+                            Debug.Log("Buff Up Block -> Chosen Cell Index : " + bestAdjacentCellIndex + " with sum : " + maxSum);
+                            return bestAdjacentCellIndex;
                         }
                     }
                 }
-
-                if(bestAdjacentCellIndex == _gridManager.InvalidCellIndex)
-                {
-                    bestAdjacentCellIndex = highestValueCoinCellIndex;
-                    Debug.Log("Buff Up Block -> Chosen Cell Index : " + bestAdjacentCellIndex + " as no better option available");
-                }
-                else
-                {
-                    Debug.Log("Buff Up Block -> Chosen Cell Index : " + bestAdjacentCellIndex + " with sum : " + maxSum);
-                }
-
-                return bestAdjacentCellIndex;
             }
 
             if(_gameManager.UnblockedCellIndicesList.Count > 0)
