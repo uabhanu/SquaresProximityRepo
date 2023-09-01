@@ -223,7 +223,7 @@ namespace Managers
 
             if(attackCellIndicesList.Count > 0)
             {
-                Vector2Int bestAdjacentCellIndex = _gridManager.InvalidCellIndex;
+                Vector2Int bestAdjacentCellIndex;
                 int maxSum = 0;
 
                 int highestValueCoin = _gameManager.LesserCoinValuesList[0];
@@ -243,14 +243,14 @@ namespace Managers
                         foreach(Vector2Int adjacentAdjacentCellIndex in adjacentAdjacentCellIndicesList)
                         {
                             int adjacentAdjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentAdjacentCellIndex.x , adjacentAdjacentCellIndex.y);
-                            
+                
                             if(_gameManager.LesserCoinValuesList.Contains(adjacentAdjacentCellCoinValue))
                             {
                                 currentSum += adjacentAdjacentCellCoinValue;
                             }
                         }
 
-                        if(currentSum > maxSum)
+                        if(currentSum > maxSum && _gameManager.CoinValue > _gameManager.MinCoinValue && _gameManager.CoinValue - _gameManager.LesserCoinValuesList[0] <= _gameManager.MaxDifferenceAttack)
                         {
                             maxSum = currentSum;
                             bestAdjacentCellIndex = adjacentCellIndex;
@@ -259,9 +259,6 @@ namespace Managers
                         }
                     }
                 }
-
-                Debug.Log("Attack Block -> No valid cell available, AI can't make a move.");
-                return _gridManager.InvalidCellIndex;
             }
 
             if(buffUpCellIndicesList.Count > 0)
