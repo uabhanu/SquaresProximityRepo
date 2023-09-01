@@ -284,9 +284,9 @@ namespace Managers
                         {
                             int adjacentAdjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentAdjacentCellIndex.x , adjacentAdjacentCellIndex.y);
 
-                            if(_gameManager.CurrentPlayerID == _gridManager.PlayerIDData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                            if(_gameManager.CurrentPlayerID == _gridManager.PlayerIDData.GetValue(adjacentAdjacentCellIndex.x , adjacentAdjacentCellIndex.y))
                             {
-                                currentSum += adjacentAdjacentCellCoinValue;   
+                                currentSum += adjacentAdjacentCellCoinValue;
                             }
                         }
 
@@ -294,10 +294,14 @@ namespace Managers
                         {
                             maxSum = currentSum;
                             bestAdjacentCellIndex = adjacentCellIndex;
-                            Debug.Log("Buff Up Block -> Chosen Cell Index : " + bestAdjacentCellIndex + " with sum : " + maxSum);
-                            return bestAdjacentCellIndex;
                         }
                     }
+                }
+
+                if(bestAdjacentCellIndex != _gridManager.InvalidCellIndex)
+                {
+                    Debug.Log("Buff Up Block -> Chosen Cell Index : " + bestAdjacentCellIndex + " with sum : " + maxSum);
+                    return bestAdjacentCellIndex;
                 }
             }
 
