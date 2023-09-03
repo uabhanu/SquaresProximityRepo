@@ -284,19 +284,13 @@ namespace Managers
                         {
                             int adjacentAdjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentAdjacentCellIndex.x , adjacentAdjacentCellIndex.y);
 
-                            if(_gameManager.CurrentPlayerID == _gridManager.PlayerIDData.GetValue(adjacentAdjacentCellIndex.x , adjacentAdjacentCellIndex.y))
+                            if(adjacentAdjacentCellCoinValue > 0 && _gameManager.CurrentPlayerID == _gridManager.PlayerIDData.GetValue(adjacentAdjacentCellIndex.x , adjacentAdjacentCellIndex.y))
                             {
-                                currentSum += adjacentAdjacentCellCoinValue;
+                                currentSum++;
                             }
                         }
 
-                        if(currentSum > maxSum && _gameManager.CoinValue <= highestValueCoin && highestValueCoin < _gameManager.MaxCoinValue)
-                        {
-                            maxSum = currentSum;
-                            bestAdjacentCellIndex = adjacentCellIndex;
-                        }
-                        
-                        if(currentSum > maxSum && _gameManager.CoinValue <= highestValueCoin)
+                        if((currentSum > maxSum && _gameManager.CoinValue <= highestValueCoin && highestValueCoin < _gameManager.MaxCoinValue) || (currentSum > maxSum && _gameManager.CoinValue <= highestValueCoin))
                         {
                             maxSum = currentSum;
                             bestAdjacentCellIndex = adjacentCellIndex;
