@@ -223,16 +223,10 @@ namespace Managers
 
             if(attackCellIndicesList.Count > 0)
             {
-                Vector2Int bestAdjacentCellIndex;
+                Vector2Int bestAdjacentCellIndex = _gridManager.InvalidCellIndex;
                 int maxSum = 0;
 
-                int highestValueCoin = _gameManager.LesserCoinValuesList[0];
-
-                Vector2Int highestValueCoinCellIndex = _gameManager.LesserCoinsCellIndicesList.First(cellIndex => _gridManager.CoinValueData.GetValue(cellIndex.x , cellIndex.y) == highestValueCoin);
-
-                List<Vector2Int> adjacentCellIndicesList = GetAdjacentCellIndicesList(highestValueCoinCellIndex);
-
-                foreach(Vector2Int adjacentCellIndex in adjacentCellIndicesList)
+                foreach(Vector2Int adjacentCellIndex in attackCellIndicesList)
                 {
                     int currentSum = 0;
 
@@ -243,21 +237,25 @@ namespace Managers
                         foreach(Vector2Int adjacentAdjacentCellIndex in adjacentAdjacentCellIndicesList)
                         {
                             int adjacentAdjacentCellCoinValue = _gridManager.CoinValueData.GetValue(adjacentAdjacentCellIndex.x , adjacentAdjacentCellIndex.y);
-                
+
                             if(_gameManager.LesserCoinValuesList.Contains(adjacentAdjacentCellCoinValue))
                             {
                                 currentSum += adjacentAdjacentCellCoinValue;
                             }
                         }
 
-                        if(currentSum > maxSum && _gameManager.CoinValue > _gameManager.MinCoinValue && _gameManager.CoinValue - _gameManager.LesserCoinValuesList[0] <= _gameManager.MaxDifferenceAttack || _gameManager.CoinValue == _gameManager.MaxCoinValue)
+                        if(currentSum > maxSum && _gameManager.CoinValue > _gameManager.MinCoinValue && (_gameManager.CoinValue - _gameManager.LesserCoinValuesList[0] <= _gameManager.MaxDifferenceAttack || _gameManager.CoinValue == _gameManager.MaxCoinValue))
                         {
                             maxSum = currentSum;
                             bestAdjacentCellIndex = adjacentCellIndex;
-                            Debug.Log("Attack Block -> Chosen Cell Index : " + bestAdjacentCellIndex + " with sum : " + maxSum);
-                            return bestAdjacentCellIndex;
                         }
                     }
+                }
+
+                if(bestAdjacentCellIndex != _gridManager.InvalidCellIndex)
+                {
+                    Debug.Log("Attack Block -> Chosen Cell Index : " + bestAdjacentCellIndex + " with sum : " + maxSum);
+                    return bestAdjacentCellIndex;
                 }
             }
 
