@@ -250,7 +250,7 @@ namespace Managers
                             }
                         }
 
-                        if(currentSum > maxSum && _gameManager.CoinValue > _gameManager.MinCoinValue && _gameManager.CoinValue - _gameManager.LesserCoinValuesList[0] <= _gameManager.MaxDifferenceAttack)
+                        if(currentSum > maxSum && _gameManager.CoinValue > _gameManager.MinCoinValue && _gameManager.CoinValue - _gameManager.LesserCoinValuesList[0] <= _gameManager.MaxDifferenceAttack || _gameManager.CoinValue == _gameManager.MaxCoinValue)
                         {
                             maxSum = currentSum;
                             bestAdjacentCellIndex = adjacentCellIndex;
