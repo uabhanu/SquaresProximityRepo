@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -420,6 +422,24 @@ namespace Managers
 
         private void OnGameTied()
         {
+            int maxScore = _playersTotalWinsArray.Max();
+            List<int> tiedPlayers = new List<int>();
+
+            for(int i = 0; i < _playersTotalWinsArray.Length; i++)
+            {
+                if(_playersTotalWinsArray[i] == maxScore)
+                {
+                    tiedPlayers.Add(i);
+                }
+            }
+            
+            foreach(int playerIndex in tiedPlayers)
+            {
+                _playersTotalWinsArray[playerIndex]++;
+                playerTotalWinsLabelsTMPTexts[playerIndex].text = playerNameTMPInputFields[playerIndex].text + " Wins!!!";
+                winsPanelObjs[playerIndex].SetActive(true);
+            }
+            
             gameTiedPanelObj.SetActive(true);
         }
 
@@ -437,18 +457,6 @@ namespace Managers
         
             playerWinsLabelsTMPTexts[_highestScorePlayerID].text = playerNameTMPInputFields[_highestScorePlayerID].text + " Wins!!!";
             winsPanelObjs[_highestScorePlayerID].SetActive(true);
-        
-            // string[] nameKeys = new string[_numberOfPlayers];
-            // string[] winsKeys = new string[_numberOfPlayers];
-            //
-            // for(int i = 0; i < _numberOfPlayers; i++)
-            // {
-            //     nameKeys[i] = "Player" + i + "Name";
-            //     winsKeys[i] = "Player" + i + "TotalWins";
-            // }
-            //
-            // PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
-            // PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
         }
 
         private void OnScoreUpdated(int[] coinScoresArray)
