@@ -143,10 +143,13 @@ namespace Managers
                         {
                             _gameManager.SelfCoinsCellIndicesList.Add(new Vector2Int(x , y));
                             int coinValue = _gridManager.CoinValueData.GetValue(x , y);
-                            
-                            _gameManager.SelfCoinValuesList.Add(coinValue);
-                            List<int> sortedLesserCoinValues = _gameManager.SelfCoinValuesList.OrderByDescending(value => value).ToList();
-                            _gameManager.SelfCoinValuesList = sortedLesserCoinValues;
+
+                            if(coinValue < _gameManager.MaxCoinValue)
+                            {
+                                _gameManager.SelfCoinValuesList.Add(coinValue);
+                                List<int> sortedLesserCoinValues = _gameManager.SelfCoinValuesList.OrderByDescending(value => value).ToList();
+                                _gameManager.SelfCoinValuesList = sortedLesserCoinValues;   
+                            }
                         }
                     }
                 }
