@@ -265,10 +265,54 @@ namespace Managers
 
             if(buffUpCellIndicesList.Count > 0)
             {
+                int highestValueCoin = _gameManager.SelfCoinValuesList[0];
+                List<Vector2Int> vulnerableCoins = new List<Vector2Int>();
+                
+                foreach(int coinValue in _gameManager.SelfCoinValuesList)
+                {
+                    if(coinValue < highestValueCoin)
+                    {
+                        List<Vector2Int> coinIndices = _gameManager.SelfCoinsCellIndicesList
+                        .Where(cellIndex => _gridManager.CoinValueData.GetValue(cellIndex.x , cellIndex.y) == coinValue)
+                        .ToList();
+
+                        foreach(Vector2Int coinIndex in coinIndices)
+                        {
+                            List<Vector2Int> adjacentCellIndicesListForVulnerableCoin = GetAdjacentCellIndicesList(coinIndex);
+
+                            int unblockedNeighbors = adjacentCellIndicesListForVulnerableCoin
+                            .Count(adjacentCellIndex =>
+                            adjacentCellIndex != _gridManager.InvalidCellIndex &&
+                            !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y));
+                            
+                            if(unblockedNeighbors == 1)
+                            {
+                                vulnerableCoins.Add(coinIndex);
+                            }
+                        }
+                    }
+                }
+                
+                if(vulnerableCoins.Count > 0)
+                {
+                    Vector2Int vulnerableCellIndex = vulnerableCoins.First();
+
+                    List<Vector2Int> adjacentCells = GetAdjacentCellIndicesList(vulnerableCellIndex)
+                    .Where(adjacentCellIndex =>
+                    adjacentCellIndex != _gridManager.InvalidCellIndex &&
+                    !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y))
+                    .ToList();
+                    
+                    if(adjacentCells.Count == 1)
+                    {
+                        targetCellIndex = adjacentCells.First();
+                        Debug.Log("Buff Up Block -> Chosen Cell Index to protect vulnerable coin: " + "(" + (targetCellIndex.x + " , " + targetCellIndex.y) + " )");
+                        return targetCellIndex;
+                    }
+                }
+                
                 Vector2Int bestAdjacentCellIndex = _gridManager.InvalidCellIndex;
                 int maxSum = 0;
-
-                int highestValueCoin = _gameManager.SelfCoinValuesList[0];
 
                 Vector2Int highestValueCoinCellIndex = _gameManager.SelfCoinsCellIndicesList.First(cellIndex => _gridManager.CoinValueData.GetValue(cellIndex.x , cellIndex.y) == highestValueCoin);
 
@@ -307,7 +351,7 @@ namespace Managers
                     return targetCellIndex;
                 }
             }
-
+            
             if(_gameManager.UnblockedCellIndicesList.Count > 0)
             {
                 targetCellIndex = _gridManager.InvalidCellIndex;
