@@ -10,7 +10,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-        
+
+            if(Keyboard.current.tabKey.wasPressedThisFrame)
+            {
+                EventsManager.Invoke(Event.KeyboardTabPressed);
+            }
             if(Mouse.current.leftButton.wasPressedThisFrame)
             {
                 EventsManager.Invoke(Event.MouseLeftClicked);
