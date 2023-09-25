@@ -59,7 +59,6 @@ namespace Managers
         [SerializeField] private float aiCoinPlaceDelay;
         [Tooltip("Please do not select the value below 1 and above 20")] [SerializeField] private int coinValueForTesting;
         [SerializeField] private int maxCoinValue;
-        [SerializeField] private int maxDifferenceAIHumanPoints;
         [SerializeField] private int maxDifferenceAttack;
         [SerializeField] private int maxHigherCoinValue;
         [SerializeField] private int minCoinValue;
@@ -76,7 +75,6 @@ namespace Managers
         public IAIManager IAIManager => _iAIManager;
         public ICoinPlacer ICoinPlacer => _iCoinPlacer;
         public int MaxCoinValue => maxCoinValue;
-        public int MaxDifferenceAIHumanPoints => maxDifferenceAIHumanPoints;
         public int MaxDifferenceAttack => maxDifferenceAttack;
         public int MaxHigherCoinValue => maxHigherCoinValue;
         public int MinCoinValue => minCoinValue;
@@ -170,8 +168,10 @@ namespace Managers
             _playerInputActions.MobileMap.Enable();
             _playerInputActions.PCMap.Enable();
         
-            _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
-
+            #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
+            #endif
+            
             ToggleEventSubscription(true);
             UpdateTrailVisibility();
         }
@@ -385,14 +385,21 @@ namespace Managers
             if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
             {
                 Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
-                MouseTrailObj.transform.position = snapPos;
+                
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                    MouseTrailObj.transform.position = snapPos;
+                #endif
             }
             else
             {
-                MouseTrailObj.transform.position = mouseWorldPos;
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                    MouseTrailObj.transform.position = mouseWorldPos;
+                #endif
             }
 
-            UpdateTrailVisibility();
+            #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                UpdateTrailVisibility();
+            #endif
         }
 
         private void OnNumberOfPlayersSelected(int numberOfPlayers)
