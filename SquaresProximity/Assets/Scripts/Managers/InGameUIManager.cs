@@ -20,6 +20,7 @@ namespace Managers
         private bool[] _aiHumanSelectionsBoolArray;
         private int _highestScorePlayerID;
         private int _numberOfPlayers;
+        private int[] _playerScoresArray;
         private int[] _playersTotalWinsArray;
         private int[] _totalReceivedArray;
         private string[] _playerNamesArray;
@@ -422,12 +423,12 @@ namespace Managers
 
         private void OnGameTied()
         {
-            int maxScore = _playersTotalWinsArray.Max();
+            int maxScore = _playerScoresArray.Max();
             List<int> tiedPlayers = new List<int>();
 
-            for(int i = 0; i < _playersTotalWinsArray.Length; i++)
+            for(int i = 0; i < _playerScoresArray.Length; i++)
             {
-                if(_playersTotalWinsArray[i] == maxScore)
+                if(_playerScoresArray[i] == maxScore)
                 {
                     tiedPlayers.Add(i);
                 }
@@ -464,6 +465,7 @@ namespace Managers
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 coinScoreTMPTexts[i].text = _playerNamesArray[i] + " : " + coinScoresArray[i];
+                _playerScoresArray = coinScoresArray;
             }
         }
 
