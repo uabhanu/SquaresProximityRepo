@@ -444,6 +444,20 @@ namespace Managers
             gameTiedPanelObj.SetActive(true);
         }
 
+        private void OnKeyboardTabPressed()
+        {
+            for(int i = 0; i < playerNameTMPInputFields.Length; i++)
+            {
+                if(playerNameTMPInputFields[i].isFocused)
+                {
+                    playerNameTMPInputFields[i].DeactivateInputField();
+                    int nextIndex = (i + 1) % playerNameTMPInputFields.Length;
+                    playerNameTMPInputFields[nextIndex].ActivateInputField();
+                    break;
+                }
+            }
+        }
+
         private void OnPlayerWins(int highestScorePlayerID)
         {
             _highestScorePlayerID = highestScorePlayerID;
@@ -480,6 +494,7 @@ namespace Managers
             {
                 EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
+                EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);    
@@ -488,6 +503,7 @@ namespace Managers
             {
                 EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
+                EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
