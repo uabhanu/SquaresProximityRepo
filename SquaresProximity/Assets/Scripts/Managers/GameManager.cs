@@ -273,11 +273,13 @@ namespace Managers
         private void OnGamePaused()
         {
             _isGameStarted = false;
+            Time.timeScale = 0;
         }
     
         private void OnGameResumed()
         {
             _isGameStarted = true;
+            Time.timeScale = 1;
         }
     
         private void OnGameStarted()
