@@ -86,27 +86,36 @@ namespace Managers
 
         private void OnGameOver()
         {
-            int highestScorePlayerID = GetHighestScorePlayer();
+            int highestScore = int.MinValue;
+            int winningPlayer = -1;
 
-            for(int i = 0; i < _numberOfPlayers - 1; i++)
+            for(int i = 0; i < _numberOfPlayers; i++)
             {
-                for(int j = i + 1; j < _numberOfPlayers; j++)
+                if(_coinScoreValuesArray[i] > highestScore)
                 {
-                    if(_coinScoreValuesArray[i] == _coinScoreValuesArray[j])
-                    {
-                        for(int k = 0; k < _numberOfPlayers; k++)
-                        {
-                            if(_coinScoreValuesArray[k] > _coinScoreValuesArray[i] && _coinScoreValuesArray[k] > _coinScoreValuesArray[j])
-                            {
-                                EventsManager.Invoke(Event.PlayerWins , k);
-                                return;
-                            }
-                        }
-
-                        EventsManager.Invoke(Event.GameTied);
-                        return;
-                    }
+                    highestScore = _coinScoreValuesArray[i];
+                    winningPlayer = i;
                 }
+            }
+
+            bool isTie = false;
+
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                if(_coinScoreValuesArray[i] == highestScore && i != winningPlayer)
+                {
+                    isTie = true;
+                    break;
+                }
+            }
+
+            if(isTie)
+            {
+                EventsManager.Invoke(Event.GameTied);
+            }
+            else
+            {
+                EventsManager.Invoke(Event.PlayerWins , winningPlayer);
             }
         }
 
