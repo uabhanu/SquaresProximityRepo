@@ -108,8 +108,6 @@ namespace Managers
                     }
                 }
             }
-
-            EventsManager.Invoke(Event.PlayerWins , highestScorePlayerID);
         }
 
         private void OnNumberOfPlayersSelected(int numberOfPlayers)
