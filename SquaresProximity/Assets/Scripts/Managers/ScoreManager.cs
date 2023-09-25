@@ -29,24 +29,7 @@ namespace Managers
         #endregion
 
         #region User Defined Functions
-        
-        private int GetHighestScorePlayer()
-        {
-            int highestScore = int.MinValue;
-            int highestScorePlayerID = -1;
 
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                if(_coinScoreValuesArray[i] > highestScore)
-                {
-                    highestScore = _coinScoreValuesArray[i];
-                    highestScorePlayerID = i;
-                }
-            }
-
-            return highestScorePlayerID;
-        }
-        
         private void CoinBuffedUpScore(int buffedUpCoinPlayerID , int buffedUpCoinIncrement)
         {
             _coinScoreValuesArray[buffedUpCoinPlayerID] += buffedUpCoinIncrement;
