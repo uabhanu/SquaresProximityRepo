@@ -75,7 +75,18 @@ namespace Managers
                 numberOfPlayersSelectionTogglesArray[i].isOn = false;
             }
             
-            LoadNumberOfPlayers();
+            int savedPlayers = PlayerPrefs.GetInt("NumberOfPlayers" , 2);
+            
+            if(savedPlayers == 2)
+            {
+                numberOfPlayersSelectionTogglesArray[0].isOn = true;
+                numberOfPlayersSelectionTogglesArray[1].isOn = false;
+            }
+            else
+            {
+                numberOfPlayersSelectionTogglesArray[0].isOn = false;
+                numberOfPlayersSelectionTogglesArray[1].isOn = true;
+            }
             
             PlayerPrefsManager.LoadData(ref _holesToggleBool , HolesKey);
             holesToggle.isOn = _holesToggleBool;
@@ -99,29 +110,6 @@ namespace Managers
         #endregion
 
         #region User Defined Functions
-        
-        private void LoadNumberOfPlayers()
-        {
-            int savedPlayers = PlayerPrefs.GetInt("NumberOfPlayers" , 2);
-            
-            if(savedPlayers == 2)
-            {
-                numberOfPlayersSelectionTogglesArray[0].isOn = true;
-                numberOfPlayersSelectionTogglesArray[1].isOn = false;
-            }
-            else
-            {
-                numberOfPlayersSelectionTogglesArray[0].isOn = false;
-                numberOfPlayersSelectionTogglesArray[1].isOn = true;
-            }
-        }
-        
-        private void SaveNumberOfPlayers()
-        {
-            int selectedPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
-            PlayerPrefs.SetInt("NumberOfPlayers" , selectedPlayers);
-            PlayerPrefs.Save();
-        }
         
         private void UpdateInGamePlayerNames(int playerID)
         {
@@ -400,8 +388,6 @@ namespace Managers
                 playerNameTMPInputFields[i].text = _playerNamesArray[i];
                 playerTotalWinsLabelsTMPTexts[i].text = _playerNamesArray[i] + " Total Wins: " + _playersTotalWinsArray[i];
             }
-            
-            SaveNumberOfPlayers();
         }
 
         public void ResumeButton()
@@ -436,7 +422,9 @@ namespace Managers
                 EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
             }
 
-            SaveNumberOfPlayers();
+            int selectedPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
+            PlayerPrefs.SetInt("NumberOfPlayers" , selectedPlayers);
+            PlayerPrefs.Save();
         }
         
         #endregion
