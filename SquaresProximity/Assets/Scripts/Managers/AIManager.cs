@@ -226,8 +226,9 @@ namespace Managers
 
             if(attackCellIndicesList.Count > 0)
             {
-                Vector2Int bestAdjacentCellIndex = _gridManager.InvalidCellIndex;
+                bool shouldPlaceCoin = false;
                 int maxSum = 0;
+                Vector2Int bestAdjacentCellIndex = _gridManager.InvalidCellIndex;
 
                 foreach(Vector2Int adjacentCellIndex in attackCellIndicesList)
                 {
@@ -251,11 +252,33 @@ namespace Managers
                         {
                             maxSum = currentSum;
                             bestAdjacentCellIndex = adjacentCellIndex;
+                            shouldPlaceCoin = true;
                         }
                     }
                 }
 
-                if(bestAdjacentCellIndex != _gridManager.InvalidCellIndex)
+                if(!shouldPlaceCoin)
+                {
+                    foreach(Vector2Int vulnerableCoinIndex in _gameManager.LesserCoinsCellIndicesList)
+                    {
+                        List<Vector2Int> adjacentCellIndicesListForVulnerableCoin = GetAdjacentCellIndicesList(vulnerableCoinIndex);
+
+                        int unblockedNeighbors = adjacentCellIndicesListForVulnerableCoin.Count(adjacentCellIndex =>
+                        adjacentCellIndex != _gridManager.InvalidCellIndex && !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y));
+
+                        if(unblockedNeighbors == 1)
+                        {
+                            targetCellIndex = adjacentCellIndicesListForVulnerableCoin
+                            .FirstOrDefault(adjacentCellIndex => adjacentCellIndex != _gridManager.InvalidCellIndex &&
+                            !_gridManager.IsCellBlockedData.GetValue(adjacentCellIndex.x , adjacentCellIndex.y));
+
+                            Debug.Log("Attack Block -> Placing coin to protect vulnerable coin at Cell Index : " + "(" + (targetCellIndex.x + " , " + targetCellIndex.y) + " )");
+                            return targetCellIndex;
+                        }
+                    }
+                }
+                
+                else if(bestAdjacentCellIndex != _gridManager.InvalidCellIndex)
                 {
                     targetCellIndex = bestAdjacentCellIndex;
                     Debug.Log("Attack Block -> Chosen Cell Index : " + "(" + (targetCellIndex.x + " , " + targetCellIndex.y) + " ) with sum : " + maxSum);
