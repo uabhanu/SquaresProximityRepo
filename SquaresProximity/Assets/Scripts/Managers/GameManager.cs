@@ -165,11 +165,14 @@ namespace Managers
         {
             _coinUIObj = GameObject.Find("CoinUI");
             _playerInputActions = new InputActions();
-            _playerInputActions.MobileMap.Enable();
-            _playerInputActions.PCMap.Enable();
+            
+            #if UNITY_ANDROID || UNITY_IOS
+                _playerInputActions.MobileMap.Enable();
+            #endif
         
             #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
                 _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
+                _playerInputActions.PCMap.Enable();
             #endif
             
             ToggleEventSubscription(true);
