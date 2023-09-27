@@ -170,7 +170,7 @@ namespace Managers
                 _playerInputActions.MobileMap.Enable();
             #endif
         
-            #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+            #if UNITY_STANDALONE || UNITY_WEBGL
                 _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
                 _playerInputActions.PCMap.Enable();
             #endif
@@ -256,7 +256,9 @@ namespace Managers
 
         public void UpdateTrailVisibility()
         {
-            MouseTrailObj.SetActive(IsMouseMoving);
+            #if UNITY_STANDALONE || UNITY_WEBGL
+                MouseTrailObj.SetActive(IsMouseMoving);
+            #endif
         }
     
         #endregion
@@ -419,6 +421,8 @@ namespace Managers
     
         private void OnTouchscreenTapped()
         {
+            Debug.Log("[Input] Tapped on an Android");
+            
             if(!_isGameStarted) return;
 
             for(int i = 0; i < IsAIArray.Length; i++)
