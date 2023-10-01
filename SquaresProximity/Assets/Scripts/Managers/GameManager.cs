@@ -218,22 +218,12 @@ namespace Managers
         
         private Vector2Int GetPlayerCellIndex()
         {
-            #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-            
-                if(IsAIArray[CurrentPlayerID])
-                {
-                    return _iAIManager.FindCellToPlaceCoinOn();
-                }
+            if(IsAIArray[CurrentPlayerID])
+            {
+                return _iAIManager.FindCellToPlaceCoinOn();
+            }
 
-                return _cellIndexAtMousePosition;
-                
-            #endif
-            
-            #if UNITY_ANDROID || UNITY_IOS
-            
-                //Todo Get the Cell Index from the Tap Position
-            
-            #endif
+            return _cellIndexAtMousePosition;
         }
         
         public void ResetPlayersRemaining()
