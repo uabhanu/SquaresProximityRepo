@@ -55,6 +55,7 @@ namespace Managers
         private Vector2Int _cellIndexToUse;
 
         [SerializeField] private bool isTestingMode;
+        [SerializeField] private Camera mainCamera;
         [SerializeField] private float aiCoinPlaceDelay;
         [Tooltip("Please do not select the value below 1 and above 20")] [SerializeField] private int coinValueForTesting;
         [SerializeField] private int maxCoinValue;
@@ -422,10 +423,10 @@ namespace Managers
             _isRandomTurns = !IsRandomTurns;
         }
     
-        private void OnTouchscreenTapped()
+        private void OnTouchscreenTapped(Vector2 touchscreenPosition)
         {
             if(!_isGameStarted) return;
-
+            
             for(int i = 0; i < IsAIArray.Length; i++)
             {
                 if(IsAIArray[i] && CurrentPlayerID == i)
@@ -434,7 +435,9 @@ namespace Managers
                 }
             }
 
-            CellIndexToUse = GetPlayerCellIndex();
+            Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(touchscreenPosition.x , touchscreenPosition.y , mainCamera.nearClipPlane));
+            CellIndexToUse = _gridManager.WorldToCell(worldPosition);
+            Debug.Log("Tapped on Cell Index : " + CellIndexToUse);
 
             if(CellIndexToUse == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexToUse.x , CellIndexToUse.y))
             {
@@ -457,7 +460,7 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.MouseMoved , new Action(OnMouseMoved));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
                 EventsManager.SubscribeToEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
-                EventsManager.SubscribeToEvent(Event.TouchscreenTapped , new Action(OnTouchscreenTapped));
+                EventsManager.SubscribeToEvent(Event.TouchscreenTapped , (Action<Vector2>)OnTouchscreenTapped);
             }
             else
             {
@@ -470,7 +473,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.MouseMoved , new Action(OnMouseMoved));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
                 EventsManager.UnsubscribeFromEvent(Event.RandomTurnsToggled , new Action(OnRandomTurnsToggled));
-                EventsManager.UnsubscribeFromEvent(Event.TouchscreenTapped , new Action(OnTouchscreenTapped));
+                EventsManager.UnsubscribeFromEvent(Event.TouchscreenTapped , (Action<Vector2>)OnTouchscreenTapped);
             }
         }
 
