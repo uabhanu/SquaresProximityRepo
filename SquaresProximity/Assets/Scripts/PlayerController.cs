@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
             {
                 EventsManager.Invoke(Event.KeyboardTabPressed);
             }
+            
             if(Mouse.current.leftButton.wasPressedThisFrame)
             {
                 EventsManager.Invoke(Event.MouseLeftClicked);
@@ -29,9 +30,10 @@ public class PlayerController : MonoBehaviour
 
         #if UNITY_IOS || UNITY_ANDROID
 
-            if(Touchscreen.current.primaryTouch.tap.wasPressedThisFrame)
+            if(Touchscreen.current.primaryTouch.press.isPressed)
             {
-                EventsManager.Invoke(Event.TouchscreenTapped);
+                Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+                EventsManager.Invoke(Event.TouchscreenTapped , touchPosition);
             }
         
         #endif
