@@ -44,7 +44,6 @@ namespace Managers
         private List<Vector2Int> _lesserCoinsCellIndicesList;
         private List<Vector2Int> _selfCoinsCellIndicesList;
         private List<Vector2Int> _unblockedCellIndicesList;
-        private InputActions _playerInputActions;
         private int _coinValue;
         private int _currentPlayerID;
         private int _numberOfPlayers;
@@ -164,15 +163,9 @@ namespace Managers
         private void Start()
         {
             _coinUIObj = GameObject.Find("CoinUI");
-            _playerInputActions = new InputActions();
-            
-            #if UNITY_ANDROID || UNITY_IOS
-                _playerInputActions.MobileMap.Enable();
-            #endif
         
             #if UNITY_STANDALONE || UNITY_WEBGL
                 _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
-                _playerInputActions.PCMap.Enable();
             #endif
             
             ToggleEventSubscription(true);
