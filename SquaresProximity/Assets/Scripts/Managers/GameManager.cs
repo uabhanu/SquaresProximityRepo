@@ -217,12 +217,22 @@ namespace Managers
         
         private Vector2Int GetPlayerCellIndex()
         {
-            if(IsAIArray[CurrentPlayerID])
-            {
-                return _iAIManager.FindCellToPlaceCoinOn();
-            }
+            #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
+            
+                if(IsAIArray[CurrentPlayerID])
+                {
+                    return _iAIManager.FindCellToPlaceCoinOn();
+                }
 
-            return _cellIndexAtMousePosition;
+                return _cellIndexAtMousePosition;
+                
+            #endif
+            
+            #if UNITY_ANDROID || UNITY_IOS
+            
+                //Todo Get the Cell Index from the Tap Position
+            
+            #endif
         }
         
         public void ResetPlayersRemaining()
@@ -414,8 +424,6 @@ namespace Managers
     
         private void OnTouchscreenTapped()
         {
-            Debug.Log("[Input] Tapped on an Android");
-            
             if(!_isGameStarted) return;
 
             for(int i = 0; i < IsAIArray.Length; i++)
