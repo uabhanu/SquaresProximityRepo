@@ -24,22 +24,31 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     ""name"": ""InputActions"",
     ""maps"": [
         {
-            ""name"": ""PCMap"",
-            ""id"": ""62499dcc-dbd3-4c63-ab82-f241eea0856e"",
+            ""name"": ""MobileMap"",
+            ""id"": ""0442e94a-9d75-4738-93e7-6994e9825b03"",
             ""actions"": [
                 {
-                    ""name"": ""MouseClick"",
+                    ""name"": ""Tap"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""133fe763-51d3-4ddb-9218-278c4149e08e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TapPressed"",
                     ""type"": ""Button"",
-                    ""id"": ""1db5b295-f6da-4d11-b617-e65569fdc193"",
+                    ""id"": ""2a0c82cd-7a35-4c92-adaf-00717de9a513"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""MouseMovement"",
+                    ""name"": ""TapPosition"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""ccad9095-6085-4674-b609-630a890e211a"",
+                    ""id"": ""174b396d-9a57-4c21-9ced-0d95836e63de"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -49,51 +58,34 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""7cd6f8bf-126b-4a9d-bc07-1a9d6c6b4860"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""id"": ""89f03fd1-fe72-42c9-93aa-25af49a267a6"",
+                    ""path"": ""<Touchscreen>/primaryTouch"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MouseClick"",
+                    ""action"": ""Tap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""17b47567-367f-4091-b7fc-12198bdf0f02"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
+                    ""id"": ""5f8a87ba-84a6-4f4d-bf65-d2282ff2fcd8"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": ""Tap"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MouseMovement"",
+                    ""action"": ""TapPressed"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""MobileMap"",
-            ""id"": ""0442e94a-9d75-4738-93e7-6994e9825b03"",
-            ""actions"": [
-                {
-                    ""name"": ""Tap"",
-                    ""type"": ""Button"",
-                    ""id"": ""133fe763-51d3-4ddb-9218-278c4149e08e"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""89f03fd1-fe72-42c9-93aa-25af49a267a6"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""id"": ""a3cf614f-967b-4f43-9e67-14fcc1b10940"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Tap"",
+                    ""action"": ""TapPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -102,13 +94,11 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": []
 }");
-        // PCMap
-        m_PCMap = asset.FindActionMap("PCMap", throwIfNotFound: true);
-        m_PCMap_MouseClick = m_PCMap.FindAction("MouseClick", throwIfNotFound: true);
-        m_PCMap_MouseMovement = m_PCMap.FindAction("MouseMovement", throwIfNotFound: true);
         // MobileMap
         m_MobileMap = asset.FindActionMap("MobileMap", throwIfNotFound: true);
         m_MobileMap_Tap = m_MobileMap.FindAction("Tap", throwIfNotFound: true);
+        m_MobileMap_TapPressed = m_MobileMap.FindAction("TapPressed", throwIfNotFound: true);
+        m_MobileMap_TapPosition = m_MobileMap.FindAction("TapPosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -167,69 +157,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // PCMap
-    private readonly InputActionMap m_PCMap;
-    private List<IPCMapActions> m_PCMapActionsCallbackInterfaces = new List<IPCMapActions>();
-    private readonly InputAction m_PCMap_MouseClick;
-    private readonly InputAction m_PCMap_MouseMovement;
-    public struct PCMapActions
-    {
-        private @InputActions m_Wrapper;
-        public PCMapActions(@InputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @MouseClick => m_Wrapper.m_PCMap_MouseClick;
-        public InputAction @MouseMovement => m_Wrapper.m_PCMap_MouseMovement;
-        public InputActionMap Get() { return m_Wrapper.m_PCMap; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PCMapActions set) { return set.Get(); }
-        public void AddCallbacks(IPCMapActions instance)
-        {
-            if (instance == null || m_Wrapper.m_PCMapActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PCMapActionsCallbackInterfaces.Add(instance);
-            @MouseClick.started += instance.OnMouseClick;
-            @MouseClick.performed += instance.OnMouseClick;
-            @MouseClick.canceled += instance.OnMouseClick;
-            @MouseMovement.started += instance.OnMouseMovement;
-            @MouseMovement.performed += instance.OnMouseMovement;
-            @MouseMovement.canceled += instance.OnMouseMovement;
-        }
-
-        private void UnregisterCallbacks(IPCMapActions instance)
-        {
-            @MouseClick.started -= instance.OnMouseClick;
-            @MouseClick.performed -= instance.OnMouseClick;
-            @MouseClick.canceled -= instance.OnMouseClick;
-            @MouseMovement.started -= instance.OnMouseMovement;
-            @MouseMovement.performed -= instance.OnMouseMovement;
-            @MouseMovement.canceled -= instance.OnMouseMovement;
-        }
-
-        public void RemoveCallbacks(IPCMapActions instance)
-        {
-            if (m_Wrapper.m_PCMapActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IPCMapActions instance)
-        {
-            foreach (var item in m_Wrapper.m_PCMapActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_PCMapActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public PCMapActions @PCMap => new PCMapActions(this);
-
     // MobileMap
     private readonly InputActionMap m_MobileMap;
     private List<IMobileMapActions> m_MobileMapActionsCallbackInterfaces = new List<IMobileMapActions>();
     private readonly InputAction m_MobileMap_Tap;
+    private readonly InputAction m_MobileMap_TapPressed;
+    private readonly InputAction m_MobileMap_TapPosition;
     public struct MobileMapActions
     {
         private @InputActions m_Wrapper;
         public MobileMapActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Tap => m_Wrapper.m_MobileMap_Tap;
+        public InputAction @TapPressed => m_Wrapper.m_MobileMap_TapPressed;
+        public InputAction @TapPosition => m_Wrapper.m_MobileMap_TapPosition;
         public InputActionMap Get() { return m_Wrapper.m_MobileMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -242,6 +182,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Tap.started += instance.OnTap;
             @Tap.performed += instance.OnTap;
             @Tap.canceled += instance.OnTap;
+            @TapPressed.started += instance.OnTapPressed;
+            @TapPressed.performed += instance.OnTapPressed;
+            @TapPressed.canceled += instance.OnTapPressed;
+            @TapPosition.started += instance.OnTapPosition;
+            @TapPosition.performed += instance.OnTapPosition;
+            @TapPosition.canceled += instance.OnTapPosition;
         }
 
         private void UnregisterCallbacks(IMobileMapActions instance)
@@ -249,6 +195,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Tap.started -= instance.OnTap;
             @Tap.performed -= instance.OnTap;
             @Tap.canceled -= instance.OnTap;
+            @TapPressed.started -= instance.OnTapPressed;
+            @TapPressed.performed -= instance.OnTapPressed;
+            @TapPressed.canceled -= instance.OnTapPressed;
+            @TapPosition.started -= instance.OnTapPosition;
+            @TapPosition.performed -= instance.OnTapPosition;
+            @TapPosition.canceled -= instance.OnTapPosition;
         }
 
         public void RemoveCallbacks(IMobileMapActions instance)
@@ -266,13 +218,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         }
     }
     public MobileMapActions @MobileMap => new MobileMapActions(this);
-    public interface IPCMapActions
-    {
-        void OnMouseClick(InputAction.CallbackContext context);
-        void OnMouseMovement(InputAction.CallbackContext context);
-    }
     public interface IMobileMapActions
     {
         void OnTap(InputAction.CallbackContext context);
+        void OnTapPressed(InputAction.CallbackContext context);
+        void OnTapPosition(InputAction.CallbackContext context);
     }
 }
