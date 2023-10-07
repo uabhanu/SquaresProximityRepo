@@ -29,8 +29,12 @@ namespace Utils
                 Instantiate(uiObjectsList[0]);
             #endif
 
-            #if UNITY_STANDALONE || UNITY_WEBGL
+            #if UNITY_STANDALONE
                 Instantiate(uiObjectsList[1]);
+            #endif
+            
+            #if UNITY_WEBGL
+                Instantiate(uiObjectsList[2]);
             #endif
         }
     }

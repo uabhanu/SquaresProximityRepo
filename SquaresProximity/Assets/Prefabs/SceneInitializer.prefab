@@ -54,3 +54,4 @@ MonoBehaviour:
   uiObjectsList:
   - {fileID: 6044010295568214694, guid: 32af82abd389ee34d9008c8959d5de7c, type: 3}
   - {fileID: 6044010295568214694, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+  - {fileID: 6044010295568214694, guid: bcd06c23701a82c41bfe3d151ca8f5fb, type: 3}
