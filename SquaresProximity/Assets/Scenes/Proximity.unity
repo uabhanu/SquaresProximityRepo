@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &2066782652
+--- !u!1001 &509152297
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -131,22 +131,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1821153355321576527, guid: 59e8355605093cc4ca8e8282c023d553, type: 3}
-      propertyPath: sceneObjectsList.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821153355321576527, guid: 59e8355605093cc4ca8e8282c023d553, type: 3}
-      propertyPath: sceneObjectsList.Array.data[3]
-      value: 
-      objectReference: {fileID: 6885675273128450885, guid: a7474fed4851ea44c8096110c60471f8, type: 3}
-    - target: {fileID: 1821153355321576527, guid: 59e8355605093cc4ca8e8282c023d553, type: 3}
-      propertyPath: sceneObjectsList.Array.data[4]
-      value: 
-      objectReference: {fileID: 4498203541992366259, guid: c78ea13eef5c04f408e79b46abbb51dd, type: 3}
-    - target: {fileID: 1821153355321576527, guid: 59e8355605093cc4ca8e8282c023d553, type: 3}
-      propertyPath: sceneObjectsList.Array.data[5]
-      value: 
-      objectReference: {fileID: 8660565226316340475, guid: 3323a56c2dc5bd3469c8e768ef605bd2, type: 3}
     - target: {fileID: 4796806574221270825, guid: 59e8355605093cc4ca8e8282c023d553, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -200,4 +184,4 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 2066782652}
+  - {fileID: 509152297}
