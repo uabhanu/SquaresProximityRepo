@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -109,24 +110,8 @@ namespace Managers
         
         #endregion
 
-        #region User Defined Functions
+        #region User Defined Button Functions
         
-        private void UpdateInGamePlayerNames(int playerID)
-        {
-            string playerName = playerNameTMPInputFields[playerID].text;
-            EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
-        }
-
-        public void AIHumanToggle()
-        {
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                bool isAI = aiHumanTogglesArray[i].isOn;
-                _aiHumanSelectionsBoolArray[i] = isAI;
-                EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
-            }
-        }
-
         public void BackButton()
         {
             if(backButtonTMPText.text == "Back")
@@ -287,13 +272,6 @@ namespace Managers
             EventsManager.Invoke(Event.GameStarted);
         }
 
-        public void HolesToggle()
-        {
-            EventsManager.Invoke(Event.HolesToggled);
-            _holesToggleBool = holesToggle.isOn;
-            PlayerPrefsManager.SaveData(_holesToggleBool , HolesKey);
-        }
-
         public void LeaderboardButton()
         {
             leaderboardPanelObj.SetActive(true);
@@ -334,11 +312,15 @@ namespace Managers
             pauseMenuPanelObj.SetActive(true);
         }
 
-        public void RandomTurnsToggle()
+        public void QuitButton()
         {
-            EventsManager.Invoke(Event.RandomTurnsToggled);
-            _randomTurnsToggleBool = randomTurnsToggle.isOn;
-            PlayerPrefsManager.SaveData(_randomTurnsToggleBool , RandomTurnsKey);
+            #if UNITY_EDITOR
+                EditorApplication.isPlaying = false;
+            #endif
+            
+            #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_WEBGL
+                Application.Quit();
+            #endif
         }
 
         public void ResetButton()
@@ -396,6 +378,40 @@ namespace Managers
             inGameUIPanelsObj.SetActive(true);
             pauseButtonObj.SetActive(true);
             pauseMenuPanelObj.SetActive(false);
+        }
+        
+        #endregion
+        
+        #region User Defined Functions
+        
+        private void UpdateInGamePlayerNames(int playerID)
+        {
+            string playerName = playerNameTMPInputFields[playerID].text;
+            EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
+        }
+
+        public void AIHumanToggle()
+        {
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                bool isAI = aiHumanTogglesArray[i].isOn;
+                _aiHumanSelectionsBoolArray[i] = isAI;
+                EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
+            }
+        }
+
+        public void HolesToggle()
+        {
+            EventsManager.Invoke(Event.HolesToggled);
+            _holesToggleBool = holesToggle.isOn;
+            PlayerPrefsManager.SaveData(_holesToggleBool , HolesKey);
+        }
+
+        public void RandomTurnsToggle()
+        {
+            EventsManager.Invoke(Event.RandomTurnsToggled);
+            _randomTurnsToggleBool = randomTurnsToggle.isOn;
+            PlayerPrefsManager.SaveData(_randomTurnsToggleBool , RandomTurnsKey);
         }
 
         public void SetPlayersNumber()
