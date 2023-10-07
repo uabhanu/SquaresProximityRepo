@@ -36,11 +36,12 @@ namespace Utils
             
             #endif
         }
-        private Color GetContrastingColor(Color color)
+        public Color GetContrastingColor(Color color)
         {
             float luminance = (0.299f * color.r + 0.587f * color.g + 0.114f * color.b);
             return luminance > 0.5f ? Color.black : Color.white;
         }
+        
         public Color GetColor()
         {
             Vector2Int cellIndex = _gridManager.WorldToCell(transform.position);
