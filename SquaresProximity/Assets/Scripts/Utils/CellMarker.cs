@@ -47,11 +47,5 @@ namespace Utils
             Vector2Int cellIndex = _gridManager.WorldToCell(transform.position);
             return _gridManager.CellSpriteRenderersData.GetValue(cellIndex.x , cellIndex.y).color;
         }
-
-        public void SetColor(Color color)
-        {
-            Vector2Int cellIndex = _gridManager.WorldToCell(transform.position);
-            _gridManager.CellSpriteRenderersData.GetValue(cellIndex.x , cellIndex.y).color = color;
-        }
     }
 }
