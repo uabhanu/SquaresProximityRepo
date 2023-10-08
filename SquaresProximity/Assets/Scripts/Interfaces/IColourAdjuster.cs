@@ -6,6 +6,5 @@ namespace Interfaces
     {
         public Color GetColor();
         public Color GetContrastingColor(Color color);
-        public void SetColor(Color color);
     }
 }
