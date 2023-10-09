@@ -11,6 +11,7 @@ namespace Managers
         
         private bool _shouldGenerateEmptyCellsBool;
         private int _holeCellsCount;
+        private int _randomSpritesIndex;
         private int _totalCells;
         private GridData<bool> _isCellBlockedData;
         private GridData<GameObject> _coinOnTheCellData;
@@ -25,6 +26,7 @@ namespace Managers
         [HideInInspector] [SerializeField] private GridInfo gridInfo;
         [SerializeField] private int columns;
         [SerializeField] private int rows;
+        [SerializeField] private Sprite[] availableSprites;
         
         #endregion
 
@@ -76,6 +78,8 @@ namespace Managers
         
         private void Awake()
         {
+            _randomSpritesIndex = Random.Range(0 , availableSprites.Length);
+            
             if(isTestingMode)
             {
                 GridInfo.Cols = 12;
@@ -173,10 +177,10 @@ namespace Managers
                     Vector2 cellWorldPos = CellToWorld(cellIndex.x , cellIndex.y);
                     GameObject cellObject = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
                     SpriteRenderer cellRenderer = cellObject.GetComponentInChildren<SpriteRenderer>();
+                    CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
                     cellRenderer.color = Color.black;
                 
                     _cellPrefabData.SetValue(cellIndex.x , cellIndex.y , cellObject);
-                    CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
                 }
             }
 
@@ -184,7 +188,9 @@ namespace Managers
             {
                 Vector2 cellWorldPos = CellToWorld(cellIndex.x , cellIndex.y);
                 GameObject cell = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
-                CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cell.GetComponentInChildren<SpriteRenderer>());
+                SpriteRenderer cellRenderer = cell.GetComponentInChildren<SpriteRenderer>();
+                cellRenderer.sprite = availableSprites[_randomSpritesIndex];
+                CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
                 CoinOnTheCellData.SetValue(cellIndex.x , cellIndex.y , cell);
             }
         }
