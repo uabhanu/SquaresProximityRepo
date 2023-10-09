@@ -45,6 +45,7 @@ namespace Managers
         [SerializeField] private GameObject[] winsPanelObjs;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
+        [SerializeField] private TMP_Text[] gameTitleTMPTexts;
         [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
         [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
         [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
@@ -454,6 +455,30 @@ namespace Managers
             pauseButtonObj.SetActive(false);
         }
 
+        private void OnGamePaused()
+        {
+            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
+            {
+                gameTitleTMPTexts[i].enabled = true;
+            }
+        }
+
+        private void OnGameResumed()
+        {
+            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
+            {
+                gameTitleTMPTexts[i].enabled = false;
+            }
+        }
+
+        private void OnGameStarted()
+        {
+            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
+            {
+                gameTitleTMPTexts[i].enabled = false;
+            }
+        }
+
         private void OnGameTied()
         {
             int maxScore = _playerScoresArray.Max();
@@ -526,6 +551,9 @@ namespace Managers
             if(shouldSubscribe)
             {
                 EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+                EventsManager.SubscribeToEvent(Event.GamePaused , new Action(OnGamePaused));
+                EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
+                EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
@@ -535,6 +563,9 @@ namespace Managers
             else
             {
                 EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+                EventsManager.UnsubscribeFromEvent(Event.GamePaused , new Action(OnGamePaused));
+                EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
+                EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);

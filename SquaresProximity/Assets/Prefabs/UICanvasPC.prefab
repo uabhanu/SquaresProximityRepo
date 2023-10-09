@@ -5177,9 +5177,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 8397798982979555225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -166, y: -73}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -165, y: 0}
   m_SizeDelta: {x: 330, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4573884887089838486
@@ -7231,9 +7231,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 8397798982979555225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 166, y: -73}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 165, y: 0}
   m_SizeDelta: {x: 330, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &852183663008912706
@@ -7831,6 +7831,9 @@ MonoBehaviour:
   - {fileID: 6378831753500823874}
   - {fileID: 5065678277369122788}
   backButtonTMPText: {fileID: 3626058884489032781}
+  gameTitleTMPTexts:
+  - {fileID: 9002043773805841355}
+  - {fileID: 6821126825103719159}
   totalReceivedTMPTexts:
   - {fileID: 754869620334700599}
   - {fileID: 764343153362655338}
