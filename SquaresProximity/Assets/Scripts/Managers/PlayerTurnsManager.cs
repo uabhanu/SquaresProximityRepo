@@ -188,7 +188,7 @@ namespace Managers
         {
             if(_gameManager.CoinUIObj != null)
             {
-                Color playerColor = _gameManager.GetPlayerColor(_gameManager.CurrentPlayerID);
+                Color playerColor = _gameManager.GetPlayerColour(_gameManager.CurrentPlayerID);
                 Image coinUIImage = _gameManager.CoinUIObj.GetComponent<Image>();
                 coinUIImage.color = playerColor;
             
@@ -220,10 +220,10 @@ namespace Managers
             if(_gameManager.MouseTrailObj != null)
             {
                 SpriteRenderer trailRenderer = _gameManager.MouseTrailObj.GetComponentInChildren<SpriteRenderer>();
-                Color playerColor = _gameManager.GetPlayerColor(_gameManager.CurrentPlayerID);
+                Color playerColour = _gameManager.GetPlayerColour(_gameManager.CurrentPlayerID);
 
-                playerColor.a *= 0.5f;
-                trailRenderer.color = playerColor;
+                playerColour.a *= 0.5f;
+                trailRenderer.color = playerColour;
             }
         }
         
