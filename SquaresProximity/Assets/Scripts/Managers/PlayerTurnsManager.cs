@@ -154,18 +154,18 @@ namespace Managers
                 switch(playerIndex)
                 {
                     case 0:
-                        coinRenderer.color = Color.red;
-                        coinValueTMP.color = Color.yellow;
+                        coinRenderer.color = _gameManager.GetCoinBackgroundColour(0);
+                        coinValueTMP.color = _gameManager.GetCoinForegroundColour(0);
                     break;
 
                     case 1:
-                        coinRenderer.color = Color.green;
-                        coinValueTMP.color = Color.blue;
+                        coinRenderer.color = _gameManager.GetCoinBackgroundColour(1);
+                        coinValueTMP.color = _gameManager.GetCoinForegroundColour(1);
                     break;
 
                     case 2:
-                        coinRenderer.color = Color.blue;
-                        coinValueTMP.color = Color.cyan;
+                        coinRenderer.color = _gameManager.GetCoinBackgroundColour(2);
+                        coinValueTMP.color = _gameManager.GetCoinForegroundColour(2);
                     break;
 
                     default:
@@ -188,7 +188,7 @@ namespace Managers
         {
             if(_gameManager.CoinUIObj != null)
             {
-                Color coinUIColour = _gameManager.GetCoinUIBackgroundColour(_gameManager.CurrentPlayerID);
+                Color coinUIColour = _gameManager.GetCoinBackgroundColour(_gameManager.CurrentPlayerID);
                 Image coinUIImage = _gameManager.CoinUIObj.GetComponent<Image>();
                 coinUIImage.color = coinUIColour;
             
@@ -197,15 +197,15 @@ namespace Managers
                 switch(_gameManager.CurrentPlayerID)
                 {
                     case 0:
-                        coinUIText.color = _gameManager.GetCoinUIForegroundColour(_gameManager.CurrentPlayerID);
+                        coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
                     break;
 
                     case 1:
-                        coinUIText.color = _gameManager.GetCoinUIForegroundColour(_gameManager.CurrentPlayerID);
+                        coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
                     break;
 
                     case 2:
-                        coinUIText.color = _gameManager.GetCoinUIForegroundColour(_gameManager.CurrentPlayerID);
+                        coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
                     break;
 
                     default:
@@ -220,7 +220,7 @@ namespace Managers
             if(_gameManager.MouseTrailObj != null)
             {
                 SpriteRenderer trailRenderer = _gameManager.MouseTrailObj.GetComponentInChildren<SpriteRenderer>();
-                Color playerColour = _gameManager.GetCoinUIBackgroundColour(_gameManager.CurrentPlayerID);
+                Color playerColour = _gameManager.GetCoinBackgroundColour(_gameManager.CurrentPlayerID);
 
                 playerColour.a *= 0.5f;
                 trailRenderer.color = playerColour;
