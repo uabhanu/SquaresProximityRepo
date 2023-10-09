@@ -54,6 +54,5 @@ MonoBehaviour:
   rows: 8
   availableSprites:
   - {fileID: -1634653016, guid: 5e1e4a52de0dee64c80bc235646112f1, type: 3}
-  - {fileID: 204678285, guid: 5e1e4a52de0dee64c80bc235646112f1, type: 3}
   - {fileID: -666265818, guid: 5e1e4a52de0dee64c80bc235646112f1, type: 3}
   - {fileID: -2089469928, guid: 5e1e4a52de0dee64c80bc235646112f1, type: 3}
