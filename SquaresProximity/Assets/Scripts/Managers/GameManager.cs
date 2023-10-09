@@ -56,8 +56,8 @@ namespace Managers
 
         [SerializeField] private bool isTestingMode;
         [SerializeField] private Camera mainCamera;
-        [SerializeField] private Color[] coinUIBackgroundColours;
-        [SerializeField] private Color[] coinUIForegroundColours;
+        [SerializeField] private Color[] coinBackgroundColours;
+        [SerializeField] private Color[] coinForegroundColours;
         [SerializeField] private float aiCoinPlaceDelay;
         [Tooltip("Please do not select the value below 1 and above 20")] [SerializeField] private int coinValueForTesting;
         [SerializeField] private int maxCoinValue;
@@ -194,25 +194,25 @@ namespace Managers
         #endregion
 
         #region User Defined Functions
-    
-        public Color GetCoinUIBackgroundColour(int playerIndex)
+        
+        public Color GetCoinBackgroundColour(int index)
         {
-            switch(playerIndex)
+            switch(index)
             {
-                case 0: return coinUIBackgroundColours[0];
-                case 1: return coinUIBackgroundColours[1];
-                case 2: return coinUIBackgroundColours[2];
+                case 0: return coinBackgroundColours[0];
+                case 1: return coinBackgroundColours[1];
+                case 2: return coinBackgroundColours[2];
                 default: return Color.white;
             }
         }
         
-        public Color GetCoinUIForegroundColour(int playerIndex)
+        public Color GetCoinForegroundColour(int index)
         {
-            switch(playerIndex)
+            switch(index)
             {
-                case 0: return coinUIForegroundColours[0];
-                case 1: return coinUIForegroundColours[1];
-                case 2: return coinUIForegroundColours[2];
+                case 0: return coinForegroundColours[0];
+                case 1: return coinForegroundColours[1];
+                case 2: return coinForegroundColours[2];
                 default: return Color.white;
             }
         }
