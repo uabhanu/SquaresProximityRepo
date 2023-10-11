@@ -22,6 +22,7 @@ namespace Managers
         private readonly Vector2Int _invalidCellIndex = new (-1 , -1);
 
         [SerializeField] private bool isTestingMode;
+        [SerializeField] private Color holeColour;
         [SerializeField] private GameObject cellPrefab;
         [HideInInspector] [SerializeField] private GridInfo gridInfo;
         [SerializeField] private int columns;
@@ -177,10 +178,10 @@ namespace Managers
                     Vector2 cellWorldPos = CellToWorld(cellIndex.x , cellIndex.y);
                     GameObject cellObject = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
                     SpriteRenderer cellRenderer = cellObject.GetComponentInChildren<SpriteRenderer>();
-                    CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
-                    cellRenderer.color = Color.black;
-                
+                    cellRenderer.sprite = availableSprites[_randomSpritesIndex];
+                    cellRenderer.color = holeColour;
                     _cellPrefabData.SetValue(cellIndex.x , cellIndex.y , cellObject);
+                    CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
                 }
             }
 

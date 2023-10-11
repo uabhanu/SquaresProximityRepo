@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTestingMode: 0
+  holeColour: {r: 0, g: 0, b: 0, a: 1}
   cellPrefab: {fileID: 4578332380355879588, guid: d2192b7241422c0489cda2d786bcd30f, type: 3}
   gridInfo:
     Rows: 8
