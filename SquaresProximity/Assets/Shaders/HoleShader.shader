@@ -2,8 +2,8 @@ Shader "Custom/HoleShader"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-        _DotSize ("Dot Size", Range(0, 0.5)) = 0.02
+        _MainTex ("Texture" , 2D) = "white" {}
+        _SquareSize ("Square Size" , Range(0 , 0.5)) = 0.39
     }
     
     SubShader
@@ -31,7 +31,7 @@ Shader "Custom/HoleShader"
             };
 
             sampler2D _MainTex;
-            float _DotSize;
+            float _SquareSize;
 
             v2f vert (appdata_t v)
             {
@@ -45,15 +45,16 @@ Shader "Custom/HoleShader"
             {
                 // Calculate the distance from the pixel to the center
                 float2 center = 0.5;
-                float distanceToCenter = distance(i.uv, center);
+                float2 distanceToCenter = abs(i.uv - center);
 
-                // If the pixel is within the specified dot size of the center, color it red
-                if (distanceToCenter < _DotSize) {
-                    return half4(1, 0, 0, 1); // Color the center pixel red
+                // If the pixel is within the specified square size of the center, color it black
+                if(distanceToCenter.x < _SquareSize && distanceToCenter.y < _SquareSize)
+                {
+                    return half4(0 , 0 , 0 , 1); // Color the center pixel black
                 }
 
                 // Sample the texture as usual
-                half4 col = tex2D(_MainTex, i.uv);
+                half4 col = tex2D(_MainTex , i.uv);
                 return col;
             }
             ENDCG
