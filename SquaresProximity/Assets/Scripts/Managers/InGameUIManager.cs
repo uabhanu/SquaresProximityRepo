@@ -373,6 +373,12 @@ namespace Managers
             }
         }
 
+        public void RestartButton()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Time.timeScale = 1;
+        }
+
         public void ResumeButton()
         {
             EventsManager.Invoke(Event.GameResumed);
