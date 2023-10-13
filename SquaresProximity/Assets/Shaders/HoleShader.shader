@@ -3,7 +3,7 @@ Shader "Custom/HoleShader"
     Properties
     {
         _MainTex ("Texture" , 2D) = "white" {}
-        _SquareSize ("Square Size" , Range(0 , 0.5)) = 0.39
+        _HoleSize ("Hole Size" , Range(0.0 , 0.5)) = 0.0
     }
     
     SubShader
@@ -31,7 +31,7 @@ Shader "Custom/HoleShader"
             };
 
             sampler2D _MainTex;
-            float _SquareSize;
+            float _HoleSize;
 
             v2f vert (appdata_t v)
             {
@@ -48,7 +48,7 @@ Shader "Custom/HoleShader"
                 float2 distanceToCenter = abs(i.uv - center);
 
                 // If the pixel is within the specified square size of the center, color it black
-                if(distanceToCenter.x < _SquareSize && distanceToCenter.y < _SquareSize)
+                if(distanceToCenter.x < _HoleSize && distanceToCenter.y < _HoleSize)
                 {
                     return half4(0 , 0 , 0 , 1); // Color the center pixel black
                 }
