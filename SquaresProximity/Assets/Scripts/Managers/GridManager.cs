@@ -9,6 +9,8 @@ namespace Managers
     {
         #region Variables Declarations
         
+        private static readonly int HoleSize = Shader.PropertyToID("_HoleSize");
+        
         private bool _shouldGenerateEmptyCellsBool;
         private int _holeCellsCount;
         private int _randomSpritesIndex;
@@ -22,14 +24,14 @@ namespace Managers
         private readonly Vector2Int _invalidCellIndex = new (-1 , -1);
 
         [SerializeField] private bool isTestingMode;
-        [SerializeField] private Color holeColour;
+        [SerializeField] private float holeSize;
         [SerializeField] private GameObject cellPrefab;
         [HideInInspector] [SerializeField] private GridInfo gridInfo;
         [SerializeField] private int columns;
         [SerializeField] private int rows;
         [SerializeField] private Material holeMaterial;
         [SerializeField] private Sprite[] availableSprites;
-        
+
         #endregion
 
         #region Helper Properties
@@ -180,8 +182,7 @@ namespace Managers
                     GameObject cellObject = Instantiate(cellPrefab , cellWorldPos , Quaternion.identity , transform);
                     SpriteRenderer cellRenderer = cellObject.GetComponentInChildren<SpriteRenderer>();
                     cellRenderer.sprite = availableSprites[_randomSpritesIndex];
-                    //cellRenderer.color = holeColour;
-                    cellRenderer.material = holeMaterial;
+                    cellRenderer.material.SetFloat(HoleSize , holeSize);
                     _cellPrefabData.SetValue(cellIndex.x , cellIndex.y , cellObject);
                     CellSpriteRenderersData.SetValue(cellIndex.x , cellIndex.y , cellRenderer);
                 }
