@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTestingMode: 0
-  holeColour: {r: 0, g: 0, b: 0, a: 1}
+  holeSize: 0.401
   cellPrefab: {fileID: 4578332380355879588, guid: d2192b7241422c0489cda2d786bcd30f, type: 3}
   gridInfo:
     Rows: 8
@@ -55,7 +55,6 @@ MonoBehaviour:
   rows: 8
   holeMaterial: {fileID: 2100000, guid: 7fe21b12f380ae442823d49499f0f0ea, type: 2}
   availableSprites:
-  - {fileID: 21300000, guid: 71ac55be2d32b5641a44a27aa8856359, type: 3}
   - {fileID: 21300000, guid: 31a728b2c11840a40b2bd0eee7547587, type: 3}
   - {fileID: 21300000, guid: 44613666bf6b4424ab459b191b719129, type: 3}
   - {fileID: 21300000, guid: 7694a4eb6ee55cd42815c32dfc0afc7e, type: 3}
