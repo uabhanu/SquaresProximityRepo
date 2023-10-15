@@ -4,6 +4,7 @@ Shader "Custom/UIImageAnimatorShader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _ScaleSpeed ("Scale Speed", Range(0.1, 2.0)) = 0.5
+        _MaxBackwardDistance ("Max Backward Distance", Range(0.0, 1.0)) = 0.1
     }
     SubShader
     {
@@ -28,6 +29,7 @@ Shader "Custom/UIImageAnimatorShader"
             };
 
             float _ScaleSpeed;
+            float _MaxBackwardDistance;
 
             v2f vert (appdata_t v)
             {
@@ -35,7 +37,8 @@ Shader "Custom/UIImageAnimatorShader"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
                 // Apply animation here
-                float scale = 1.0 + sin(_Time.y * _ScaleSpeed) * 0.1;
+                float scale = 1.0 + sin(_Time.y * _ScaleSpeed) * _MaxBackwardDistance;
+                scale = max(scale, 1.0);  // Ensure the scale doesn't go below 1.0
                 o.vertex.xy *= scale;
                 return o;
             }
