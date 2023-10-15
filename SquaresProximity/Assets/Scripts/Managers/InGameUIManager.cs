@@ -375,8 +375,7 @@ namespace Managers
 
         public void RestartButton()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            Time.timeScale = 1;
+            EventsManager.Invoke(Event.GameRestarted);
         }
 
         public void ResumeButton()
