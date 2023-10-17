@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace Managers
 {
@@ -287,6 +288,13 @@ namespace Managers
             _isGameStarted = false;
             Time.timeScale = 0;
         }
+
+        private void OnGameRestarted()
+        {
+            _isGameStarted = true;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Time.timeScale = 1;
+        }
     
         private void OnGameResumed()
         {
@@ -457,6 +465,7 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
                 EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
                 EventsManager.SubscribeToEvent(Event.GamePaused , new Action(OnGamePaused));
+                EventsManager.SubscribeToEvent(Event.GameRestarted , new Action(OnGameRestarted));
                 EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
                 EventsManager.SubscribeToEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
@@ -470,6 +479,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
                 EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
                 EventsManager.UnsubscribeFromEvent(Event.GamePaused , new Action(OnGamePaused));
+                EventsManager.UnsubscribeFromEvent(Event.GameRestarted , new Action(OnGameRestarted));
                 EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
                 EventsManager.UnsubscribeFromEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
