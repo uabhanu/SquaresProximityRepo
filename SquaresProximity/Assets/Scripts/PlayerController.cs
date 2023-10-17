@@ -1,6 +1,7 @@
 using Event = Managers.Event;
 using Managers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -18,6 +19,11 @@ public class PlayerController : MonoBehaviour
             
             if(Mouse.current.leftButton.wasPressedThisFrame)
             {
+                if(EventSystem.current.IsPointerOverGameObject())
+                {
+                    return; // Ignore the click on UI elements.
+                }
+                
                 EventsManager.Invoke(Event.MouseLeftClicked);
             }
 
