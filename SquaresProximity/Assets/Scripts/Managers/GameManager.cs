@@ -32,6 +32,7 @@ namespace Managers
         #region Variables Declarations
     
         private bool _isGameStarted;
+        private bool _isGamePaused;
         private bool _isMouseMoving;
         private bool _isRandomTurns;
         private bool[] _isAIArray;
@@ -87,6 +88,12 @@ namespace Managers
         public IPlayerTurnsManager IPlayerTurnsManager => _iPlayerTurnsManager;
         public List<List<int>> PlayerNumbersList => _playerNumbersList;
         public List<int> PlayersRemainingList => _playersRemainingList;
+        
+        public bool IsGamePaused
+        {
+            get => _isGamePaused;
+            set => _isGamePaused = value;
+        }
         
         public bool IsMouseMoving
         {
@@ -285,21 +292,21 @@ namespace Managers
 
         private void OnGamePaused()
         {
-            _isGameStarted = false;
-            Time.timeScale = 0;
+            IsGamePaused = true;
+            //Time.timeScale = 0;
         }
 
         private void OnGameRestarted()
         {
             _isGameStarted = true;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            Time.timeScale = 1;
+            //Time.timeScale = 1;
         }
     
         private void OnGameResumed()
         {
-            _isGameStarted = true;
-            Time.timeScale = 1;
+            IsGamePaused = false;
+            //Time.timeScale = 1;
         }
     
         private void OnGameStarted()
