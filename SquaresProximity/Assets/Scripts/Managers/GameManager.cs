@@ -293,20 +293,20 @@ namespace Managers
         private void OnGamePaused()
         {
             IsGamePaused = true;
-            //Time.timeScale = 0;
+            Time.timeScale = 0;
         }
 
         private void OnGameRestarted()
         {
             _isGameStarted = true;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            //Time.timeScale = 1;
+            Time.timeScale = 1;
         }
     
         private void OnGameResumed()
         {
             IsGamePaused = false;
-            //Time.timeScale = 1;
+            Time.timeScale = 1;
         }
     
         private void OnGameStarted()
