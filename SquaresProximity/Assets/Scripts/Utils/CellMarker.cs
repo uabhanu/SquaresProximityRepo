@@ -1,11 +1,11 @@
-using Interfaces;
-using Managers;
-using TMPro;
-using UnityEditor;
-using UnityEngine;
-
 namespace Utils
 {
+    using Interfaces;
+    using Managers;
+    using TMPro;
+    using UnityEditor;
+    using UnityEngine;
+    
     public class CellMarker : MonoBehaviour , IColourAdjuster
     {
         private GridManager _gridManager;

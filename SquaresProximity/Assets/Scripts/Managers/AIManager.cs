@@ -1,11 +1,11 @@
-using Interfaces;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
 namespace Managers
 {
+    using Interfaces;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using UnityEngine;
+    
     public class AIManager : IAIManager
     {
         #region Constructor

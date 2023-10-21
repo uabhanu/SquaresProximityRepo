@@ -1,10 +1,10 @@
-using Interfaces;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-
 namespace Managers
 {
+    using Interfaces;
+    using TMPro;
+    using UnityEngine;
+    using UnityEngine.UI;
+    
     public class PlayerTurnsManager : IPlayerTurnsManager
     {
         #region Constructor

@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Utils
 {
+    using System.Collections.Generic;
+    using UnityEngine;
+    
     public class SceneInitializer : MonoBehaviour
     {
         [SerializeField] private List<GameObject> sceneObjectsList;

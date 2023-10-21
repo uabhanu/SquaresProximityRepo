@@ -1,3 +1,5 @@
+using Data;
+
 public class GridData<T>
 {
     private T[,] _grid;

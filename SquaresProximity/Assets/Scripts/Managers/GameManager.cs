@@ -1,13 +1,13 @@
-using Interfaces;
-using Random = UnityEngine.Random;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-
 namespace Managers
 {
+    using Interfaces;
+    using Random = UnityEngine.Random;
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.InputSystem;
+    using UnityEngine.SceneManagement;
+    
     public class GameManager : MonoBehaviour
     {
         #region Constructor

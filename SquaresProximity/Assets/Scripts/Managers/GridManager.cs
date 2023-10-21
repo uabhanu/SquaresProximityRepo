@@ -1,10 +1,12 @@
-using Random = UnityEngine.Random;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+using Data;
 
 namespace Managers
 {
+    using Random = UnityEngine.Random;
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+    
     public class GridManager : MonoBehaviour
     {
         #region Variables Declarations

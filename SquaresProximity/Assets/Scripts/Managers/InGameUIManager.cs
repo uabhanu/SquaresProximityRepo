@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-
 namespace Managers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using TMPro;
+    using UnityEditor;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+    using UnityEngine.UI;
+    
     public class InGameUIManager : MonoBehaviour
     {
         #region Variable Declarations

@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
-
 namespace Managers
 {
+    using System;
+    using System.Collections.Generic;
+
     public enum Event
     {
         AIHumanToggled,

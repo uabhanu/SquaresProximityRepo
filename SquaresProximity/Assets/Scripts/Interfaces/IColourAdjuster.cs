@@ -1,7 +1,7 @@
-using UnityEngine;
-
 namespace Interfaces
 {
+    using UnityEngine;
+    
     public interface IColourAdjuster
     {
         public Color GetColor();

@@ -1,8 +1,8 @@
-using System.Collections;
-using UnityEngine;
-
 namespace Interfaces
 {
+    using System.Collections;
+    using UnityEngine;
+    
     public interface IAIManager
     {
         public IEnumerator AnimateCoinEffect(SpriteRenderer coinRenderer , Color? capturingColor = null);

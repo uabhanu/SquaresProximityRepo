@@ -1,9 +1,9 @@
-using System;
-using JetBrains.Annotations;
-using UnityEngine;
-
 namespace Managers
 {
+    using System;
+    using JetBrains.Annotations;
+    using UnityEngine;
+    
     public static class PlayerPrefsManager
     {
         private static T Deserialize<T>(string serializedData)

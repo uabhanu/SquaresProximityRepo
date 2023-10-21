@@ -1,11 +1,10 @@
-using System;
-using Interfaces;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-
 namespace Utils
 {
+    using Interfaces;
+    using TMPro;
+    using UnityEngine;
+    using UnityEngine.UI;
+    
     public class ColourAdjuster : MonoBehaviour , IColourAdjuster
     {
         private Color _tmpTextOriginalColour;

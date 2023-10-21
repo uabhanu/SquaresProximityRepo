@@ -1,8 +1,8 @@
-using System;
-using UnityEngine;
-
 namespace Managers
 {
+    using System;
+    using UnityEngine;
+    
     public class ScoreManager : MonoBehaviour
     {
         #region Variables Declarations
