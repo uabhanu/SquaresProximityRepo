@@ -111,7 +111,7 @@ namespace Managers
         
         #endregion
 
-        #region User Defined Button Functions
+        #region Button Functions
         
         public void BackButton()
         {
@@ -388,36 +388,12 @@ namespace Managers
         
         #endregion
         
-        #region User Defined Functions
+        #region Other Functions
         
         private void UpdateInGamePlayerNames(int playerID)
         {
             string playerName = playerNameTMPInputFields[playerID].text;
             EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
-        }
-
-        public void AIHumanToggle()
-        {
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                bool isAI = aiHumanTogglesArray[i].isOn;
-                _aiHumanSelectionsBoolArray[i] = isAI;
-                EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
-            }
-        }
-
-        public void HolesToggle()
-        {
-            EventsManager.Invoke(Event.HolesToggled);
-            _holesToggleBool = holesToggle.isOn;
-            PlayerPrefsManager.SaveData(_holesToggleBool , HolesKey);
-        }
-
-        public void RandomTurnsToggle()
-        {
-            EventsManager.Invoke(Event.RandomTurnsToggled);
-            _randomTurnsToggleBool = randomTurnsToggle.isOn;
-            PlayerPrefsManager.SaveData(_randomTurnsToggleBool , RandomTurnsKey);
         }
 
         public void SetPlayersNumber()
@@ -449,6 +425,34 @@ namespace Managers
             PlayerPrefs.Save();
         }
         
+        #endregion
+
+        #region Toggle Functions
+
+        public void AIHumanToggle()
+        {
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                bool isAI = aiHumanTogglesArray[i].isOn;
+                _aiHumanSelectionsBoolArray[i] = isAI;
+                EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
+            }
+        }
+
+        public void HolesToggle()
+        {
+            EventsManager.Invoke(Event.HolesToggled);
+            _holesToggleBool = holesToggle.isOn;
+            PlayerPrefsManager.SaveData(_holesToggleBool , HolesKey);
+        }
+
+        public void RandomTurnsToggle()
+        {
+            EventsManager.Invoke(Event.RandomTurnsToggled);
+            _randomTurnsToggleBool = randomTurnsToggle.isOn;
+            PlayerPrefsManager.SaveData(_randomTurnsToggleBool , RandomTurnsKey);
+        }
+
         #endregion
 
         #region Events Related Functions
