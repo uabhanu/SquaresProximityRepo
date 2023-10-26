@@ -150,12 +150,6 @@ namespace Managers
                     aiHumanTogglesArray[0].isOn = true;
                 }
             }
-        
-            else if(numberOfPlayersSelectionTogglesArray[0].isOn && numberOfPlayersSelectionTogglesArray[1].isOn)
-            {
-                return;
-            }
-        
             else
             {
                 _numberOfPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
