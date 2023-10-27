@@ -265,6 +265,11 @@ namespace Managers
             inGameUIPanelsObj.SetActive(true);
             playerInputPanelObj.SetActive(false);
             EventsManager.Invoke(Event.GameStarted);
+            
+            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
+            {
+                gameTitleTMPTexts[i].enabled = false;
+            }
         }
 
         public void LeaderboardButton()
@@ -474,14 +479,6 @@ namespace Managers
             }
         }
 
-        private void OnGameStarted()
-        {
-            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
-            {
-                gameTitleTMPTexts[i].enabled = false;
-            }
-        }
-
         private void OnGameTied()
         {
             int maxScore = _playerScoresArray.Max();
@@ -556,7 +553,6 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
                 EventsManager.SubscribeToEvent(Event.GamePaused , new Action(OnGamePaused));
                 EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
-                EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
@@ -568,7 +564,6 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
                 EventsManager.UnsubscribeFromEvent(Event.GamePaused , new Action(OnGamePaused));
                 EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
-                EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
