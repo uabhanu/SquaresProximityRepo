@@ -77,19 +77,6 @@ namespace Managers
                 numberOfPlayersSelectionTogglesArray[i].isOn = false;
             }
             
-            int savedPlayers = PlayerPrefs.GetInt("NumberOfPlayers" , 2);
-            
-            if(savedPlayers == 2)
-            {
-                numberOfPlayersSelectionTogglesArray[0].isOn = true;
-                numberOfPlayersSelectionTogglesArray[1].isOn = false;
-            }
-            else
-            {
-                numberOfPlayersSelectionTogglesArray[0].isOn = false;
-                numberOfPlayersSelectionTogglesArray[1].isOn = true;
-            }
-            
             PlayerPrefsManager.LoadData(ref _holesToggleBool , HolesKey);
             holesToggle.isOn = _holesToggleBool;
             
@@ -516,6 +503,11 @@ namespace Managers
             }
         }
 
+        private void OnNumberOfPlayersToggled()
+        {
+            SetPlayersNumber();
+        }
+
         private void OnPlayerWins(int highestScorePlayerID)
         {
             _highestScorePlayerID = highestScorePlayerID;
@@ -555,6 +547,7 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
+                EventsManager.SubscribeToEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);    
@@ -566,6 +559,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
+                EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
