@@ -1,5 +1,6 @@
 namespace Utils
 {
+    using Managers;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -20,7 +21,11 @@ namespace Utils
         
         private void OnToggleValueChanged(bool isOn)
         {
-            
+            if(isOn)
+            {
+                Debug.Log("NumberOfPlayersToggled Event Invoked");
+                EventsManager.Invoke(Managers.Event.NumberOfPlayersToggled);   
+            }
         }
     }
 }
