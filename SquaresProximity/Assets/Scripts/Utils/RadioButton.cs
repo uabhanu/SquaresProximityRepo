@@ -23,7 +23,6 @@ namespace Utils
         {
             if(isOn)
             {
-                Debug.Log("NumberOfPlayersToggled Event Invoked");
                 EventsManager.Invoke(Managers.Event.NumberOfPlayersToggled);   
             }
         }
