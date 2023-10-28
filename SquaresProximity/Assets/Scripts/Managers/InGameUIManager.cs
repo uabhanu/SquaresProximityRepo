@@ -185,26 +185,20 @@ namespace Managers
 
                 winsPanelObjs[_numberOfPlayers].SetActive(false);
             }
-        
+            
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 playerNameTMPInputFields[i].text = _playerNamesArray[i];
                 totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
             }
-        
-            string[] aiKeys = new string[_numberOfPlayers];
-            string[] nameKeys = new string[_numberOfPlayers];
+            
             string[] winsKeys = new string[_numberOfPlayers];
-        
+            
             for(int i = 0; i < _numberOfPlayers; i++)
             {
-                aiKeys[i] = "Player" + i + "AI";
-                nameKeys[i] = "Player" + i + "Name";
                 winsKeys[i] = "Player" + i + "TotalWins";
             }
-        
-            PlayerPrefsManager.SaveData(_aiHumanSelectionsBoolArray , aiKeys);
-            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
+            
             PlayerPrefsManager.SaveData(_playersTotalWinsArray , winsKeys);
         }
 
@@ -257,6 +251,18 @@ namespace Managers
             {
                 gameTitleTMPTexts[i].enabled = false;
             }
+            
+            string[] aiKeys = new string[_numberOfPlayers];
+            string[] nameKeys = new string[_numberOfPlayers];
+            
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                aiKeys[i] = "Player" + i + "AI";
+                nameKeys[i] = "Player" + i + "Name";
+            }
+            
+            PlayerPrefsManager.SaveData(_aiHumanSelectionsBoolArray , aiKeys);
+            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
         }
 
         public void LeaderboardButton()
