@@ -71,11 +71,6 @@ namespace Managers
 
             _playersTotalWinsArray = new int[_numberOfPlayers];
             _totalReceivedArray = new int[_numberOfPlayers];
-
-            for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
-            {
-                numberOfPlayersSelectionTogglesArray[i].isOn = false;
-            }
             
             PlayerPrefsManager.LoadData(ref _holesToggleBool , HolesKey);
             holesToggle.isOn = _holesToggleBool;
@@ -125,30 +120,15 @@ namespace Managers
 
         public void ConfirmButton()
         {
-            bool isAnyToggleOn = numberOfPlayersSelectionTogglesArray[0].isOn || numberOfPlayersSelectionTogglesArray[1].isOn;
-
-            if(!isAnyToggleOn)
+            _numberOfPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
+            
+            string[] aiKeys = new string[_numberOfPlayers];
+            
+            for(int i = 0; i < _numberOfPlayers; i++)
             {
-                _numberOfPlayers = 2;
-                numberOfPlayersSelectionTogglesArray[0].isOn = true;
-                
-                for(int i = 0; i < aiHumanTogglesArray.Length; i++)
-                {
-                    aiHumanTogglesArray[0].isOn = true;
-                }
-            }
-            else
-            {
-                _numberOfPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
-                
-                string[] aiKeys = new string[_numberOfPlayers];
-                
-                for(int i = 0; i < _numberOfPlayers; i++)
-                {
-                    aiKeys[i] = "Player" + i + "AI";
-                    PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
-                    aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
-                }
+                aiKeys[i] = "Player" + i + "AI";
+                PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
+                aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
             }
         
             numberOfPlayersSelectionPanelObj.SetActive(false);
