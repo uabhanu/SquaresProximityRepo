@@ -19,6 +19,7 @@ namespace Managers
         private bool _holesToggleBool;
         private bool _randomTurnsToggleBool;
         private bool[] _aiHumanSelectionsBoolArray;
+        private bool[] _numberOfPlayersSelectionsBoolArray;
         private int _highestScorePlayerID;
         private int _numberOfPlayers;
         private int[] _playerScoresArray;
@@ -69,6 +70,7 @@ namespace Managers
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
 
+            _numberOfPlayersSelectionsBoolArray = new bool[numberOfPlayersSelectionTogglesArray.Length];
             _playersTotalWinsArray = new int[_numberOfPlayers];
             _totalReceivedArray = new int[_numberOfPlayers];
             
@@ -82,6 +84,17 @@ namespace Managers
             {
                 winsPanelObjs[i].SetActive(false);
             }
+            
+            string[] numberOfPlayersKeys = new string[numberOfPlayersSelectionTogglesArray.Length];
+            
+            for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+            {
+                numberOfPlayersKeys[i] = "Number Of Players" + i;
+                PlayerPrefsManager.LoadData(ref _numberOfPlayersSelectionsBoolArray , numberOfPlayersKeys);
+                numberOfPlayersSelectionTogglesArray[i].isOn = _numberOfPlayersSelectionsBoolArray[i];
+            }
+            
+            SetPlayersNumber();
 
             ToggleEventSubscription(true);
         }
@@ -408,6 +421,20 @@ namespace Managers
                 bool isAI = aiHumanTogglesArray[i].isOn;
                 _aiHumanSelectionsBoolArray[i] = isAI;
                 EventsManager.Invoke(Event.AIHumanToggled , i , isAI);
+            }
+        }
+        
+        public void NumberOfPlayersToggle()
+        {
+            for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+            {
+                bool numberOfPlayersToggled = numberOfPlayersSelectionTogglesArray[i].isOn;
+                _numberOfPlayersSelectionsBoolArray[i] = numberOfPlayersToggled;
+                
+                string[] numberOfPlayersKeys = new string[numberOfPlayersSelectionTogglesArray.Length];
+                numberOfPlayersKeys[i] = "Number Of Players" + i;
+                
+                PlayerPrefsManager.SaveData(_numberOfPlayersSelectionsBoolArray , numberOfPlayersKeys);
             }
         }
 
