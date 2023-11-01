@@ -383,30 +383,31 @@ namespace Managers
 
         public void SetPlayersNumber()
         {
-            if(numberOfPlayersSelectionTogglesArray[0].isOn)
+            int selectedPlayers = 0;
+
+            for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
             {
-                _numberOfPlayers = 2;
-                _aiHumanSelectionsBoolArray = new bool[_numberOfPlayers];
-                _playerNamesArray = new string[_numberOfPlayers];
-                _playersTotalWinsArray = new int[_numberOfPlayers];
-                _totalReceivedArray = new int[_numberOfPlayers];
-                playerNameTMPInputFields[_numberOfPlayers].gameObject.SetActive(false);
-                EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
-            }
-        
-            else if(numberOfPlayersSelectionTogglesArray[1].isOn)
-            {
-                _numberOfPlayers = 3;
-                _aiHumanSelectionsBoolArray = new bool[_numberOfPlayers];
-                _playerNamesArray = new string[_numberOfPlayers];
-                _playersTotalWinsArray = new int[_numberOfPlayers];
-                _totalReceivedArray = new int[_numberOfPlayers];
-                playerNameTMPInputFields[_numberOfPlayers - 1].gameObject.SetActive(true);
-                EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
+                if(numberOfPlayersSelectionTogglesArray[i].isOn)
+                {
+                    selectedPlayers = i + 2;
+                    break;
+                }
             }
 
-            int selectedPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
-            PlayerPrefs.SetInt("NumberOfPlayers" , selectedPlayers);
+            _numberOfPlayers = selectedPlayers;
+            _aiHumanSelectionsBoolArray = new bool[_numberOfPlayers];
+            _playerNamesArray = new string[_numberOfPlayers];
+            _playersTotalWinsArray = new int[_numberOfPlayers];
+            _totalReceivedArray = new int[_numberOfPlayers];
+
+            for(int i = 0; i < playerNameTMPInputFields.Length; i++)
+            {
+                playerNameTMPInputFields[i].gameObject.SetActive(i < _numberOfPlayers);
+            }
+
+            EventsManager.Invoke(Event.NumberOfPlayersSelected , _numberOfPlayers);
+
+            PlayerPrefs.SetInt("NumberOfPlayers" , _numberOfPlayers);
             PlayerPrefs.Save();
         }
         
