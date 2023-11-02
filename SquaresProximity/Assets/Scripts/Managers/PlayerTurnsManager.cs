@@ -168,12 +168,11 @@ namespace Managers
         {
             if(_gameManager.CoinUIObj != null)
             {
-                Color coinUIColour = _gameManager.GetCoinBackgroundColour(_gameManager.CurrentPlayerID);
+                Color coinColour = _gameManager.GetCoinBackgroundColour(_gameManager.CurrentPlayerID);
                 Image coinUIImage = _gameManager.CoinUIObj.GetComponent<Image>();
-                coinUIImage.color = coinUIColour;
-            
                 TMP_Text coinUIText = _gameManager.CoinUIObj.GetComponentInChildren<TMP_Text>();
                 
+                coinUIImage.color = coinColour;
                 coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
             }
         }
