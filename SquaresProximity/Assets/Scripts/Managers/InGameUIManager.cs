@@ -133,8 +133,6 @@ namespace Managers
 
         public void ConfirmButton()
         {
-            _numberOfPlayers = numberOfPlayersSelectionTogglesArray[0].isOn ? 2 : 3;
-            
             string[] aiKeys = new string[_numberOfPlayers];
             
             for(int i = 0; i < _numberOfPlayers; i++)
@@ -174,9 +172,19 @@ namespace Managers
             if(_numberOfPlayers == 2)
             {
                 totalReceivedPanelObjs[_numberOfPlayers].SetActive(false);
-                totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
-
-                winsPanelObjs[_numberOfPlayers].SetActive(false);
+                totalReceivedPanelObjs[_numberOfPlayers + 1].SetActive(false);
+                totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;
+            }
+            
+            else if(_numberOfPlayers == 3)
+            {
+                totalReceivedPanelObjs[_numberOfPlayers].SetActive(false);
+                totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;
+            }
+            
+            else if(_numberOfPlayers == 4)
+            {
+                totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;
             }
             
             for(int i = 0; i < _numberOfPlayers; i++)
@@ -209,7 +217,19 @@ namespace Managers
             if(_numberOfPlayers == 2)
             {
                 inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers].SetActive(false);
-                inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 545;
+                inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers + 1].SetActive(false);
+                inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 650;
+            }
+            
+            else if(_numberOfPlayers == 3)
+            {
+                inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers].SetActive(false);
+                inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 250;
+            }
+            
+            else if(_numberOfPlayers == 4)
+            {
+                inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 125;
             }
 
             for(int i = 0; i < _numberOfPlayers; i++)
@@ -265,7 +285,19 @@ namespace Managers
             if(_numberOfPlayers == 2)
             {
                 leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
-                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
+                leaderboardWinsPanelObjs[_numberOfPlayers + 1].SetActive(false);
+                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;
+            }
+            
+            else if(_numberOfPlayers == 3)
+            {
+                leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
+                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;
+            }
+            
+            else if(_numberOfPlayers == 4)
+            {
+                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;
             }
 
             playerInputPanelObj.SetActive(false);
@@ -280,7 +312,19 @@ namespace Managers
             if(_numberOfPlayers == 2)
             {
                 leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
-                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;
+                leaderboardWinsPanelObjs[_numberOfPlayers + 1].SetActive(false);
+                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;
+            }
+            
+            else if(_numberOfPlayers == 3)
+            {
+                leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
+                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;
+            }
+            
+            else if(_numberOfPlayers == 4)
+            {
+                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;
             }
         
             pauseButtonObj.SetActive(false);
