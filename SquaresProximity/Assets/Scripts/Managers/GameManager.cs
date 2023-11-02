@@ -210,6 +210,7 @@ namespace Managers
                 case 0: return coinBackgroundColours[0];
                 case 1: return coinBackgroundColours[1];
                 case 2: return coinBackgroundColours[2];
+                case 3: return coinBackgroundColours[3];
                 default: return Color.white;
             }
         }
@@ -221,6 +222,7 @@ namespace Managers
                 case 0: return coinForegroundColours[0];
                 case 1: return coinForegroundColours[1];
                 case 2: return coinForegroundColours[2];
+                case 3: return coinForegroundColours[3];
                 default: return Color.white;
             }
         }
