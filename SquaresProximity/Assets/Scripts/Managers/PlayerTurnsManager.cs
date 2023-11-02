@@ -142,7 +142,7 @@ namespace Managers
             }
         }
 
-        public void UpdateCoinColor(int x , int y , int playerIndex)
+        public void UpdateCoinColor(int x , int y)
         {
             GameObject coin = _gridManager.CoinOnTheCellData.GetValue(x , y);
 
@@ -150,29 +150,9 @@ namespace Managers
             {
                 SpriteRenderer coinRenderer = coin.GetComponentInChildren<SpriteRenderer>();
                 TMP_Text coinValueTMP = coin.GetComponentInChildren<TMP_Text>();
-
-                switch(playerIndex)
-                {
-                    case 0:
-                        coinRenderer.color = _gameManager.GetCoinBackgroundColour(0);
-                        coinValueTMP.color = _gameManager.GetCoinForegroundColour(0);
-                    break;
-
-                    case 1:
-                        coinRenderer.color = _gameManager.GetCoinBackgroundColour(1);
-                        coinValueTMP.color = _gameManager.GetCoinForegroundColour(1);
-                    break;
-
-                    case 2:
-                        coinRenderer.color = _gameManager.GetCoinBackgroundColour(2);
-                        coinValueTMP.color = _gameManager.GetCoinForegroundColour(2);
-                    break;
-
-                    default:
-                        coinRenderer.color = Color.white;
-                        coinValueTMP.color = Color.black;
-                    break;
-                }
+                
+                coinRenderer.color = _gameManager.GetCoinBackgroundColour(_gameManager.CurrentPlayerID);
+                coinValueTMP.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
             
                 for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
                 {
@@ -193,25 +173,8 @@ namespace Managers
                 coinUIImage.color = coinUIColour;
             
                 TMP_Text coinUIText = _gameManager.CoinUIObj.GetComponentInChildren<TMP_Text>();
-        
-                switch(_gameManager.CurrentPlayerID)
-                {
-                    case 0:
-                        coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
-                    break;
-
-                    case 1:
-                        coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
-                    break;
-
-                    case 2:
-                        coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
-                    break;
-
-                    default:
-                        coinUIText.color = Color.black;
-                    break;
-                }
+                
+                coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
             }
         }
 
