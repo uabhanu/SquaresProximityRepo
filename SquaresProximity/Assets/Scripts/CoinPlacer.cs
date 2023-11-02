@@ -65,7 +65,7 @@ public class CoinPlacer : ICoinPlacer
                 {
                     _gridManager.PlayerIDData.SetValue(x , y , currentPlayerID);
                     EventsManager.Invoke(Event.CoinCaptured , currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
-                    _gameManager.IPlayerTurnsManager.UpdateCoinColor(x , y , currentPlayerID);
+                    _gameManager.IPlayerTurnsManager.UpdateCoinColor(x , y);
                 }
             }
         });
@@ -89,7 +89,7 @@ public class CoinPlacer : ICoinPlacer
             _gridManager.CoinOnTheCellData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , newCoinObj);
             newCoinObj.GetComponentInChildren<TextMeshPro>().text = _gameManager.CoinValue.ToString();
 
-            _gameManager.IPlayerTurnsManager.UpdateCoinColor(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , _gameManager.CurrentPlayerID);
+            _gameManager.IPlayerTurnsManager.UpdateCoinColor(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y);
 
             for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
             {
