@@ -5,7 +5,7 @@ namespace Interfaces
         public void EndPlayerTurn();
         public void StartPlayerTurn();
         public void UpdateAdjacentCoinText(int x , int y , int newCoinValue);
-        public void UpdateCoinColor(int x , int y , int playerIndex);
+        public void UpdateCoinColor(int x , int y);
         public void UpdateCoinUIImageColors();
         public void UpdateTrailColor();
     }
