@@ -173,18 +173,38 @@ namespace Managers
             {
                 totalReceivedPanelObjs[_numberOfPlayers].SetActive(false);
                 totalReceivedPanelObjs[_numberOfPlayers + 1].SetActive(false);
-                totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;
+
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 370;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
+                #endif
             }
             
             else if(_numberOfPlayers == 3)
             {
                 totalReceivedPanelObjs[_numberOfPlayers].SetActive(false);
-                totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;
+                
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 45;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;          
+                #endif
             }
             
             else if(_numberOfPlayers == 4)
             {
-                totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = -60;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;          
+                #endif
             }
             
             for(int i = 0; i < _numberOfPlayers; i++)
@@ -218,18 +238,38 @@ namespace Managers
             {
                 inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers].SetActive(false);
                 inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers + 1].SetActive(false);
-                inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 650;
+                
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 650;          
+                #endif
             }
             
             else if(_numberOfPlayers == 3)
             {
                 inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers].SetActive(false);
-                inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 250;
+                
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 150;         
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 250;          
+                #endif
             }
             
             else if(_numberOfPlayers == 4)
             {
-                inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 125;
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;         
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 125;          
+                #endif
             }
 
             for(int i = 0; i < _numberOfPlayers; i++)
@@ -286,18 +326,38 @@ namespace Managers
             {
                 leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
                 leaderboardWinsPanelObjs[_numberOfPlayers + 1].SetActive(false);
-                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;
+                
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;     
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
+                #endif
             }
             
             else if(_numberOfPlayers == 3)
             {
                 leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
-                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;
+                
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 100;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;          
+                #endif
             }
             
             else if(_numberOfPlayers == 4)
             {
-                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = -15;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;          
+                #endif
             }
 
             playerInputPanelObj.SetActive(false);
@@ -313,18 +373,38 @@ namespace Managers
             {
                 leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
                 leaderboardWinsPanelObjs[_numberOfPlayers + 1].SetActive(false);
-                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;
+                
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;     
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
+                #endif
             }
             
             else if(_numberOfPlayers == 3)
             {
                 leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
-                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;
+                
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 100;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 145;          
+                #endif
             }
             
             else if(_numberOfPlayers == 4)
             {
-                totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;
+                #if UNITY_ANDROID || UNITY_IOS
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = -15;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;          
+                #endif
             }
         
             pauseButtonObj.SetActive(false);
