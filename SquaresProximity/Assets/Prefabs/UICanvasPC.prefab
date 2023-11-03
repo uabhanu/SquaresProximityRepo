@@ -2450,7 +2450,7 @@ GameObject:
   - component: {fileID: 8890256961609836972}
   - component: {fileID: 911596016767821155}
   m_Layer: 5
-  m_Name: YellowReceivedPanel
+  m_Name: OrangeReceivedPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2504,7 +2504,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 146797890, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
+  m_Sprite: {fileID: -883989179, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4900,7 +4900,7 @@ GameObject:
   - component: {fileID: 9219159072241591252}
   - component: {fileID: 5870525667966121500}
   m_Layer: 5
-  m_Name: YellowReceivedLabelText (TMP)
+  m_Name: OrangeReceivedLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4962,8 +4962,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190310
-  m_fontColor: {r: 0.9019608, g: 0, b: 0, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
