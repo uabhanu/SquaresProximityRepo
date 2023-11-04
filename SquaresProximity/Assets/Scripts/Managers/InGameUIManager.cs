@@ -227,7 +227,8 @@ namespace Managers
             {
                 "Player 1",
                 "Player 2",
-                "Player 3"
+                "Player 3",
+                "Player 4"
             };
 
             if(_numberOfPlayers == 2)
@@ -268,8 +269,6 @@ namespace Managers
                 inGameUIPlayerNamesDisplayPanelObjs[i].SetActive(true);
                 _playerNamesArray[i] = playerNameTMPInputFields[i].text;
 
-                UpdateInGamePlayerNames(i);
-
                 if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
                 {
                     if(!aiHumanTogglesArray[i].isOn)
@@ -286,6 +285,8 @@ namespace Managers
                         aiHumanTogglesArray[0].isOn = true;
                     }
                 }
+                
+                UpdateInGamePlayerNames(i);
             }
         
             inGameUIPanelsObj.SetActive(true);
