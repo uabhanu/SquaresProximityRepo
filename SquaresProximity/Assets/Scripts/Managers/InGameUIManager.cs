@@ -171,9 +171,6 @@ namespace Managers
         
             if(_numberOfPlayers == 2)
             {
-                totalReceivedPanelObjs[_numberOfPlayers].SetActive(false);
-                totalReceivedPanelObjs[_numberOfPlayers + 1].SetActive(false);
-
                 #if UNITY_ANDROID || UNITY_IOS
                     totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 370;          
                 #endif
@@ -185,8 +182,6 @@ namespace Managers
             
             else if(_numberOfPlayers == 3)
             {
-                totalReceivedPanelObjs[_numberOfPlayers].SetActive(false);
-                
                 #if UNITY_ANDROID || UNITY_IOS
                     totalReceivedPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 45;          
                 #endif
@@ -210,6 +205,7 @@ namespace Managers
             for(int i = 0; i < _numberOfPlayers; i++)
             {
                 playerNameTMPInputFields[i].text = _playerNamesArray[i];
+                totalReceivedPanelObjs[i].SetActive(true);
                 totalReceivedTMPTexts[i].text = playerNameTMPInputFields[i].text + " received : " + _totalReceivedArray[i];
             }
             
@@ -236,9 +232,6 @@ namespace Managers
 
             if(_numberOfPlayers == 2)
             {
-                inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers].SetActive(false);
-                inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers + 1].SetActive(false);
-                
                 #if UNITY_ANDROID || UNITY_IOS
                     inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
                 #endif
@@ -250,8 +243,6 @@ namespace Managers
             
             else if(_numberOfPlayers == 3)
             {
-                inGameUIPlayerNamesDisplayPanelObjs[_numberOfPlayers].SetActive(false);
-                
                 #if UNITY_ANDROID || UNITY_IOS
                     inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 150;         
                 #endif
@@ -274,6 +265,7 @@ namespace Managers
 
             for(int i = 0; i < _numberOfPlayers; i++)
             {
+                inGameUIPlayerNamesDisplayPanelObjs[i].SetActive(true);
                 _playerNamesArray[i] = playerNameTMPInputFields[i].text;
 
                 UpdateInGamePlayerNames(i);
@@ -324,9 +316,6 @@ namespace Managers
         
             if(_numberOfPlayers == 2)
             {
-                leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
-                leaderboardWinsPanelObjs[_numberOfPlayers + 1].SetActive(false);
-                
                 #if UNITY_ANDROID || UNITY_IOS
                     totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;     
                 #endif
@@ -338,8 +327,6 @@ namespace Managers
             
             else if(_numberOfPlayers == 3)
             {
-                leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
-                
                 #if UNITY_ANDROID || UNITY_IOS
                     totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 100;          
                 #endif
@@ -360,6 +347,11 @@ namespace Managers
                 #endif
             }
 
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                leaderboardWinsPanelObjs[i].SetActive(true);
+            }
+            
             playerInputPanelObj.SetActive(false);
         }
 
@@ -371,9 +363,6 @@ namespace Managers
         
             if(_numberOfPlayers == 2)
             {
-                leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
-                leaderboardWinsPanelObjs[_numberOfPlayers + 1].SetActive(false);
-                
                 #if UNITY_ANDROID || UNITY_IOS
                     totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 400;     
                 #endif
@@ -385,8 +374,6 @@ namespace Managers
             
             else if(_numberOfPlayers == 3)
             {
-                leaderboardWinsPanelObjs[_numberOfPlayers].SetActive(false);
-                
                 #if UNITY_ANDROID || UNITY_IOS
                     totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 100;          
                 #endif
@@ -405,6 +392,11 @@ namespace Managers
                 #if UNITY_STANDALONE || UNITY_WEBGL
                     totalWinsPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;          
                 #endif
+            }
+            
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                leaderboardWinsPanelObjs[i].SetActive(true);
             }
         
             pauseButtonObj.SetActive(false);
