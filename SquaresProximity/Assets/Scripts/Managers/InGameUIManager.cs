@@ -29,6 +29,7 @@ namespace Managers
 
         [SerializeField] private GameObject coinUIObj;
         [SerializeField] private GameObject continueButtonObj;
+        [SerializeField] private GameObject gameIntroPanelObj;
         [SerializeField] private GameObject gameOverPanelsObj;
         [SerializeField] private GameObject gameTiedPanelObj;
         [SerializeField] private GameObject inGameUIPanelsObj;
@@ -67,6 +68,7 @@ namespace Managers
             gameTiedPanelObj.SetActive(false);
             inGameUIPanelsObj.SetActive(false);
             leaderboardPanelObj.SetActive(false);
+            numberOfPlayersSelectionPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
 
@@ -79,6 +81,11 @@ namespace Managers
             
             PlayerPrefsManager.LoadData(ref _randomTurnsToggleBool , RandomTurnsKey);
             randomTurnsToggle.isOn = _randomTurnsToggleBool;
+
+            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
+            {
+                gameTitleTMPTexts[i].enabled = false;
+            }
 
             for(int i = 0; i < winsPanelObjs.Length; i++)
             {
@@ -424,6 +431,17 @@ namespace Managers
             #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_WEBGL
                 Application.Quit();
             #endif
+        }
+
+        public void ReadyButton()
+        {
+            gameIntroPanelObj.SetActive(false);
+            numberOfPlayersSelectionPanelObj.SetActive(true);
+            
+            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
+            {
+                gameTitleTMPTexts[i].enabled = true;
+            }
         }
 
         public void ResetButton()
