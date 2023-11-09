@@ -6,7 +6,7 @@ namespace Utils
 
     public class RadioButton : MonoBehaviour
     {
-        public Toggle toggle;
+        [SerializeField] private Toggle toggle;
         
         private void Start()
         {
