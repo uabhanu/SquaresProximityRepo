@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4469691971375873931}
   - component: {fileID: 1740086196531238273}
   m_Layer: 5
-  m_Name: RedTotalWinsPanel
+  m_Name: Player1TotalWinsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -553,7 +553,7 @@ GameObject:
   - component: {fileID: 2616729157689479132}
   - component: {fileID: 4659560165097464069}
   m_Layer: 5
-  m_Name: BlueTotalWinsLabelText (TMP)
+  m_Name: TotalWinsLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2106,7 +2106,7 @@ GameObject:
   - component: {fileID: 1940943499456137212}
   - component: {fileID: 2137490119283144879}
   m_Layer: 5
-  m_Name: RedWinsPanel
+  m_Name: Player1WinsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2182,7 +2182,7 @@ GameObject:
   - component: {fileID: 1572379158876637350}
   - component: {fileID: 4032442013570825073}
   m_Layer: 5
-  m_Name: GreenTotalWinsLabelText (TMP)
+  m_Name: TotalWinsLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2450,7 +2450,7 @@ GameObject:
   - component: {fileID: 8890256961609836972}
   - component: {fileID: 911596016767821155}
   m_Layer: 5
-  m_Name: OrangeReceivedPanel
+  m_Name: Player4ReceivedPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2504,7 +2504,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -883989179, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
+  m_Sprite: {fileID: 1133030900, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2927,7 +2927,7 @@ GameObject:
   - component: {fileID: 2728225329456171730}
   - component: {fileID: 246428344340496747}
   m_Layer: 5
-  m_Name: OrangeWinsPanel
+  m_Name: Player4WinsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2981,7 +2981,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -883989179, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
+  m_Sprite: {fileID: 1133030900, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3003,7 +3003,7 @@ GameObject:
   - component: {fileID: 4741897761127368006}
   - component: {fileID: 4921818586766482093}
   m_Layer: 5
-  m_Name: GreenCoinScoreText (TMP)
+  m_Name: CoinScoreText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3056,7 +3056,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Green : '
+  m_text: ': '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -3347,7 +3347,7 @@ GameObject:
   - component: {fileID: 7703812645350754109}
   - component: {fileID: 7661087873369617465}
   m_Layer: 5
-  m_Name: BlueTotalWinsPanel
+  m_Name: Player3TotalWinsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3633,7 +3633,7 @@ GameObject:
   - component: {fileID: 2065564091389055578}
   - component: {fileID: 3576099974129918888}
   m_Layer: 5
-  m_Name: OrangeCoinScoreText (TMP)
+  m_Name: CoinScoreText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3686,7 +3686,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Orange : '
+  m_text: ': '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -3696,7 +3696,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3997,7 +3997,7 @@ GameObject:
   - component: {fileID: 302549403249050182}
   - component: {fileID: 1596449877754723051}
   m_Layer: 5
-  m_Name: BlueCoinScoreText (TMP)
+  m_Name: CoinScoreText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4050,7 +4050,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Blue : '
+  m_text: ': '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -4265,7 +4265,7 @@ GameObject:
   - component: {fileID: 1582273035562146665}
   - component: {fileID: 7012457841348404593}
   m_Layer: 5
-  m_Name: RedWinsLabelText (TMP)
+  m_Name: WinsLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4318,7 +4318,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Red Wins!!!
+  m_text: Wins!!!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -4345,7 +4345,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.75
+  m_fontSize: 47.55
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4632,7 +4632,7 @@ GameObject:
   - component: {fileID: 8803452255606704986}
   - component: {fileID: 7619779351771203559}
   m_Layer: 5
-  m_Name: RedTotalWinsLabelText (TMP)
+  m_Name: TotalWinsLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4900,7 +4900,7 @@ GameObject:
   - component: {fileID: 9219159072241591252}
   - component: {fileID: 5870525667966121500}
   m_Layer: 5
-  m_Name: OrangeReceivedLabelText (TMP)
+  m_Name: ReceivedLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4953,7 +4953,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Yellow Received : '
+  m_text: 'Received :'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -4963,7 +4963,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5986,7 +5986,7 @@ GameObject:
   - component: {fileID: 3058720628900468395}
   - component: {fileID: 4553965960158965144}
   m_Layer: 5
-  m_Name: BlueWinsLabelText (TMP)
+  m_Name: WinsLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6039,7 +6039,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Blue Wins!!!
+  m_text: Wins!!!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -6066,7 +6066,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 27.7
+  m_fontSize: 47.55
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7410,7 +7410,7 @@ GameObject:
   - component: {fileID: 6632681641285865876}
   - component: {fileID: 2025560557014431703}
   m_Layer: 5
-  m_Name: BlueReceivedLabelText (TMP)
+  m_Name: ReceivedLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7463,7 +7463,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Blue Received : '
+  m_text: 'Received :'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -7776,7 +7776,7 @@ GameObject:
   - component: {fileID: 2948018430927379899}
   - component: {fileID: 754869620334700599}
   m_Layer: 5
-  m_Name: RedReceivedLabelText (TMP)
+  m_Name: ReceivedLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7829,7 +7829,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Red Received : '
+  m_text: 'Received :'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -7910,7 +7910,7 @@ GameObject:
   - component: {fileID: 4321396914740896505}
   - component: {fileID: 6863735337627710364}
   m_Layer: 5
-  m_Name: RedPanel
+  m_Name: Player1Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8520,7 +8520,7 @@ GameObject:
   - component: {fileID: 8815150574046419836}
   - component: {fileID: 7520821652992961309}
   m_Layer: 5
-  m_Name: GreenTotalWinsPanel
+  m_Name: Player2TotalWinsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8596,7 +8596,7 @@ GameObject:
   - component: {fileID: 8822558484930473450}
   - component: {fileID: 7840230883186612442}
   m_Layer: 5
-  m_Name: OrangeWinsLabelText (TMP)
+  m_Name: WinsLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8649,7 +8649,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Orange Wins!!!
+  m_text: Wins!!!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -8658,8 +8658,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -8676,7 +8676,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.4
+  m_fontSize: 47.55
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9648,7 +9648,7 @@ GameObject:
   - component: {fileID: 4221860202859908782}
   - component: {fileID: 4258728502263116086}
   m_Layer: 5
-  m_Name: GreenReceivedPanel
+  m_Name: Player2ReceivedPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10054,7 +10054,7 @@ GameObject:
   - component: {fileID: 3128234807485779413}
   - component: {fileID: 764343153362655338}
   m_Layer: 5
-  m_Name: GreenReceivedLabelText (TMP)
+  m_Name: ReceivedLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10107,7 +10107,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Green Received : '
+  m_text: 'Received :'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -10396,7 +10396,7 @@ GameObject:
   - component: {fileID: 3202605042185390453}
   - component: {fileID: 2561551179081926638}
   m_Layer: 5
-  m_Name: RedCoinScoreText (TMP)
+  m_Name: CoinScoreText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10449,7 +10449,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Red : '
+  m_text: ': '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -10737,7 +10737,7 @@ GameObject:
   - component: {fileID: 6069704589317396886}
   - component: {fileID: 1470597664179379010}
   m_Layer: 5
-  m_Name: RedReceivedPanel
+  m_Name: Player1ReceivedPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12599,7 +12599,7 @@ GameObject:
   - component: {fileID: 1228895819710911705}
   - component: {fileID: 7123767057552925019}
   m_Layer: 5
-  m_Name: BlueReceivedPanel
+  m_Name: Player3ReceivedPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13631,7 +13631,7 @@ GameObject:
   - component: {fileID: 3893109744500428160}
   - component: {fileID: 204844561019686577}
   m_Layer: 5
-  m_Name: OrangeTotalWinsPanel
+  m_Name: Player4TotalWinsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13685,7 +13685,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -883989179, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
+  m_Sprite: {fileID: 1133030900, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -13783,7 +13783,7 @@ GameObject:
   - component: {fileID: 3292098053698013264}
   - component: {fileID: 8668278875385282002}
   m_Layer: 5
-  m_Name: GreenPanel
+  m_Name: Player2Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14127,7 +14127,7 @@ GameObject:
   - component: {fileID: 5816572003320420726}
   - component: {fileID: 9134321714173555574}
   m_Layer: 5
-  m_Name: OrangePanel
+  m_Name: Player4Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14181,7 +14181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -883989179, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
+  m_Sprite: {fileID: 1133030900, guid: e82c02e526d05824bb8272a4722d445e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14203,7 +14203,7 @@ GameObject:
   - component: {fileID: 9148291498836168083}
   - component: {fileID: 6371793270094111595}
   m_Layer: 5
-  m_Name: OrangeTotalWinsLabelText (TMP)
+  m_Name: TotalWinsLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14266,7 +14266,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -14337,7 +14337,7 @@ GameObject:
   - component: {fileID: 7118495126981309536}
   - component: {fileID: 691923074611540293}
   m_Layer: 5
-  m_Name: GreenWinsPanel
+  m_Name: Player2WinsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14718,7 +14718,7 @@ GameObject:
   - component: {fileID: 7044013954152437315}
   - component: {fileID: 5139532876023778061}
   m_Layer: 5
-  m_Name: BluePanel
+  m_Name: Player3Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15220,7 +15220,7 @@ GameObject:
   - component: {fileID: 6686678736935936734}
   - component: {fileID: 1716658971101091682}
   m_Layer: 5
-  m_Name: BlueWinsPanel
+  m_Name: Player3WinsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15430,7 +15430,7 @@ GameObject:
   - component: {fileID: 529395916156322253}
   - component: {fileID: 6354599125397305656}
   m_Layer: 5
-  m_Name: GreenWinsLabelText (TMP)
+  m_Name: WinsLabelText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15483,7 +15483,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Green Wins!!!
+  m_text: Wins!!!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -15510,7 +15510,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24.35
+  m_fontSize: 47.55
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
