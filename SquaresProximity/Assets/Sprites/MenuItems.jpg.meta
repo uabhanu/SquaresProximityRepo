@@ -162,7 +162,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MenuButtonLightPink
+      name: MenuItemLightPink
       rect:
         serializedVersion: 2
         x: 2521
@@ -183,7 +183,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MenuButtonRed
+      name: MenuItemRed
       rect:
         serializedVersion: 2
         x: 295
@@ -204,7 +204,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MenuButtonGreen
+      name: MenuItemGreen
       rect:
         serializedVersion: 2
         x: 4756
@@ -287,6 +287,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: MenuItemCyan
+      rect:
+        serializedVersion: 2
+        x: 2521
+        y: 196
+        width: 1909
+        height: 557
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55039fabd8581e0438e41eab4fbe4e25
+      internalID: -684865257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MenuItemsPink
+      rect:
+        serializedVersion: 2
+        x: 4752
+        y: 1016
+        width: 1909
+        height: 557
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3860d6c987cb97e408235c6d3c870ee2
+      internalID: 1133030900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -299,11 +341,13 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       MenuButtonBlue: -120847976
-      MenuButtonGreen: 1399715988
-      MenuButtonLightPink: 620431496
-      MenuButtonRed: 1434745096
+      MenuItemCyan: -684865257
+      MenuItemGreen: 1399715988
+      MenuItemLightPink: 620431496
       MenuItemOrange: -883989179
+      MenuItemRed: 1434745096
       MenuItemYellow: 146797890
+      MenuItemsPink: 1133030900
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
