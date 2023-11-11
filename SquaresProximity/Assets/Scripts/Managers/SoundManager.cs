@@ -18,7 +18,7 @@ namespace Managers
             ToggleEventSubscription(false);
         }
 
-        private void OnCoinPlaced(/*int a , int b*/)
+        private void OnCoinPlaced(int a , int b)
         {
             audioSource.clip = coinPlacedClip;
             audioSource.Play();
@@ -28,13 +28,11 @@ namespace Managers
         {
             if(shouldSubscribe)
             {
-                EventsManager.SubscribeToEvent(Event.CoinPlaced , new Action(OnCoinPlaced));
-                //EventsManager.SubscribeToEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
+                EventsManager.SubscribeToEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
             }
             else
             {
-                EventsManager.SubscribeToEvent(Event.CoinPlaced , new Action(OnCoinPlaced));
-                //EventsManager.UnsubscribeFromEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
+                EventsManager.UnsubscribeFromEvent(Event.CoinPlaced , (Action<int , int>)OnCoinPlaced);
             }
         }
     }
