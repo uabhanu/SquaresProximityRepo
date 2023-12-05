@@ -563,7 +563,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
+        m_MethodName: OfflineOnlneToggle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!1 &354982296955137619
 GameObject:
@@ -5170,7 +5182,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
+        m_MethodName: OfflineOnlneToggle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!1 &2908206653630836426
 GameObject:
@@ -10571,6 +10595,9 @@ MonoBehaviour:
   - {fileID: 5908917880805072194}
   - {fileID: 5184507460762128455}
   - {fileID: 1738150092259597936}
+  offlineOnlineSelectionTogglesArray:
+  - {fileID: 8108431850252596271}
+  - {fileID: 6606047126158896677}
 --- !u!1 &6056266090565472135
 GameObject:
   m_ObjectHideFlags: 0

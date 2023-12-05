@@ -20,6 +20,7 @@ namespace Managers
         private bool _randomTurnsToggleBool;
         private bool[] _aiHumanSelectionsBoolArray;
         private bool[] _numberOfPlayersSelectionsBoolArray;
+        private bool[] _offlineOnlineSelectionsBoolArray;
         private int _highestScorePlayerID;
         private int _numberOfPlayers;
         private int[] _playerScoresArray;
@@ -56,6 +57,7 @@ namespace Managers
         [SerializeField] private Toggle randomTurnsToggle;
         [SerializeField] private Toggle[] aiHumanTogglesArray;
         [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
+        [SerializeField] private Toggle[] offlineOnlineSelectionTogglesArray;
 
         #endregion
     
@@ -73,6 +75,7 @@ namespace Managers
             playerInputPanelObj.SetActive(false);
 
             _numberOfPlayersSelectionsBoolArray = new bool[numberOfPlayersSelectionTogglesArray.Length];
+            _offlineOnlineSelectionsBoolArray = new bool[offlineOnlineSelectionTogglesArray.Length];
             _playersTotalWinsArray = new int[_numberOfPlayers];
             _totalReceivedArray = new int[_numberOfPlayers];
             
@@ -99,6 +102,15 @@ namespace Managers
                 numberOfPlayersKeys[i] = "Number Of Players" + i;
                 PlayerPrefsManager.LoadData(ref _numberOfPlayersSelectionsBoolArray , numberOfPlayersKeys);
                 numberOfPlayersSelectionTogglesArray[i].isOn = _numberOfPlayersSelectionsBoolArray[i];
+            }
+
+            string[] offlineOnlineKeys = new string[offlineOnlineSelectionTogglesArray.Length];
+            
+            for(int i = 0; i < offlineOnlineSelectionTogglesArray.Length; i++)
+            {
+                offlineOnlineKeys[i] = "Player" + i + "Offline or Online";
+                PlayerPrefsManager.LoadData(ref _offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
+                offlineOnlineSelectionTogglesArray[i].isOn = _offlineOnlineSelectionsBoolArray[i];
             }
             
             SetPlayersNumber();
@@ -314,7 +326,15 @@ namespace Managers
                 nameKeys[i] = "Player" + i + "Name";
             }
             
+            string[] offlineOnlineKeys = new string[_offlineOnlineSelectionsBoolArray.Length];
+            
+            for(int i = 0; i < _offlineOnlineSelectionsBoolArray.Length; i++)
+            {
+                offlineOnlineKeys[i] = "Player" + i + "Offline or Online";
+            }
+            
             PlayerPrefsManager.SaveData(_aiHumanSelectionsBoolArray , aiKeys);
+            PlayerPrefsManager.SaveData(_offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
             PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
         }
 
@@ -459,6 +479,8 @@ namespace Managers
             {
                 _aiHumanSelectionsBoolArray[i] = false;
                 aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
+                _offlineOnlineSelectionsBoolArray[i] = false;
+                offlineOnlineSelectionTogglesArray[i].isOn = _offlineOnlineSelectionsBoolArray[i];
                 _holesToggleBool = false;
                 holesToggle.isOn = _holesToggleBool;
                 _randomTurnsToggleBool = false;
@@ -481,6 +503,15 @@ namespace Managers
                 PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
                 PlayerPrefsManager.LoadData(ref _playerNamesArray , nameKeys);
                 PlayerPrefsManager.LoadData(ref _playersTotalWinsArray , winsKeys);
+            }
+            
+            string[] offlineOnlineKeys = new string[_offlineOnlineSelectionsBoolArray.Length];
+            
+            for(int i = 0; i < _offlineOnlineSelectionsBoolArray.Length; i++)
+            {
+                offlineOnlineKeys[i] = "Player" + i + "Offline or Online";
+                
+                PlayerPrefsManager.LoadData(ref _offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
             }
             
             PlayerPrefsManager.LoadData(ref _holesToggleBool , HolesKey);
@@ -560,6 +591,13 @@ namespace Managers
             }
         }
         
+        public void HolesToggle()
+        {
+            EventsManager.Invoke(Event.HolesToggled);
+            _holesToggleBool = holesToggle.isOn;
+            PlayerPrefsManager.SaveData(_holesToggleBool , HolesKey);
+        }
+        
         public void NumberOfPlayersToggle()
         {
             for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
@@ -574,11 +612,17 @@ namespace Managers
             }
         }
 
-        public void HolesToggle()
+        public void OfflineOnlneToggle()
         {
-            EventsManager.Invoke(Event.HolesToggled);
-            _holesToggleBool = holesToggle.isOn;
-            PlayerPrefsManager.SaveData(_holesToggleBool , HolesKey);
+            string[] offlineOnlineKeys = new string[_offlineOnlineSelectionsBoolArray.Length];
+            
+            for(int i = 0; i < _offlineOnlineSelectionsBoolArray.Length; i++)
+            {
+                bool isOfflineOnline = offlineOnlineSelectionTogglesArray[i].isOn;
+                _offlineOnlineSelectionsBoolArray[i] = isOfflineOnline;
+            }
+            
+            PlayerPrefsManager.SaveData(_offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
         }
 
         public void RandomTurnsToggle()
