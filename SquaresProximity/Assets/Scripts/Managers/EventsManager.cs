@@ -22,6 +22,8 @@ namespace Managers
         MouseMoved,
         NumberOfPlayersSelected,
         NumberOfPlayersToggled,
+        PlayerOffline,
+        PlayerOnline,
         PlayerTotalReceived,
         PlayerWins,
         PlayerNamesUpdated,
