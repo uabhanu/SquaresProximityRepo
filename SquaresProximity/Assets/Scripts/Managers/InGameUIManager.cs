@@ -17,6 +17,7 @@ namespace Managers
         private const string RandomTurnsKey = "Random Turns";
 
         private bool _holesToggleBool;
+        private bool _playerIsOnline;
         private bool _randomTurnsToggleBool;
         private bool[] _aiHumanSelectionsBoolArray;
         private bool[] _numberOfPlayersSelectionsBoolArray;
@@ -156,9 +157,18 @@ namespace Managers
             
             for(int i = 0; i < _numberOfPlayers; i++)
             {
-                aiKeys[i] = "Player" + i + "AI";
-                PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
-                aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
+                if(_playerIsOnline)
+                {
+                    aiHumanTogglesArray[i].isOn = false;
+                    aiHumanTogglesArray[i].gameObject.SetActive(false);
+                }
+                else
+                {
+                    aiHumanTogglesArray[i].gameObject.SetActive(true);
+                    aiKeys[i] = "Player" + i + "AI";
+                    PlayerPrefsManager.LoadData(ref _aiHumanSelectionsBoolArray , aiKeys);
+                    aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
+                }
             }
         
             numberOfPlayersSelectionPanelObj.SetActive(false);
@@ -294,14 +304,12 @@ namespace Managers
                     {
                         _playerNamesArray[i] = defaultPlayerNames[i];
                         playerNameTMPInputFields[i].text = _playerNamesArray[i];
-                        aiHumanTogglesArray[0].isOn = true;   
                     }
                     
                     if(aiHumanTogglesArray[i].isOn)
                     {
                         _playerNamesArray[i] = defaultAIPlayerName;
                         playerNameTMPInputFields[i].text = _playerNamesArray[i];
-                        aiHumanTogglesArray[0].isOn = true;
                     }
                 }
                 
@@ -701,14 +709,20 @@ namespace Managers
             SetPlayersNumber();
         }
 
-        private void OnPlayerOffline()
+        private void OnPlayerOfflineOnlineToggled()
         {
-            Debug.Log("Player Offline");
-        }
-
-        private void OnPlayerOnline()
-        {
-            Debug.Log("Player Online");
+            for(int i = 0; i < offlineOnlineSelectionTogglesArray.Length; i++)
+            {
+                if(offlineOnlineSelectionTogglesArray[i].isOn && i == 1)
+                {
+                    _playerIsOnline = true;
+                }
+                
+                else if(offlineOnlineSelectionTogglesArray[i].isOn && i == 0)
+                {
+                    _playerIsOnline = false;
+                }
+            }
         }
 
         private void OnPlayerWins(int highestScorePlayerID)
@@ -751,8 +765,7 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
-                EventsManager.SubscribeToEvent(Event.PlayerOffline , new Action(OnPlayerOffline));
-                EventsManager.SubscribeToEvent(Event.PlayerOnline , new Action(OnPlayerOnline));
+                EventsManager.SubscribeToEvent(Event.PlayerOfflineOnlineToggled , new Action(OnPlayerOfflineOnlineToggled));
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);    
@@ -765,8 +778,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
-                EventsManager.UnsubscribeFromEvent(Event.PlayerOffline , new Action(OnPlayerOffline));
-                EventsManager.UnsubscribeFromEvent(Event.PlayerOnline , new Action(OnPlayerOnline));
+                EventsManager.UnsubscribeFromEvent(Event.PlayerOfflineOnlineToggled , new Action(OnPlayerOfflineOnlineToggled));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
