@@ -566,7 +566,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8527379706435513361}
         m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
-        m_MethodName: OfflineOnlneToggle
+        m_MethodName: OfflineOnlineToggle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5185,7 +5185,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8527379706435513361}
         m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
-        m_MethodName: OfflineOnlneToggle
+        m_MethodName: OfflineOnlineToggle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

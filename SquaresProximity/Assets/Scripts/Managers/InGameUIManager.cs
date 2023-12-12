@@ -612,7 +612,7 @@ namespace Managers
             }
         }
 
-        public void OfflineOnlneToggle()
+        public void OfflineOnlineToggle()
         {
             string[] offlineOnlineKeys = new string[_offlineOnlineSelectionsBoolArray.Length];
             
@@ -701,6 +701,16 @@ namespace Managers
             SetPlayersNumber();
         }
 
+        private void OnPlayerOffline()
+        {
+            Debug.Log("Player Offline");
+        }
+
+        private void OnPlayerOnline()
+        {
+            Debug.Log("Player Online");
+        }
+
         private void OnPlayerWins(int highestScorePlayerID)
         {
             _highestScorePlayerID = highestScorePlayerID;
@@ -741,6 +751,8 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
+                EventsManager.SubscribeToEvent(Event.PlayerOffline , new Action(OnPlayerOffline));
+                EventsManager.SubscribeToEvent(Event.PlayerOnline , new Action(OnPlayerOnline));
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);    
@@ -753,6 +765,8 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
+                EventsManager.UnsubscribeFromEvent(Event.PlayerOffline , new Action(OnPlayerOffline));
+                EventsManager.UnsubscribeFromEvent(Event.PlayerOnline , new Action(OnPlayerOnline));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
