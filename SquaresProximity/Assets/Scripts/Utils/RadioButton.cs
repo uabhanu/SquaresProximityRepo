@@ -23,7 +23,8 @@ namespace Utils
         {
             if(isOn)
             {
-                EventsManager.Invoke(Managers.Event.NumberOfPlayersToggled);   
+                EventsManager.Invoke(Managers.Event.NumberOfPlayersToggled);
+                EventsManager.Invoke(Managers.Event.PlayerOfflineOnlineToggled);
             }
         }
     }
