@@ -2660,8 +2660,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6213765064134708031}
   - {fileID: 7317975974237341937}
+  - {fileID: 6213765064134708031}
   m_Father: {fileID: 7233139007724515746}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7125,7 +7125,7 @@ GameObject:
   - component: {fileID: 8311486951174833605}
   - component: {fileID: 9129306378480245853}
   m_Layer: 5
-  m_Name: NumberOfPlayersSelectionPanel
+  m_Name: PlayersSelectionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
