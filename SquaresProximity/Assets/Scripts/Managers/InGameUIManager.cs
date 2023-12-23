@@ -112,6 +112,7 @@ namespace Managers
                 offlineOnlineKeys[i] = "Player" + i + "Offline or Online";
                 PlayerPrefsManager.LoadData(ref _offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
                 offlineOnlineSelectionTogglesArray[i].isOn = _offlineOnlineSelectionsBoolArray[i];
+                _playerIsOnline = _offlineOnlineSelectionsBoolArray[1];
             }
             
             SetPlayersNumber();
@@ -334,15 +335,7 @@ namespace Managers
                 nameKeys[i] = "Player" + i + "Name";
             }
             
-            string[] offlineOnlineKeys = new string[_offlineOnlineSelectionsBoolArray.Length];
-            
-            for(int i = 0; i < _offlineOnlineSelectionsBoolArray.Length; i++)
-            {
-                offlineOnlineKeys[i] = "Player" + i + "Offline or Online";
-            }
-            
             PlayerPrefsManager.SaveData(_aiHumanSelectionsBoolArray , aiKeys);
-            PlayerPrefsManager.SaveData(_offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
             PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
         }
 
@@ -627,6 +620,7 @@ namespace Managers
             for(int i = 0; i < _offlineOnlineSelectionsBoolArray.Length; i++)
             {
                 bool isOfflineOnline = offlineOnlineSelectionTogglesArray[i].isOn;
+                offlineOnlineKeys[i] = "Player" + i + "Offline or Online";
                 _offlineOnlineSelectionsBoolArray[i] = isOfflineOnline;
             }
             
