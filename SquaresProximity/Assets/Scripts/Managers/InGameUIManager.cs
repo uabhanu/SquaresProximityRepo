@@ -48,6 +48,7 @@ namespace Managers
         [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
+        [SerializeField] private LobbyManager lobbyManager;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
         [SerializeField] private TMP_Text[] gameTitleTMPTexts;
@@ -77,6 +78,7 @@ namespace Managers
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
 
+            
             _numberOfPlayersSelectionsBoolArray = new bool[numberOfPlayersSelectionTogglesArray.Length];
             _offlineOnlineSelectionsBoolArray = new bool[offlineOnlineSelectionTogglesArray.Length];
             _playersTotalWinsArray = new int[_numberOfPlayers];
@@ -439,6 +441,16 @@ namespace Managers
             }
         
             pauseButtonObj.SetActive(false);
+        }
+
+        public void LobbyJoinButton()
+        {
+            lobbyManager.JoinLobby(0);
+        }
+
+        public void LobbyLeaveButton()
+        {
+            lobbyManager.LeaveLobby();
         }
 
         public void OkButton()
