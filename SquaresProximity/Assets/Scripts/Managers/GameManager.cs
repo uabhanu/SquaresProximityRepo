@@ -12,10 +12,11 @@ namespace Managers
     {
         #region Constructor
     
-        public GameManager(IAIManager _iaiManager , ICoinPlacer iCoinPlacer , IPlayerTurnsManager iPlayerTurnsManager)
+        public GameManager(IAIManager _iaiManager , ICoinPlacer iCoinPlacer , ILobbyManager iLobbyManager , IPlayerTurnsManager iPlayerTurnsManager)
         {
             _iAIManager = _iaiManager;
             _iCoinPlacer = iCoinPlacer;
+            _iLobbyManager = iLobbyManager;
             _iPlayerTurnsManager = iPlayerTurnsManager;
         }
     
@@ -25,6 +26,7 @@ namespace Managers
 
         private IAIManager _iAIManager;
         private ICoinPlacer _iCoinPlacer;
+        private ILobbyManager _iLobbyManager;
         private IPlayerTurnsManager _iPlayerTurnsManager;
 
         #endregion
@@ -304,6 +306,7 @@ namespace Managers
             _gridManager = FindObjectOfType<GridManager>();
             
             _iAIManager = new AIManager(this , _gridManager);
+            _iLobbyManager = new LobbyManager(this);
             _iPlayerTurnsManager = new PlayerTurnsManager(this , _gridManager);
             _iCoinPlacer = new CoinPlacer(this , _gridManager);
 
