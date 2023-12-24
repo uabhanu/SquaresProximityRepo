@@ -1,9 +1,8 @@
 namespace Managers
 {
-    using Interfaces;
     using UnityEngine;
     
-    public class LobbyManager : ILobbyManager
+    public class LobbyManager : MonoBehaviour
     {
         public LobbyManager(GameManager gameManager)
         {
