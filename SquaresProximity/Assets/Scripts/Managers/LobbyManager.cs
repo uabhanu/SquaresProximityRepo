@@ -1,51 +1,31 @@
-using System.Collections.Generic;
-using Unity.Networking.Transport;
-using UnityEngine;
-
 namespace Managers
 {
-    public class LobbyManager : MonoBehaviour
+    using Interfaces;
+    using UnityEngine;
+    
+    public class LobbyManager : ILobbyManager
     {
-        private List<NetworkConnection> _playersNetworkConnectionsList;
+        public LobbyManager(GameManager gameManager)
+        {
+            _gameManager = gameManager;
+        }
         
-        public static LobbyManager Instance;
+        private GameManager _gameManager;
+        
+        public void CreateLobby(int maxPlayers)
+        {
+            maxPlayers = _gameManager.NumberOfPlayers;
+            Debug.Log($"Creating a new lobby with max players: {maxPlayers}");
+        }
 
-        private void Awake()
-        {
-            if(Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-        
-        public void CreateLobby()
-        {
-            Debug.Log("Creating a new lobby...");
-        }
-        
         public void JoinLobby(int lobbyId)
         {
-            Debug.Log($"Player joining lobby {lobbyId}...");
+            Debug.Log($"Joining lobby with ID: {lobbyId}");
         }
-        
-        public void OnPlayerJoined(NetworkConnection conn)
+
+        public void LeaveLobby()
         {
-            _playersNetworkConnectionsList.Add(conn);
-        }
-        
-        public void OnPlayerLeft(NetworkConnection conn)
-        {
-            _playersNetworkConnectionsList.Remove(conn);
-        }
-        
-        public void StartGame()
-        {
-            Debug.Log("Starting game with players in lobby...");
+            Debug.Log("Leaving lobby");
         }
     }
 }
