@@ -37,6 +37,7 @@ namespace Managers
         [SerializeField] private GameObject inGameUIPanelsObj;
         [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
         [SerializeField] private GameObject leaderboardPanelObj;
+        [SerializeField] private GameObject lobbyPanelObj;
         [SerializeField] private GameObject pauseButtonObj;
         [SerializeField] private GameObject pauseMenuPanelObj;
         [SerializeField] private GameObject numberOfPlayersSelectionPanelObj;
@@ -71,6 +72,7 @@ namespace Managers
             gameTiedPanelObj.SetActive(false);
             inGameUIPanelsObj.SetActive(false);
             leaderboardPanelObj.SetActive(false);
+            lobbyPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
@@ -173,7 +175,15 @@ namespace Managers
             }
         
             numberOfPlayersSelectionPanelObj.SetActive(false);
-            playerInputPanelObj.SetActive(true);
+
+            if(offlineOnlineSelectionTogglesArray[1].isOn)
+            {
+                lobbyPanelObj.SetActive(true);
+            }
+            else
+            {
+                playerInputPanelObj.SetActive(true);   
+            }
             
             string[] nameKeys = new string[_numberOfPlayers];
             string[] winsKeys = new string[_numberOfPlayers];
