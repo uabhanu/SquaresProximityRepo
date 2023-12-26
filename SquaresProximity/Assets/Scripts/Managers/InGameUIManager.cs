@@ -448,6 +448,12 @@ namespace Managers
             pauseButtonObj.SetActive(false);
         }
 
+        public void MainMenuButton()
+        {
+            lobbyMenuPanelObj.SetActive(false);
+            numberOfPlayersSelectionPanelObj.SetActive(true);
+        }
+
         public void OkButton()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
