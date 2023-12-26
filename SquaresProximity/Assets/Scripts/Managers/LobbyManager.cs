@@ -1,52 +1,34 @@
 namespace Managers
 {
+    using Interfaces;
     using System;
+    using System.Threading.Tasks;
     using Unity.Services.Authentication;
     using Unity.Services.Lobbies;
     using UnityEngine;
 
-    public class LobbyManager : MonoBehaviour
+    public class LobbyManager : MonoBehaviour , ILobbyManager
     {
-        private GameManager _gameManager;
+        #region Constructor
+        
+        public LobbyManager(InGameUIManager inGameUIManager)
+        {
+            _inGameUIManager = inGameUIManager;
+        }
+        
+        #endregion
+        
+        #region Variables Declaration
+        
+        private InGameUIManager _inGameUIManager;
         private string _lobbyID;
         private string _playerID;
+        
+        #endregion
+        
+        #region Functions
 
-        private void Awake()
-        {
-            Debug.Log("LobbyManager is waking up.");
-            _gameManager = FindObjectOfType<GameManager>();
-            Debug.Log("GameManager found: " + (_gameManager != null));
-        }
-
-        private void OnDestroy()
-        {
-            Debug.Log("LobbyManager is being destroyed. Attempting to delete lobby.");
-            DeleteLobby();
-        }
-
-        private async void DeleteLobby()
-        {
-            Debug.Log($"Attempting to delete lobby: {_lobbyID}");
-            
-            if(!string.IsNullOrEmpty(_lobbyID))
-            {
-                try
-                {
-                    await Lobbies.Instance.DeleteLobbyAsync(_lobbyID);
-                    Debug.Log($"Lobby with ID: {_lobbyID} deleted");
-                }
-                catch(Exception e)
-                {
-                    Debug.LogError($"Failed to delete lobby: {e.Message}");
-                }
-            }
-            else
-            {
-                Debug.Log("No lobby to delete (_lobbyID is null or empty).");
-            }
-        }
-
-        public async void CreateLobby()
+        public async Task CreateLobby()
         {
             Debug.Log("CreateLobby called.");
             
@@ -60,7 +42,7 @@ namespace Managers
             try
             {
                 Debug.Log("Attempting to create a new lobby.");
-                var lobby = await Lobbies.Instance.CreateLobbyAsync("Bhanu's Lobby" , _gameManager.NumberOfPlayers);
+                var lobby = await Lobbies.Instance.CreateLobbyAsync("Bhanu's Lobby" , _inGameUIManager.NumberOfPlayers);
                 _lobbyID = lobby.Id;
                 Debug.Log($"Lobby created with ID: {_lobbyID}");
             }
@@ -93,7 +75,7 @@ namespace Managers
             }
         }
 
-        public async void LeaveLobby()
+        public async Task LeaveLobby()
         {
             Debug.Log($"LeaveLobby called. Attempting to leave lobby: {_lobbyID} with player ID: {_playerID}");
 
@@ -118,5 +100,7 @@ namespace Managers
                 EventsManager.Invoke(Event.LobbyDeleted);
             }
         }
+        
+        #endregion
     }
 }
