@@ -1,5 +1,6 @@
 namespace Managers
 {
+    using Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -12,6 +13,21 @@ namespace Managers
     
     public class InGameUIManager : MonoBehaviour
     {
+        #region Constructor
+
+        public InGameUIManager(ILobbyManager iLobbyManager)
+        {
+            _iLobbyManager = iLobbyManager;
+        }
+
+        #endregion
+
+        #region Interfaces Declarations
+
+        private ILobbyManager _iLobbyManager;
+
+        #endregion
+        
         #region Variable Declarations
 
         private const string HolesKey = "Holes";
@@ -50,7 +66,6 @@ namespace Managers
         [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
-        [SerializeField] private LobbyManager lobbyManager;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
         [SerializeField] private TMP_Text lobbyTitleTMPText;
@@ -64,6 +79,8 @@ namespace Managers
         [SerializeField] private Toggle[] aiHumanTogglesArray;
         [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
         [SerializeField] private Toggle[] offlineOnlineSelectionTogglesArray;
+
+        public int NumberOfPlayers => _numberOfPlayers;
 
         #endregion
     
@@ -81,8 +98,8 @@ namespace Managers
             numberOfPlayersSelectionPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
-
             
+            _iLobbyManager = new LobbyManager(this);
             _numberOfPlayersSelectionsBoolArray = new bool[numberOfPlayersSelectionTogglesArray.Length];
             _offlineOnlineSelectionsBoolArray = new bool[offlineOnlineSelectionTogglesArray.Length];
             _playersTotalWinsArray = new int[_numberOfPlayers];
@@ -184,7 +201,7 @@ namespace Managers
 
             if(offlineOnlineSelectionTogglesArray[1].isOn)
             {
-                lobbyManager.CreateLobby();
+                _iLobbyManager.CreateLobby();
                 lobbyMenuPanelObj.SetActive(true);
             }
             else
@@ -446,6 +463,16 @@ namespace Managers
             }
         
             pauseButtonObj.SetActive(false);
+        }
+
+        public void LobbyJoinButton()
+        {
+            _iLobbyManager.JoinLobby();
+        }
+
+        public void LobbyLeaveButton()
+        {
+            _iLobbyManager.LeaveLobby();
         }
 
         public void MainMenuButton()
