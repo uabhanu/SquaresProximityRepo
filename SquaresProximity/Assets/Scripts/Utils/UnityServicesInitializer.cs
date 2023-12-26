@@ -1,12 +1,19 @@
 namespace Utils
 {
+    using Managers;
+    using System;
     using Unity.Services.Authentication;
     using Unity.Services.Core;
     using UnityEngine;
     
     public class UnityServicesInitializer : MonoBehaviour
     {
-        async void Start()
+        private void Start()
+        {
+            ToggleEventSubscription(true);
+        }
+
+        async void InitializeUnityServices()
         {
             try
             {
@@ -22,6 +29,28 @@ namespace Utils
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
                 Debug.Log("Signed in anonymously, User ID: " + AuthenticationService.Instance.PlayerId);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            ToggleEventSubscription(false);
+        }
+
+        private void OnPlayerOnline()
+        {
+            InitializeUnityServices();
+        }
+
+        private void ToggleEventSubscription(bool shouldSubscribe)
+        {
+            if(shouldSubscribe)
+            {
+                EventsManager.SubscribeToEvent(Managers.Event.PlayerIsOnline , new Action(OnPlayerOnline));
+            }
+            else
+            {
+                EventsManager.UnsubscribeFromEvent(Managers.Event.PlayerIsOnline , new Action(OnPlayerOnline));
             }
         }
     }
