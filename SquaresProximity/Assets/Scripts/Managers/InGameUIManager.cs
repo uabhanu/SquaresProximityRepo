@@ -780,6 +780,7 @@ namespace Managers
                 if(offlineOnlineSelectionTogglesArray[i].isOn && i == 1)
                 {
                     _playerIsOnline = true;
+                    EventsManager.Invoke(Event.PlayerIsOnline);
                 }
                 
                 else if(offlineOnlineSelectionTogglesArray[i].isOn && i == 0)
