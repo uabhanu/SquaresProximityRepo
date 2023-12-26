@@ -721,6 +721,13 @@ namespace Managers
             }
         }
 
+        private void OnLobbyDeleted()
+        {
+            lobbyMenuPanelObj.SetActive(false);
+            lobbyWelcomePanelObj.SetActive(false);
+            numberOfPlayersSelectionPanelObj.SetActive(true);
+        }
+
         private void OnNumberOfPlayersToggled()
         {
             SetPlayersNumber();
@@ -794,6 +801,7 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
+                EventsManager.SubscribeToEvent(Event.LobbyDeleted , new Action(OnLobbyDeleted));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
                 EventsManager.SubscribeToEvent(Event.PlayerJoinedLobby , new Action(OnPlayerJoinedLobby));
                 EventsManager.SubscribeToEvent(Event.PlayerLeftLobby , new Action(OnPlayerLeftLobby));
@@ -809,6 +817,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
+                EventsManager.UnsubscribeFromEvent(Event.LobbyDeleted , new Action(OnLobbyDeleted));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerJoinedLobby , new Action(OnPlayerJoinedLobby));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerLeftLobby , new Action(OnPlayerLeftLobby));
