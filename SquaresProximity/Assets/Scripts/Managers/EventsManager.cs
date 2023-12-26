@@ -18,6 +18,7 @@ namespace Managers
         GameTied,
         HolesToggled,
         KeyboardTabPressed,
+        LobbyDeleted,
         MouseLeftClicked,
         MouseMoved,
         NumberOfPlayersSelected,
