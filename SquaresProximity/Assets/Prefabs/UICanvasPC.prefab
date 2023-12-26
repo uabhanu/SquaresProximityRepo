@@ -1813,9 +1813,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1237838703910567548}
-        m_TargetAssemblyTypeName: Managers.LobbyManager, Assembly-CSharp
-        m_MethodName: JoinLobby
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
+        m_MethodName: LobbyJoinButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9431,9 +9431,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1237838703910567548}
-        m_TargetAssemblyTypeName: Managers.LobbyManager, Assembly-CSharp
-        m_MethodName: LeaveLobby
+      - m_Target: {fileID: 8527379706435513361}
+        m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
+        m_MethodName: LobbyLeaveButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11908,11 +11908,11 @@ RectTransform:
   - {fileID: 2340393002152699588}
   - {fileID: 3896410596739204333}
   - {fileID: 7233139007724515746}
-  - {fileID: 7318494421264981610}
   - {fileID: 3289780914991689582}
   - {fileID: 9037785015763173504}
   - {fileID: 5822291736008170756}
   - {fileID: 1936770152516847504}
+  - {fileID: 8377760765437650337}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -12031,7 +12031,6 @@ MonoBehaviour:
   - {fileID: 8418558298801778891}
   - {fileID: 8890262800759797634}
   - {fileID: 1541873984459279783}
-  lobbyManager: {fileID: 1237838703910567548}
   playerNameTMPInputFields:
   - {fileID: 5110851220399508464}
   - {fileID: 6378831753500823874}
@@ -12556,6 +12555,54 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &6346799362281206194
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8377760765437650337}
+  - component: {fileID: 1401740679745200054}
+  m_Layer: 5
+  m_Name: LobbyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8377760765437650337
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6346799362281206194}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8397798982979555225}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1401740679745200054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6346799362281206194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4524375c1a085634a8eda6e8b7f2f4ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6448265223350191876
 GameObject:
   m_ObjectHideFlags: 0
@@ -12765,50 +12812,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!1 &6504871232431856472
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7318494421264981610}
-  - component: {fileID: 1237838703910567548}
-  m_Layer: 0
-  m_Name: LobbyManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7318494421264981610
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6504871232431856472}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8397798982979555225}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1237838703910567548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6504871232431856472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4524375c1a085634a8eda6e8b7f2f4ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6533599990285272056
 GameObject:
   m_ObjectHideFlags: 0
