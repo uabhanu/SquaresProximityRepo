@@ -138,6 +138,11 @@ namespace Managers
                 PlayerPrefsManager.LoadData(ref _offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
                 offlineOnlineSelectionTogglesArray[i].isOn = _offlineOnlineSelectionsBoolArray[i];
                 _playerIsOnline = _offlineOnlineSelectionsBoolArray[1];
+
+                if(offlineOnlineSelectionTogglesArray[1].isOn)
+                {
+                    EventsManager.Invoke(Event.PlayerIsOnline);
+                }
             }
             
             SetPlayersNumber();
