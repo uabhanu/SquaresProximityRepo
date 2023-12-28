@@ -1,6 +1,5 @@
 namespace Managers
 {
-    using Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -13,21 +12,6 @@ namespace Managers
     
     public class InGameUIManager : MonoBehaviour
     {
-        #region Constructor
-
-        public InGameUIManager(ILobbyManager iLobbyManager)
-        {
-            _iLobbyManager = iLobbyManager;
-        }
-
-        #endregion
-
-        #region Interfaces Declarations
-
-        private ILobbyManager _iLobbyManager;
-
-        #endregion
-        
         #region Variable Declarations
 
         private const string HolesKey = "Holes";
@@ -99,7 +83,6 @@ namespace Managers
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
             
-            _iLobbyManager = new LobbyManager(this);
             _numberOfPlayersSelectionsBoolArray = new bool[numberOfPlayersSelectionTogglesArray.Length];
             _offlineOnlineSelectionsBoolArray = new bool[offlineOnlineSelectionTogglesArray.Length];
             _playersTotalWinsArray = new int[_numberOfPlayers];
@@ -206,7 +189,6 @@ namespace Managers
 
             if(offlineOnlineSelectionTogglesArray[1].isOn)
             {
-                _iLobbyManager.CreateLobby();
                 lobbyMenuPanelObj.SetActive(true);
             }
             else
@@ -472,12 +454,12 @@ namespace Managers
 
         public void LobbyJoinButton()
         {
-            _iLobbyManager.JoinLobby();
+            
         }
 
         public void LobbyLeaveButton()
         {
-            _iLobbyManager.LeaveLobby();
+            
         }
 
         public void MainMenuButton()
