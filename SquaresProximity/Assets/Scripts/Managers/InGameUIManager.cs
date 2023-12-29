@@ -1,3 +1,5 @@
+using WebSocketSharp;
+
 namespace Managers
 {
     using System;
@@ -9,7 +11,7 @@ namespace Managers
     using UnityEngine;
     using UnityEngine.SceneManagement;
     using UnityEngine.UI;
-    
+
     public class InGameUIManager : MonoBehaviour
     {
         #region Variable Declarations
@@ -18,6 +20,7 @@ namespace Managers
         private const string RandomTurnsKey = "Random Turns";
 
         private bool _holesToggleBool;
+        private bool _isServerPrivate;
         private bool _playerIsOnline;
         private bool _randomTurnsToggleBool;
         private bool[] _aiHumanSelectionsBoolArray;
@@ -28,6 +31,8 @@ namespace Managers
         private int[] _playerScoresArray;
         private int[] _playersTotalWinsArray;
         private int[] _totalReceivedArray;
+        private string _serverName;
+        private string _serverPassword;
         private string[] _playerNamesArray;
 
         [SerializeField] private GameObject coinUIObj;
@@ -38,8 +43,8 @@ namespace Managers
         [SerializeField] private GameObject inGameUIPanelsObj;
         [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
         [SerializeField] private GameObject leaderboardPanelObj;
-        [SerializeField] private GameObject lobbyMenuPanelObj;
-        [SerializeField] private GameObject lobbyWelcomePanelObj;
+        [SerializeField] private GameObject lobbyCreatePanelObj;
+        [SerializeField] private GameObject lobbyJoinPanelObj;
         [SerializeField] private GameObject pauseButtonObj;
         [SerializeField] private GameObject pauseMenuPanelObj;
         [SerializeField] private GameObject numberOfPlayersSelectionPanelObj;
@@ -50,6 +55,8 @@ namespace Managers
         [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
+        [SerializeField] private TMP_InputField lobbyNameTMPInputField;
+        [SerializeField] private TMP_InputField lobbyPasswordTMPInputField;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
         [SerializeField] private TMP_Text lobbyTitleTMPText;
@@ -77,8 +84,8 @@ namespace Managers
             gameTiedPanelObj.SetActive(false);
             inGameUIPanelsObj.SetActive(false);
             leaderboardPanelObj.SetActive(false);
-            lobbyMenuPanelObj.SetActive(false);
-            lobbyWelcomePanelObj.SetActive(false);
+            lobbyCreatePanelObj.SetActive(false);
+            lobbyJoinPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
@@ -189,7 +196,7 @@ namespace Managers
 
             if(offlineOnlineSelectionTogglesArray[1].isOn)
             {
-                lobbyMenuPanelObj.SetActive(true);
+                lobbyCreatePanelObj.SetActive(true);
             }
             else
             {
@@ -452,6 +459,19 @@ namespace Managers
             pauseButtonObj.SetActive(false);
         }
 
+        public void LobbyCreateButton()
+        {
+            _serverName = lobbyNameTMPInputField.text;
+            _serverPassword = lobbyPasswordTMPInputField.text;
+
+            if(!_serverName.IsNullOrEmpty() && !_serverPassword.IsNullOrEmpty())
+            {
+                //OnlineMultiplayerUIManager.Instance.CreateLobby(_serverName , _isServerPrivate , _serverPassword);
+                lobbyCreatePanelObj.SetActive(false);
+                lobbyJoinPanelObj.SetActive(true);
+            }
+        }
+
         public void LobbyJoinButton()
         {
             
@@ -464,7 +484,7 @@ namespace Managers
 
         public void MainMenuButton()
         {
-            lobbyMenuPanelObj.SetActive(false);
+            lobbyCreatePanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(true);
         }
 
@@ -735,11 +755,10 @@ namespace Managers
             }
         }
 
-        private void OnLobbyDeleted()
+        private void OnLobbyCreated()
         {
-            lobbyMenuPanelObj.SetActive(false);
-            lobbyWelcomePanelObj.SetActive(false);
-            numberOfPlayersSelectionPanelObj.SetActive(true);
+            lobbyCreatePanelObj.SetActive(false);
+            lobbyJoinPanelObj.SetActive(true);
         }
 
         private void OnNumberOfPlayersToggled()
@@ -750,14 +769,14 @@ namespace Managers
         private void OnPlayerJoinedLobby()
         {
             lobbyTitleTMPText.text = "Welcome " + AuthenticationService.Instance.PlayerId + " to the Lobby";
-            lobbyMenuPanelObj.SetActive(false);
-            lobbyWelcomePanelObj.SetActive(true);
+            lobbyCreatePanelObj.SetActive(false);
+            lobbyJoinPanelObj.SetActive(true);
         }
 
         private void OnPlayerLeftLobby()
         {
-            lobbyMenuPanelObj.SetActive(true);
-            lobbyWelcomePanelObj.SetActive(false);
+            lobbyCreatePanelObj.SetActive(true);
+            lobbyJoinPanelObj.SetActive(false);
         }
 
         private void OnPlayerOfflineOnlineToggled()
@@ -816,7 +835,7 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
-                EventsManager.SubscribeToEvent(Event.LobbyDeleted , new Action(OnLobbyDeleted));
+                EventsManager.SubscribeToEvent(Event.LobbyCreated , new Action(OnLobbyCreated));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
                 EventsManager.SubscribeToEvent(Event.PlayerJoinedLobby , new Action(OnPlayerJoinedLobby));
                 EventsManager.SubscribeToEvent(Event.PlayerLeftLobby , new Action(OnPlayerLeftLobby));
@@ -832,7 +851,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
-                EventsManager.UnsubscribeFromEvent(Event.LobbyDeleted , new Action(OnLobbyDeleted));
+                EventsManager.UnsubscribeFromEvent(Event.LobbyCreated , new Action(OnLobbyCreated));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerJoinedLobby , new Action(OnPlayerJoinedLobby));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerLeftLobby , new Action(OnPlayerLeftLobby));
