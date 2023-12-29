@@ -1,4 +1,4 @@
-namespace Utils
+namespace Utils.OnlineMultiplayer
 {
     using Object = UnityEngine.Object;
     using System;

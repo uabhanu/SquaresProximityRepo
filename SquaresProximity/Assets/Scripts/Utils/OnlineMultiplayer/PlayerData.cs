@@ -1,7 +1,6 @@
-namespace Utils
+namespace Utils.OnlineMultiplayer
 {
     using Unity.Netcode;
-    using UnityEngine;
     
     public class PlayerData : INetworkSerializable
     {

@@ -1,4 +1,4 @@
-namespace Utils
+namespace Utils.OnlineMultiplayer
 {
     using Unity.Netcode;
     using Unity.Netcode.Components;

@@ -1,4 +1,4 @@
-namespace Utils
+namespace Utils.OnlineMultiplayer
 {
     using Managers;
     using System.Collections.Generic;

@@ -1,9 +1,10 @@
-namespace Utils
+namespace Utils.OnlineMultiplayer
 {
     using System;
     using System.Collections.Generic;
     using Unity.Netcode;
     using UnityEngine;
+
     /// <summary>
     /// This cursor object is nothing but the Mouse Trail Object
     /// </summary>

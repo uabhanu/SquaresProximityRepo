@@ -1,4 +1,4 @@
-namespace Utils
+namespace Utils.OnlineMultiplayer
 {
     using System.Collections.Generic;
     using Unity.Services.Lobbies.Models;
