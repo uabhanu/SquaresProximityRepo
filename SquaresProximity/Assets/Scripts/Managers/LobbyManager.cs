@@ -3,11 +3,11 @@ namespace Managers
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Utils.OnlineMultiplayer;
     using Unity.Services.Authentication;
     using Unity.Services.Lobbies;
     using Unity.Services.Lobbies.Models;
     using UnityEngine;
-    using Utils;
     
     public class LobbyManager : IDisposable
     {

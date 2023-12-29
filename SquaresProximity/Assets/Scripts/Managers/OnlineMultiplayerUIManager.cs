@@ -1,11 +1,10 @@
-using Utils;
-
 namespace Managers
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Utils.OnlineMultiplayer;
     using Unity.Services.Authentication;
     using Unity.Services.Lobbies;
     using UnityEngine;
