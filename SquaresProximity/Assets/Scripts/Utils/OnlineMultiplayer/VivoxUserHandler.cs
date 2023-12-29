@@ -1,6 +1,8 @@
 namespace Utils.OnlineMultiplayer
 {
+    using Unity.Services.Vivox;
     using UnityEngine;
+    using VivoxUnity;
     
     public class VivoxUserHandler : MonoBehaviour
     {
@@ -11,7 +13,7 @@ namespace Utils.OnlineMultiplayer
         private const int k_volumeMin = -50;
         private const int k_volumeMax = 20;
         
-        [SerializeField] private UI.LobbyUserVolumeUI lobbyUserVolumeUI;
+        [SerializeField] private LobbyUserVolumeUI lobbyUserVolumeUI;
 
         public static float NormalizedVolumeDefault
         {
@@ -28,7 +30,7 @@ namespace Utils.OnlineMultiplayer
             _id = id;
             _vivoxId = null;
             
-            if (_iChannelSession != null)
+            if(_iChannelSession != null)
             {
                 foreach(var participant in _iChannelSession.Participants)
                 {

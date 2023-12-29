@@ -4,13 +4,15 @@ namespace Utils.OnlineMultiplayer
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Unity.Services.Authentication;
+    using Unity.Services.Vivox;
+    using VivoxUnity;
     
     public class VivoxSetup
     {
         private bool _hasInitialized;
         private bool _isMidInitialize;
-        private ILoginSession _iLoginSession = null;
-        private IChannelSession _iChannelSession = null;
+        private IChannelSession _iChannelSession;
+        private ILoginSession _iLoginSession;
         private List<VivoxUserHandler> _vivoxUserHandlersList;
         
         public void Initialize(List<VivoxUserHandler> vivoxUserHandlersList , Action<bool> onComplete)
@@ -126,8 +128,8 @@ namespace Utils.OnlineMultiplayer
         
         public void Uninitialize()
         {
-            if(!_hasInitialized)
-                return;
+            if(!_hasInitialized) return;
+            
             _iLoginSession.Logout();
         }
     }
