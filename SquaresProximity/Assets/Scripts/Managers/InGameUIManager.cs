@@ -1,5 +1,3 @@
-using WebSocketSharp;
-
 namespace Managers
 {
     using System;
@@ -55,8 +53,6 @@ namespace Managers
         [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
-        [SerializeField] private TMP_InputField lobbyNameTMPInputField;
-        [SerializeField] private TMP_InputField lobbyPasswordTMPInputField;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
         [SerializeField] private TMP_Text lobbyTitleTMPText;
@@ -461,15 +457,7 @@ namespace Managers
 
         public void LobbyCreateButton()
         {
-            _serverName = lobbyNameTMPInputField.text;
-            _serverPassword = lobbyPasswordTMPInputField.text;
-
-            if(!_serverName.IsNullOrEmpty() && !_serverPassword.IsNullOrEmpty())
-            {
-                //OnlineMultiplayerUIManager.Instance.CreateLobby(_serverName , _isServerPrivate , _serverPassword);
-                lobbyCreatePanelObj.SetActive(false);
-                lobbyJoinPanelObj.SetActive(true);
-            }
+            
         }
 
         public void LobbyJoinButton()
@@ -479,7 +467,8 @@ namespace Managers
 
         public void LobbyLeaveButton()
         {
-            
+            lobbyCreatePanelObj.SetActive(true);
+            lobbyJoinPanelObj.SetActive(false);
         }
 
         public void MainMenuButton()
