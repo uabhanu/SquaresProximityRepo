@@ -20,15 +20,9 @@ namespace Utils.OnlineMultiplayer
                 await UnityServices.InitializeAsync();
                 Debug.Log("Unity Services Initialized Successfully");
             }
-            catch (System.Exception e)
+            catch(Exception e)
             {
                 Debug.LogError($"Failed to initialize Unity Services: {e.Message}");
-            }
-            
-            if(!AuthenticationService.Instance.IsSignedIn)
-            {
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                Debug.Log("Signed in anonymously, User ID: " + AuthenticationService.Instance.PlayerId);
             }
         }
 
