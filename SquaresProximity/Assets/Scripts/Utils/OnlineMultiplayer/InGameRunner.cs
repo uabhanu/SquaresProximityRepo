@@ -155,7 +155,7 @@ namespace Utils.OnlineMultiplayer
 
             void CheckIfCanSpawnNewSymbol()
             {
-                if(!_canSpawnInGameObjects.GetValueOrDefault() || _remainingSymbolCount >= SequenceSelector.symbolCount || !IsHost) return;
+                if(!_canSpawnInGameObjects.GetValueOrDefault() || _remainingSymbolCount >= SequenceSelector.SymbolCount || !IsHost) return;
                 
                 if(_pendingSymbolPositionsQueue.Count > 0)
                 {
@@ -166,14 +166,14 @@ namespace Utils.OnlineMultiplayer
                         _symbolSpawnTimer = 0.02f;
                         SpawnNewSymbol();
                         
-                        if(_remainingSymbolCount >= SequenceSelector.symbolCount) _canSpawnInGameObjects = false;
+                        if(_remainingSymbolCount >= SequenceSelector.SymbolCount) _canSpawnInGameObjects = false;
                     }
                 }
             }
 
             void SpawnNewSymbol()
             {
-                int index = SequenceSelector.symbolCount - _pendingSymbolPositionsQueue.Count;
+                int index = SequenceSelector.SymbolCount - _pendingSymbolPositionsQueue.Count;
                 Vector3 pendingPos = _pendingSymbolPositionsQueue.Dequeue();
                 var symbolObj = Instantiate(symbolObjectPrefab);
                 symbolObj.NetworkObject.Spawn();
