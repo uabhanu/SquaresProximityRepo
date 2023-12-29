@@ -2003,7 +2003,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8527379706435513361}
         m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
-        m_MethodName: LobbyJoinButton
+        m_MethodName: LobbyCreateButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6491,7 +6491,7 @@ GameObject:
   - component: {fileID: 9063382266555146125}
   - component: {fileID: 6745633231766278765}
   m_Layer: 5
-  m_Name: LobbyCreationPanel
+  m_Name: LobbyCreatePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9538,7 +9538,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8527379706435513361}
         m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
-        m_MethodName: MainMenuButton
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12986,8 +12986,8 @@ MonoBehaviour:
   inGameUIPanelsObj: {fileID: 363162966536441467}
   inGameUIPlayerNamesDisplayPanelObj: {fileID: 988183984593403324}
   leaderboardPanelObj: {fileID: 638149817491610029}
-  lobbyMenuPanelObj: {fileID: 2802990345128822246}
-  lobbyWelcomePanelObj: {fileID: 7851374676848412490}
+  lobbyCreatePanelObj: {fileID: 2802990345128822246}
+  lobbyJoinPanelObj: {fileID: 7851374676848412490}
   pauseButtonObj: {fileID: 3233653556847469959}
   pauseMenuPanelObj: {fileID: 8768148605957751082}
   numberOfPlayersSelectionPanelObj: {fileID: 3986046983479881617}
@@ -13014,6 +13014,8 @@ MonoBehaviour:
   - {fileID: 8418558298801778891}
   - {fileID: 8890262800759797634}
   - {fileID: 1541873984459279783}
+  lobbyNameTMPInputField: {fileID: 5409264659225188487}
+  lobbyPasswordTMPInputField: {fileID: 7232547070369389406}
   playerNameTMPInputFields:
   - {fileID: 5110851220399508464}
   - {fileID: 6378831753500823874}
@@ -16652,7 +16654,7 @@ GameObject:
   - component: {fileID: 3287894090466887400}
   - component: {fileID: 4709274596222161248}
   m_Layer: 5
-  m_Name: LobbyJoiningPanel
+  m_Name: LobbyJoinPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
