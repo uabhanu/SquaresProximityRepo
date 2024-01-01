@@ -1,5 +1,7 @@
 using Event = Managers.Event;
 using Managers;
+using System;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -7,7 +9,17 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float mouseMovementThreshold;
-    
+
+    private void Start()
+    {
+        ToggleEventSubscription(true);
+    }
+
+    private void OnDestroy()
+    {
+        ToggleEventSubscription(false);
+    }
+
     private void Update()
     {
         #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
@@ -43,5 +55,22 @@ public class PlayerController : MonoBehaviour
             }
         
         #endif
+    }
+
+    private void OnPlayerIsOnline()
+    {
+        gameObject.AddComponent<NetworkObject>();
+    }
+    
+    private void ToggleEventSubscription(bool shouldSubscribe)
+    {
+        if(shouldSubscribe)
+        {
+            EventsManager.SubscribeToEvent(Event.PlayerIsOnline , new Action(OnPlayerIsOnline));
+        }
+        else
+        {
+            EventsManager.UnsubscribeFromEvent(Event.PlayerIsOnline , new Action(OnPlayerIsOnline));
+        }
     }
 }
