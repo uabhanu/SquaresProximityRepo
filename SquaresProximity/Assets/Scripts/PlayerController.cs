@@ -6,8 +6,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
+    //TODO This approach may not be the best especially when playing Single Player but works for now
+    
     [SerializeField] private float mouseMovementThreshold;
 
     private void Start()
@@ -15,7 +17,7 @@ public class PlayerController : MonoBehaviour
         ToggleEventSubscription(true);
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         ToggleEventSubscription(false);
     }
