@@ -23,6 +23,7 @@ namespace Managers
         MouseMoved,
         NumberOfPlayersSelected,
         NumberOfPlayersToggled,
+        PlayerIsOffline,
         PlayerIsOnline,
         PlayerJoinedLobby,
         PlayerLeftLobby,
