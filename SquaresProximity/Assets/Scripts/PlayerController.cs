@@ -56,6 +56,11 @@ public class PlayerController : MonoBehaviour
         
         #endif
     }
+    
+    private void OnPlayerIsOffline()
+    {
+        Destroy(gameObject.GetComponent<NetworkObject>());
+    }
 
     private void OnPlayerIsOnline()
     {
@@ -66,10 +71,12 @@ public class PlayerController : MonoBehaviour
     {
         if(shouldSubscribe)
         {
+            EventsManager.SubscribeToEvent(Event.PlayerIsOffline , new Action(OnPlayerIsOffline));
             EventsManager.SubscribeToEvent(Event.PlayerIsOnline , new Action(OnPlayerIsOnline));
         }
         else
         {
+            EventsManager.UnsubscribeFromEvent(Event.PlayerIsOffline , new Action(OnPlayerIsOffline));
             EventsManager.UnsubscribeFromEvent(Event.PlayerIsOnline , new Action(OnPlayerIsOnline));
         }
     }
