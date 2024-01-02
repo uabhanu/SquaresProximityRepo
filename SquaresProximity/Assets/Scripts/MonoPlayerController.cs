@@ -8,8 +8,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
-    //TODO This approach may not be the best especially when playing Single Player but works for now
-    
     [SerializeField] private float mouseMovementThreshold;
 
     private void Start()
