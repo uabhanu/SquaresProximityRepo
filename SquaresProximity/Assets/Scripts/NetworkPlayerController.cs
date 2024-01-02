@@ -1,13 +1,14 @@
 using Event = Managers.Event;
 using Managers;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class MonoPlayerController : MonoBehaviour
+public class NetworkPlayerController : NetworkBehaviour
 {
     [SerializeField] private float mouseMovementThreshold;
-    
+
     private void Update()
     {
         #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
