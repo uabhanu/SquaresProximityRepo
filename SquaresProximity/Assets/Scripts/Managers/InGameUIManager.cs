@@ -1,10 +1,11 @@
+using Unity.Netcode;
+
 namespace Managers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using TMPro;
-    using Unity.Services.Authentication;
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.SceneManagement;
@@ -41,8 +42,7 @@ namespace Managers
         [SerializeField] private GameObject inGameUIPanelsObj;
         [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
         [SerializeField] private GameObject leaderboardPanelObj;
-        [SerializeField] private GameObject lobbyCreatePanelObj;
-        [SerializeField] private GameObject lobbyJoinPanelObj;
+        [SerializeField] private GameObject onlineMultiplayerPanelObj;
         [SerializeField] private GameObject pauseButtonObj;
         [SerializeField] private GameObject pauseMenuPanelObj;
         [SerializeField] private GameObject numberOfPlayersSelectionPanelObj;
@@ -55,7 +55,6 @@ namespace Managers
         [SerializeField] private GameObject[] winsPanelObjs;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
-        [SerializeField] private TMP_Text lobbyTitleTMPText;
         [SerializeField] private TMP_Text[] gameTitleTMPTexts;
         [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
         [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
@@ -80,9 +79,8 @@ namespace Managers
             gameTiedPanelObj.SetActive(false);
             inGameUIPanelsObj.SetActive(false);
             leaderboardPanelObj.SetActive(false);
-            lobbyCreatePanelObj.SetActive(false);
-            lobbyJoinPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(false);
+            onlineMultiplayerPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
             
@@ -192,7 +190,7 @@ namespace Managers
 
             if(offlineOnlineSelectionTogglesArray[1].isOn)
             {
-                lobbyCreatePanelObj.SetActive(true);
+                onlineMultiplayerPanelObj.SetActive(true);
             }
             else
             {
@@ -455,26 +453,174 @@ namespace Managers
             pauseButtonObj.SetActive(false);
         }
 
-        public void LobbyCreateButton()
-        {
-            
-        }
-
-        public void LobbyJoinButton()
-        {
-            
-        }
-
-        public void LobbyLeaveButton()
-        {
-            lobbyCreatePanelObj.SetActive(true);
-            lobbyJoinPanelObj.SetActive(false);
-        }
-
         public void MainMenuButton()
         {
-            lobbyCreatePanelObj.SetActive(false);
+            onlineMultiplayerPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(true);
+        }
+
+        public void NetworkClientButton()
+        {
+            NetworkManager.Singleton.StartClient();
+            onlineMultiplayerPanelObj.SetActive(false);
+            
+            string[] defaultPlayerNames =
+            {
+                "Player 1",
+                "Player 2",
+                "Player 3",
+                "Player 4"
+            };
+
+            if(_numberOfPlayers == 2)
+            {
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 650;          
+                #endif
+            }
+            
+            else if(_numberOfPlayers == 3)
+            {
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 150;         
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 250;          
+                #endif
+            }
+            
+            else if(_numberOfPlayers == 4)
+            {
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;         
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 125;          
+                #endif
+            }
+
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                inGameUIPlayerNamesDisplayPanelObjs[i].SetActive(true);
+                _playerNamesArray[i] = playerNameTMPInputFields[i].text;
+
+                if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
+                {
+                    if(!aiHumanTogglesArray[i].isOn)
+                    {
+                        _playerNamesArray[i] = defaultPlayerNames[i];
+                        playerNameTMPInputFields[i].text = _playerNamesArray[i];
+                    }
+                }
+                
+                UpdateInGamePlayerNames(i);
+            }
+        
+            inGameUIPanelsObj.SetActive(true);
+            playerInputPanelObj.SetActive(false);
+            EventsManager.Invoke(Event.GameStarted);
+            
+            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
+            {
+                gameTitleTMPTexts[i].enabled = false;
+            }
+            
+            string[] nameKeys = new string[_numberOfPlayers];
+            
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                nameKeys[i] = "Player" + i + "Name";
+            }
+            
+            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
+        }
+
+        public void NetworkHostButton()
+        {
+            NetworkManager.Singleton.StartHost();
+            onlineMultiplayerPanelObj.SetActive(false);
+            
+            string[] defaultPlayerNames =
+            {
+                "Player 1",
+                "Player 2",
+                "Player 3",
+                "Player 4"
+            };
+
+            if(_numberOfPlayers == 2)
+            {
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 650;          
+                #endif
+            }
+            
+            else if(_numberOfPlayers == 3)
+            {
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 150;         
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 250;          
+                #endif
+            }
+            
+            else if(_numberOfPlayers == 4)
+            {
+                #if UNITY_ANDROID || UNITY_IOS
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;         
+                #endif
+                
+                #if UNITY_STANDALONE || UNITY_WEBGL
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 125;          
+                #endif
+            }
+
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                inGameUIPlayerNamesDisplayPanelObjs[i].SetActive(true);
+                _playerNamesArray[i] = playerNameTMPInputFields[i].text;
+
+                if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
+                {
+                    if(!aiHumanTogglesArray[i].isOn)
+                    {
+                        _playerNamesArray[i] = defaultPlayerNames[i];
+                        playerNameTMPInputFields[i].text = _playerNamesArray[i];
+                    }
+                }
+                
+                UpdateInGamePlayerNames(i);
+            }
+        
+            inGameUIPanelsObj.SetActive(true);
+            playerInputPanelObj.SetActive(false);
+            EventsManager.Invoke(Event.GameStarted);
+            
+            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
+            {
+                gameTitleTMPTexts[i].enabled = false;
+            }
+            
+            string[] nameKeys = new string[_numberOfPlayers];
+            
+            for(int i = 0; i < _numberOfPlayers; i++)
+            {
+                nameKeys[i] = "Player" + i + "Name";
+            }
+            
+            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
         }
 
         public void OkButton()
@@ -746,8 +892,7 @@ namespace Managers
 
         private void OnLobbyCreated()
         {
-            lobbyCreatePanelObj.SetActive(false);
-            lobbyJoinPanelObj.SetActive(true);
+            onlineMultiplayerPanelObj.SetActive(false);
         }
 
         private void OnNumberOfPlayersToggled()
@@ -757,15 +902,12 @@ namespace Managers
 
         private void OnPlayerJoinedLobby()
         {
-            lobbyTitleTMPText.text = "Welcome " + AuthenticationService.Instance.PlayerId + " to the Lobby";
-            lobbyCreatePanelObj.SetActive(false);
-            lobbyJoinPanelObj.SetActive(true);
+            onlineMultiplayerPanelObj.SetActive(false);
         }
 
         private void OnPlayerLeftLobby()
         {
-            lobbyCreatePanelObj.SetActive(true);
-            lobbyJoinPanelObj.SetActive(false);
+            onlineMultiplayerPanelObj.SetActive(true);
         }
 
         private void OnPlayerOfflineOnlineToggled()
