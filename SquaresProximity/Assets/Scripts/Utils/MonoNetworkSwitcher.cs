@@ -7,18 +7,14 @@ namespace Utils
     public class MonoNetworkSwitcher : MonoBehaviour
     {
         private MonoPlayerController _monoPlayerControllerInstance;
-        private NetworkPlayerController _networkPlayerControllerInstance;
         
         [SerializeField] private MonoPlayerController monoPlayerControllerPrefab;
-        [SerializeField] private NetworkPlayerController networkPlayerControllerPrefab;
         
         private void Start()
         {
             _monoPlayerControllerInstance = Instantiate(monoPlayerControllerPrefab.gameObject).GetComponent<MonoPlayerController>();
-            _networkPlayerControllerInstance = Instantiate(networkPlayerControllerPrefab.gameObject).GetComponent<NetworkPlayerController>();
             
             _monoPlayerControllerInstance.gameObject.SetActive(false);
-            _networkPlayerControllerInstance.gameObject.SetActive(false);
             
             ToggleEventSubscription(true);
         }
@@ -30,16 +26,12 @@ namespace Utils
         
         private void OnPlayerIsOffline()
         {
-            if(_monoPlayerControllerInstance != null) _monoPlayerControllerInstance.gameObject.SetActive(true);
-            
-            if(_networkPlayerControllerInstance != null) _networkPlayerControllerInstance.gameObject.SetActive(false);
+            _monoPlayerControllerInstance.gameObject.SetActive(true);
         }
 
         private void OnPlayerIsOnline()
         {
-            if(_monoPlayerControllerInstance != null) _monoPlayerControllerInstance.gameObject.SetActive(false);
-            
-            if(_networkPlayerControllerInstance != null) _networkPlayerControllerInstance.gameObject.SetActive(true);
+            _monoPlayerControllerInstance.gameObject.SetActive(false);
         }
     
         private void ToggleEventSubscription(bool shouldSubscribe)
