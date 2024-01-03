@@ -16,7 +16,7 @@ namespace Utils
 
         private void Awake()
         {
-            _gridManager = FindObjectOfType<GridManager>();
+            _gridManager = FindAnyObjectByType<GridManager>();
         }
 
         private void Update()

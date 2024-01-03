@@ -301,7 +301,7 @@ namespace Managers
         {
             _isGameStarted = true;
 
-            _gridManager = FindObjectOfType<GridManager>();
+            _gridManager = FindAnyObjectByType<GridManager>();
             
             _iAIManager = new AIManager(this , _gridManager);
             _iPlayerTurnsManager = new PlayerTurnsManager(this , _gridManager);
