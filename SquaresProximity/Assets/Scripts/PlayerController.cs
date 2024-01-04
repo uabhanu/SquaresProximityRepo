@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class MonoPlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float mouseMovementThreshold;
     
