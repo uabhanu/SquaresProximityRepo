@@ -1743,7 +1743,7 @@ GameObject:
   - component: {fileID: 7287918523126507228}
   - component: {fileID: 8037550473886466102}
   m_Layer: 5
-  m_Name: ClientButton
+  m_Name: CreateLobbyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1815,7 +1815,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8527379706435513361}
         m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
-        m_MethodName: NetworkClientButton
+        m_MethodName: NetworkLobbyCreateButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8669,7 +8669,7 @@ GameObject:
   - component: {fileID: 8295195588961974933}
   - component: {fileID: 5061290149684066351}
   m_Layer: 5
-  m_Name: HostButton
+  m_Name: QuickJoinLobbyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8741,7 +8741,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8527379706435513361}
         m_TargetAssemblyTypeName: Managers.InGameUIManager, Assembly-CSharp
-        m_MethodName: NetworkHostButton
+        m_MethodName: NetworkLobbyQuickJoinButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10650,7 +10650,7 @@ GameObject:
   - component: {fileID: 918865604429934685}
   - component: {fileID: 797850476375992191}
   m_Layer: 5
-  m_Name: HostText (TMP)
+  m_Name: QuickJoinLobbyText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10703,7 +10703,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Host
+  m_text: Join Lobby
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3bdad86f2b6793747a4beb9d19f73b09, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 3bdad86f2b6793747a4beb9d19f73b09, type: 2}
@@ -10730,7 +10730,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.75
+  m_fontSize: 27.45
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -11077,7 +11077,7 @@ GameObject:
   - component: {fileID: 4247351582098319871}
   - component: {fileID: 768428253486621354}
   m_Layer: 5
-  m_Name: ClientText (TMP)
+  m_Name: CreateLobbyText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11130,7 +11130,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Client
+  m_text: Create Lobby
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3bdad86f2b6793747a4beb9d19f73b09, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 3bdad86f2b6793747a4beb9d19f73b09, type: 2}
@@ -11157,7 +11157,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.75
+  m_fontSize: 22.15
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -12299,6 +12299,7 @@ MonoBehaviour:
   - {fileID: 8418558298801778891}
   - {fileID: 8890262800759797634}
   - {fileID: 1541873984459279783}
+  lobbyManager: {fileID: 4879621798522389771, guid: 2fcdb192168181e4b9afcfe30ad91346, type: 3}
   playerNameTMPInputFields:
   - {fileID: 5110851220399508464}
   - {fileID: 6378831753500823874}
