@@ -53,6 +53,7 @@ namespace Managers
         [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
+        [SerializeField] private LobbyManager lobbyManager;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
         [SerializeField] private TMP_Text[] gameTitleTMPTexts;
@@ -459,9 +460,10 @@ namespace Managers
             numberOfPlayersSelectionPanelObj.SetActive(true);
         }
 
-        public void NetworkClientButton()
+        public void NetworkLobbyCreateButton()
         {
-            NetworkManager.Singleton.StartClient();
+            lobbyManager.CreateLobby("Bhanu Lobby" , false , _numberOfPlayers);
+            
             onlineMultiplayerPanelObj.SetActive(false);
             
             string[] defaultPlayerNames =
@@ -541,9 +543,10 @@ namespace Managers
             PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
         }
 
-        public void NetworkHostButton()
+        public void NetworkLobbyQuickJoinButton()
         {
-            NetworkManager.Singleton.StartHost();
+            lobbyManager.QuickJoin();
+            
             onlineMultiplayerPanelObj.SetActive(false);
             
             string[] defaultPlayerNames =
