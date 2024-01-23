@@ -1,5 +1,3 @@
-using Unity.Netcode;
-
 namespace Managers
 {
     using System;
@@ -18,6 +16,7 @@ namespace Managers
         private const string HolesKey = "Holes";
         private const string RandomTurnsKey = "Random Turns";
 
+        private bool _isPlayerOnline;
         private bool _holesToggleBool;
         private bool _isServerPrivate;
         private bool _playerIsOnline;
@@ -42,6 +41,7 @@ namespace Managers
         [SerializeField] private GameObject inGameUIPanelsObj;
         [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
         [SerializeField] private GameObject leaderboardPanelObj;
+        [SerializeField] private GameObject lobbyPanelObj;
         [SerializeField] private GameObject onlineMultiplayerPanelObj;
         [SerializeField] private GameObject pauseButtonObj;
         [SerializeField] private GameObject pauseMenuPanelObj;
@@ -54,6 +54,7 @@ namespace Managers
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
         [SerializeField] private LobbyManager lobbyManager;
+        [SerializeField] private TMP_InputField networkPlayerNameTMPInputField;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
         [SerializeField] private TMP_Text[] gameTitleTMPTexts;
@@ -80,6 +81,7 @@ namespace Managers
             gameTiedPanelObj.SetActive(false);
             inGameUIPanelsObj.SetActive(false);
             leaderboardPanelObj.SetActive(false);
+            lobbyPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(false);
             onlineMultiplayerPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
@@ -460,11 +462,9 @@ namespace Managers
             numberOfPlayersSelectionPanelObj.SetActive(true);
         }
 
-        public void NetworkLobbyCreateButton()
+        public void NetworkGoButton()
         {
-            lobbyManager.CreateLobby("Bhanu Lobby" , false , _numberOfPlayers);
-            
-            onlineMultiplayerPanelObj.SetActive(false);
+            if(!_isPlayerOnline) return;
             
             string[] defaultPlayerNames =
             {
@@ -525,6 +525,7 @@ namespace Managers
             }
         
             inGameUIPanelsObj.SetActive(true);
+            lobbyPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
             EventsManager.Invoke(Event.GameStarted);
             
@@ -543,87 +544,27 @@ namespace Managers
             PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
         }
 
+        public void NetworkLobbyCreateButton()
+        {
+            lobbyManager.CreateLobby("Bhanu Lobby" , false , _numberOfPlayers);
+            lobbyPanelObj.SetActive(true);
+            onlineMultiplayerPanelObj.SetActive(false);
+        }
+
         public void NetworkLobbyQuickJoinButton()
         {
             lobbyManager.QuickJoin();
-            
+            lobbyPanelObj.SetActive(true);
             onlineMultiplayerPanelObj.SetActive(false);
-            
-            string[] defaultPlayerNames =
-            {
-                "Player 1",
-                "Player 2",
-                "Player 3",
-                "Player 4"
-            };
+        }
 
-            if(_numberOfPlayers == 2)
+        public void NetworkReadyButton()
+        {
+            if(!string.IsNullOrEmpty(networkPlayerNameTMPInputField.text))
             {
-                #if UNITY_ANDROID || UNITY_IOS
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
-                #endif
-                
-                #if UNITY_STANDALONE || UNITY_WEBGL
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 650;          
-                #endif
+                _isPlayerOnline = true;
+                Debug.Log("Player is Online : " + _isPlayerOnline);
             }
-            
-            else if(_numberOfPlayers == 3)
-            {
-                #if UNITY_ANDROID || UNITY_IOS
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 150;         
-                #endif
-                
-                #if UNITY_STANDALONE || UNITY_WEBGL
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 250;          
-                #endif
-            }
-            
-            else if(_numberOfPlayers == 4)
-            {
-                #if UNITY_ANDROID || UNITY_IOS
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;         
-                #endif
-                
-                #if UNITY_STANDALONE || UNITY_WEBGL
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 125;          
-                #endif
-            }
-
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                inGameUIPlayerNamesDisplayPanelObjs[i].SetActive(true);
-                _playerNamesArray[i] = playerNameTMPInputFields[i].text;
-
-                if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
-                {
-                    if(!aiHumanTogglesArray[i].isOn)
-                    {
-                        _playerNamesArray[i] = defaultPlayerNames[i];
-                        playerNameTMPInputFields[i].text = _playerNamesArray[i];
-                    }
-                }
-                
-                UpdateInGamePlayerNames(i);
-            }
-        
-            inGameUIPanelsObj.SetActive(true);
-            playerInputPanelObj.SetActive(false);
-            EventsManager.Invoke(Event.GameStarted);
-            
-            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
-            {
-                gameTitleTMPTexts[i].enabled = false;
-            }
-            
-            string[] nameKeys = new string[_numberOfPlayers];
-            
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                nameKeys[i] = "Player" + i + "Name";
-            }
-            
-            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
         }
 
         public void OkButton()
