@@ -100,7 +100,7 @@ public class CoinPlacer : ICoinPlacer
             }
 
             _gridManager.IsCellBlockedData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , true);
-            _gameManager.IsMouseMoving = false;
+            _gameManager.IsMoving = false;
 
             _gameManager.IPlayerTurnsManager.UpdateCoinUIImageColors();
             _gameManager.UpdateTrailVisibility();

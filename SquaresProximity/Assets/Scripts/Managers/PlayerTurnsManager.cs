@@ -179,9 +179,9 @@ namespace Managers
 
         public void UpdateTrailColor()
         {
-            if(_gameManager.MouseTrailObj != null)
+            if(_gameManager.TrailObj != null)
             {
-                SpriteRenderer trailRenderer = _gameManager.MouseTrailObj.GetComponentInChildren<SpriteRenderer>();
+                SpriteRenderer trailRenderer = _gameManager.TrailObj.GetComponentInChildren<SpriteRenderer>();
                 Color playerColour = _gameManager.GetCoinBackgroundColour(_gameManager.CurrentPlayerID);
 
                 playerColour.a *= 0.5f;

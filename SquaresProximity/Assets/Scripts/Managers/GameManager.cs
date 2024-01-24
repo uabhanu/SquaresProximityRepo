@@ -33,11 +33,11 @@ namespace Managers
     
         private bool _isGameStarted;
         private bool _isGamePaused;
-        private bool _isMouseMoving;
+        private bool _isMoving;
         private bool _isRandomTurns;
         private bool[] _isAIArray;
         private GameObject _coinUIObj;
-        private GameObject _mouseTrailObj;
+        private GameObject _trailObj;
         private GridManager _gridManager;
         private List<int> _lesserCoinValuesList;
         private List<int> _otherPlayerCoinValuesList;
@@ -61,7 +61,7 @@ namespace Managers
         [SerializeField] private Color[] coinBackgroundColours;
         [SerializeField] private Color[] coinForegroundColours;
         [SerializeField] private float aiCoinPlaceDelay;
-        [Tooltip("Please do not select the value below 1 and above 20")] [SerializeField] private int coinValueForTesting;
+        [SerializeField] private int coinValueForTesting;
         [SerializeField] private int maxCoinValue;
         [SerializeField] private int maxDifferenceAttack;
         [SerializeField] private int maxHigherCoinValue;
@@ -75,7 +75,7 @@ namespace Managers
         public float AICoinPlaceDelay => aiCoinPlaceDelay;
         public GameObject CoinObj => coinObj;
         public GameObject CoinUIObj => _coinUIObj;
-        public GameObject MouseTrailObj => _mouseTrailObj;
+        public GameObject TrailObj => _trailObj;
         public IAIManager IAIManager => _iAIManager;
         public ICoinPlacer ICoinPlacer => _iCoinPlacer;
         public int MaxCoinValue => maxCoinValue;
@@ -95,10 +95,10 @@ namespace Managers
             set => _isGamePaused = value;
         }
         
-        public bool IsMouseMoving
+        public bool IsMoving
         {
-            get => _isMouseMoving;
-            set => _isMouseMoving = value;
+            get => _isMoving;
+            set => _isMoving = value;
         }
         
         public int CoinValue
@@ -176,7 +176,7 @@ namespace Managers
             _coinUIObj = GameObject.Find("CoinUI");
         
             #if UNITY_STANDALONE || UNITY_WEBGL
-                _mouseTrailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
+                _trailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
             #endif
             
             ToggleEventSubscription(true);
@@ -260,7 +260,7 @@ namespace Managers
         public void UpdateTrailVisibility()
         {
             #if UNITY_STANDALONE || UNITY_WEBGL
-                MouseTrailObj.SetActive(IsMouseMoving);
+                TrailObj.SetActive(IsMoving);
             #endif
         }
     
@@ -272,10 +272,73 @@ namespace Managers
         {
             IsAIArray[playerID] = isAI;
         }
+        
+        private void OnControllerMoved()
+        {
+            if(!_isGameStarted) return;
+
+            for(int i = 0; i < IsAIArray.Length; i++)
+            {
+                if(IsAIArray[i] && CurrentPlayerID == i)
+                {
+                    return;
+                }
+            }
+
+            IsMoving = true;
+
+            //TODO Calculate position for GamePad again as the following is not giving the desired result
+            Vector3 screenPos = Gamepad.current.leftStick.ReadValue();
+            screenPos.z = Camera.main.nearClipPlane;
+
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+            _cellIndexAtMousePosition = _gridManager.WorldToCell(worldPos); 
+        
+            if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
+            {
+                Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
+                
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                        TrailObj.transform.position = snapPos;
+                #endif
+            }
+            else
+            {
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                        TrailObj.transform.position = worldPos;
+                #endif
+            }
+
+            #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                UpdateTrailVisibility();
+            #endif
+        }
 
         private void OnGameOver()
         {
             _isGameStarted = false;
+        }
+        
+        private void OnGamePadButtonPressed()
+        {
+            if(!_isGameStarted) return;
+
+            for(int i = 0; i < IsAIArray.Length; i++)
+            {
+                if(IsAIArray[i] && CurrentPlayerID == i)
+                {
+                    return;
+                }
+            }
+
+            CellIndexToUse = GetPlayerCellIndex();
+
+            if(CellIndexToUse == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexToUse.x , CellIndexToUse.y))
+            {
+                return;
+            }
+
+            ICoinPlacer.PlaceCoin(CellIndexToUse);
         }
 
         private void OnGamePaused()
@@ -376,7 +439,7 @@ namespace Managers
 
             ICoinPlacer.PlaceCoin(CellIndexToUse);
         }
-
+        
         private void OnMouseMoved()
         {
             if(!_isGameStarted) return;
@@ -389,7 +452,7 @@ namespace Managers
                 }
             }
 
-            IsMouseMoving = true;
+            IsMoving = true;
 
             Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
             mouseScreenPos.z = Camera.main.nearClipPlane;
@@ -402,19 +465,19 @@ namespace Managers
                 Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
                 
                 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                    MouseTrailObj.transform.position = snapPos;
+                        TrailObj.transform.position = snapPos;
                 #endif
             }
             else
             {
                 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                    MouseTrailObj.transform.position = mouseWorldPos;
+                        TrailObj.transform.position = mouseWorldPos;
                 #endif
             }
 
-            #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                UpdateTrailVisibility();
-            #endif
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                        UpdateTrailVisibility();
+                #endif
         }
 
         private void OnNumberOfPlayersSelected(int numberOfPlayers)
@@ -458,7 +521,9 @@ namespace Managers
             if(shouldSubscribe)
             {
                 EventsManager.SubscribeToEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
+                EventsManager.SubscribeToEvent(Event.ControllerMoved , new Action(OnControllerMoved));
                 EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
+                EventsManager.SubscribeToEvent(Event.GamePadButtonPressed , new Action(OnGamePadButtonPressed));
                 EventsManager.SubscribeToEvent(Event.GamePaused , new Action(OnGamePaused));
                 EventsManager.SubscribeToEvent(Event.GameRestarted , new Action(OnGameRestarted));
                 EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
@@ -472,7 +537,9 @@ namespace Managers
             else
             {
                 EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
+                EventsManager.UnsubscribeFromEvent(Event.ControllerMoved , new Action(OnControllerMoved));
                 EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
+                EventsManager.UnsubscribeFromEvent(Event.GamePadButtonPressed , new Action(OnGamePadButtonPressed));
                 EventsManager.UnsubscribeFromEvent(Event.GamePaused , new Action(OnGamePaused));
                 EventsManager.UnsubscribeFromEvent(Event.GameRestarted , new Action(OnGameRestarted));
                 EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
