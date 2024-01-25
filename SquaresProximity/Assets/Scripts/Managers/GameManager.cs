@@ -358,22 +358,123 @@ namespace Managers
         
         private void OnJoystickDownPressed()
         {
-            Debug.Log("Joystick Down");
+            if(!_isGameStarted) return;
+
+            for(int i = 0; i < IsAIArray.Length; i++)
+            {
+                if(IsAIArray[i] && CurrentPlayerID == i)
+                {
+                    return;
+                }
+            }
+
+            IsMoving = true;
+            
+            _cellIndexAtJoystickPosition = new Vector2Int(_cellIndexAtJoystickPosition.x , _cellIndexAtJoystickPosition.y - 1);
+            
+            Vector3 worldPosition = _gridManager.CellToWorld(_cellIndexAtJoystickPosition.x , _cellIndexAtJoystickPosition.y);
+            Vector2Int cellIndex = _gridManager.WorldToCell(worldPosition);
+
+            if(cellIndex != _gridManager.InvalidCellIndex)
+            {
+                Vector2 snapPos = _gridManager.CellToWorld(cellIndex.x , cellIndex.y);
+
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                    TrailObj.transform.position = snapPos;
+                    UpdateTrailVisibility();
+                #endif
+            }
         }
         
         private void OnJoystickLeftPressed()
         {
-            Debug.Log("Joystick Left");
+            if(!_isGameStarted) return;
+
+            for(int i = 0; i < IsAIArray.Length; i++)
+            {
+                if(IsAIArray[i] && CurrentPlayerID == i)
+                {
+                    return;
+                }
+            }
+
+            IsMoving = true;
+            
+            _cellIndexAtJoystickPosition = new Vector2Int(_cellIndexAtJoystickPosition.x - 1 , _cellIndexAtJoystickPosition.y);
+            
+            Vector3 worldPosition = _gridManager.CellToWorld(_cellIndexAtJoystickPosition.x , _cellIndexAtJoystickPosition.y);
+            Vector2Int cellIndex = _gridManager.WorldToCell(worldPosition);
+
+            if(cellIndex != _gridManager.InvalidCellIndex)
+            {
+                Vector2 snapPos = _gridManager.CellToWorld(cellIndex.x , cellIndex.y);
+
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                    TrailObj.transform.position = snapPos;
+                    UpdateTrailVisibility();
+                #endif
+            }
         }
         
         private void OnJoystickRightPressed()
         {
-            Debug.Log("Joystick Right");
+            if(!_isGameStarted) return;
+
+            for(int i = 0; i < IsAIArray.Length; i++)
+            {
+                if(IsAIArray[i] && CurrentPlayerID == i)
+                {
+                    return;
+                }
+            }
+
+            IsMoving = true;
+            
+            _cellIndexAtJoystickPosition = new Vector2Int(_cellIndexAtJoystickPosition.x + 1 , _cellIndexAtJoystickPosition.y);
+            
+            Vector3 worldPosition = _gridManager.CellToWorld(_cellIndexAtJoystickPosition.x , _cellIndexAtJoystickPosition.y);
+            Vector2Int cellIndex = _gridManager.WorldToCell(worldPosition);
+
+            if(cellIndex != _gridManager.InvalidCellIndex)
+            {
+                Vector2 snapPos = _gridManager.CellToWorld(cellIndex.x , cellIndex.y);
+
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                    TrailObj.transform.position = snapPos;
+                    UpdateTrailVisibility();
+                #endif
+            }
         }
+
         
         private void OnJoystickUpPressed()
         {
-            Debug.Log("Joystick Up");
+            if(!_isGameStarted) return;
+
+            for(int i = 0; i < IsAIArray.Length; i++)
+            {
+                if(IsAIArray[i] && CurrentPlayerID == i)
+                {
+                    return;
+                }
+            }
+
+            IsMoving = true;
+            
+            _cellIndexAtJoystickPosition = new Vector2Int(_cellIndexAtJoystickPosition.x , _cellIndexAtJoystickPosition.y + 1);
+            
+            Vector3 worldPosition = _gridManager.CellToWorld(_cellIndexAtJoystickPosition.x , _cellIndexAtJoystickPosition.y);
+            Vector2Int cellIndex = _gridManager.WorldToCell(worldPosition);
+
+            if(cellIndex != _gridManager.InvalidCellIndex)
+            {
+                Vector2 snapPos = _gridManager.CellToWorld(cellIndex.x , cellIndex.y);
+
+                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+                    TrailObj.transform.position = snapPos;
+                    UpdateTrailVisibility();
+                #endif
+            }
         }
         
         private void OnJoystickXPressed()
@@ -447,18 +548,18 @@ namespace Managers
                 Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
                 
                 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                        TrailObj.transform.position = snapPos;
+                    TrailObj.transform.position = snapPos;
                 #endif
             }
             else
             {
                 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                        TrailObj.transform.position = mouseWorldPos;
+                    TrailObj.transform.position = mouseWorldPos;
                 #endif
             }
 
                 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                        UpdateTrailVisibility();
+                    UpdateTrailVisibility();
                 #endif
         }
 
