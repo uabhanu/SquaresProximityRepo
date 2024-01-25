@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float movementThreshold;
+    [SerializeField] private float mouseThreshold;
     
     private void Update()
     {
@@ -14,12 +14,27 @@ public class PlayerController : MonoBehaviour
 
             if(Gamepad.current.buttonSouth.wasPressedThisFrame)
             {
-                EventsManager.Invoke(Event.GamePadButtonPressed);
+                EventsManager.Invoke(Event.JoystickXPressed);
+            }
+            
+            if(Gamepad.current.dpad.down.wasPressedThisFrame)
+            {
+                EventsManager.Invoke(Event.JoystickDownPressed);
+            }
+            
+            if(Gamepad.current.dpad.left.wasPressedThisFrame)
+            {
+                EventsManager.Invoke(Event.JoystickLeftPressed);
             }
 
-            if(Gamepad.current.leftStick.ReadValue().magnitude > movementThreshold)
+            if(Gamepad.current.dpad.right.wasPressedThisFrame)
             {
-                EventsManager.Invoke(Event.ControllerMoved);
+                EventsManager.Invoke(Event.JoystickRightPressed);
+            }
+            
+            if(Gamepad.current.dpad.up.wasPressedThisFrame)
+            {
+                EventsManager.Invoke(Event.JoystickUpPressed);
             }
             
             if(Keyboard.current.tabKey.wasPressedThisFrame)
@@ -37,7 +52,7 @@ public class PlayerController : MonoBehaviour
                 EventsManager.Invoke(Event.MouseLeftClicked);
             }
 
-            if(Mouse.current.delta.ReadValue().magnitude > movementThreshold)
+            if(Mouse.current.delta.ReadValue().magnitude > mouseThreshold)
             {
                 EventsManager.Invoke(Event.MouseMoved);
             }
