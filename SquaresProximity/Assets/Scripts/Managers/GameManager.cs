@@ -53,6 +53,7 @@ namespace Managers
         private int[] _totalReceivedArray;
         private List<int> _playersRemainingList;
         private List<List<int>> _playerNumbersList;
+        private Vector2Int _cellIndexAtJoystickPosition;
         private Vector2Int _cellIndexAtMousePosition;
         private Vector2Int _cellIndexToUse;
 
@@ -272,73 +273,10 @@ namespace Managers
         {
             IsAIArray[playerID] = isAI;
         }
-        
-        private void OnControllerMoved()
-        {
-            if(!_isGameStarted) return;
-
-            for(int i = 0; i < IsAIArray.Length; i++)
-            {
-                if(IsAIArray[i] && CurrentPlayerID == i)
-                {
-                    return;
-                }
-            }
-
-            IsMoving = true;
-
-            //TODO Calculate position for GamePad again as the following is not giving the desired result
-            Vector3 screenPos = Gamepad.current.leftStick.ReadValue();
-            screenPos.z = Camera.main.nearClipPlane;
-
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            _cellIndexAtMousePosition = _gridManager.WorldToCell(worldPos); 
-        
-            if(_cellIndexAtMousePosition != _gridManager.InvalidCellIndex)
-            {
-                Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
-                
-                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                        TrailObj.transform.position = snapPos;
-                #endif
-            }
-            else
-            {
-                #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                        TrailObj.transform.position = worldPos;
-                #endif
-            }
-
-            #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                UpdateTrailVisibility();
-            #endif
-        }
 
         private void OnGameOver()
         {
             _isGameStarted = false;
-        }
-        
-        private void OnGamePadButtonPressed()
-        {
-            if(!_isGameStarted) return;
-
-            for(int i = 0; i < IsAIArray.Length; i++)
-            {
-                if(IsAIArray[i] && CurrentPlayerID == i)
-                {
-                    return;
-                }
-            }
-
-            CellIndexToUse = GetPlayerCellIndex();
-
-            if(CellIndexToUse == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexToUse.x , CellIndexToUse.y))
-            {
-                return;
-            }
-
-            ICoinPlacer.PlaceCoin(CellIndexToUse);
         }
 
         private void OnGamePaused()
@@ -417,6 +355,50 @@ namespace Managers
         
             IPlayerTurnsManager.StartPlayerTurn();
         }
+        
+        private void OnJoystickDownPressed()
+        {
+            Debug.Log("Joystick Down");
+        }
+        
+        private void OnJoystickLeftPressed()
+        {
+            Debug.Log("Joystick Left");
+        }
+        
+        private void OnJoystickRightPressed()
+        {
+            Debug.Log("Joystick Right");
+        }
+        
+        private void OnJoystickUpPressed()
+        {
+            Debug.Log("Joystick Up");
+        }
+        
+        private void OnJoystickXPressed()
+        {
+            if(!_isGameStarted) return;
+
+            for(int i = 0; i < IsAIArray.Length; i++)
+            {
+                if(IsAIArray[i] && CurrentPlayerID == i)
+                {
+                    return;
+                }
+            }
+
+            CellIndexToUse = _cellIndexAtJoystickPosition;
+            
+            Debug.Log("Joystick Cell Index To Use : " + CellIndexToUse);
+
+            if(CellIndexToUse == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexToUse.x , CellIndexToUse.y))
+            {
+                return;
+            }
+
+            ICoinPlacer.PlaceCoin(CellIndexToUse);
+        }
 
         private void OnMouseLeftClicked()
         {
@@ -429,8 +411,8 @@ namespace Managers
                     return;
                 }
             }
-
-            CellIndexToUse = GetPlayerCellIndex();
+            
+            CellIndexToUse = _cellIndexAtMousePosition;
 
             if(CellIndexToUse == _gridManager.InvalidCellIndex || _gridManager.IsCellBlockedData.GetValue(CellIndexToUse.x , CellIndexToUse.y))
             {
@@ -521,13 +503,16 @@ namespace Managers
             if(shouldSubscribe)
             {
                 EventsManager.SubscribeToEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
-                EventsManager.SubscribeToEvent(Event.ControllerMoved , new Action(OnControllerMoved));
                 EventsManager.SubscribeToEvent(Event.GameOver , new Action(OnGameOver));
-                EventsManager.SubscribeToEvent(Event.GamePadButtonPressed , new Action(OnGamePadButtonPressed));
                 EventsManager.SubscribeToEvent(Event.GamePaused , new Action(OnGamePaused));
                 EventsManager.SubscribeToEvent(Event.GameRestarted , new Action(OnGameRestarted));
                 EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.SubscribeToEvent(Event.GameStarted , new Action(OnGameStarted));
+                EventsManager.SubscribeToEvent(Event.JoystickDownPressed , new Action(OnJoystickDownPressed));
+                EventsManager.SubscribeToEvent(Event.JoystickLeftPressed , new Action(OnJoystickLeftPressed));
+                EventsManager.SubscribeToEvent(Event.JoystickRightPressed , new Action(OnJoystickRightPressed));
+                EventsManager.SubscribeToEvent(Event.JoystickUpPressed , new Action(OnJoystickUpPressed));
+                EventsManager.SubscribeToEvent(Event.JoystickXPressed , new Action(OnJoystickXPressed));
                 EventsManager.SubscribeToEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
                 EventsManager.SubscribeToEvent(Event.MouseMoved , new Action(OnMouseMoved));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
@@ -537,13 +522,16 @@ namespace Managers
             else
             {
                 EventsManager.UnsubscribeFromEvent(Event.AIHumanToggled , (Action<int , bool>)OnAIHumanToggled);
-                EventsManager.UnsubscribeFromEvent(Event.ControllerMoved , new Action(OnControllerMoved));
                 EventsManager.UnsubscribeFromEvent(Event.GameOver , new Action(OnGameOver));
-                EventsManager.UnsubscribeFromEvent(Event.GamePadButtonPressed , new Action(OnGamePadButtonPressed));
                 EventsManager.UnsubscribeFromEvent(Event.GamePaused , new Action(OnGamePaused));
                 EventsManager.UnsubscribeFromEvent(Event.GameRestarted , new Action(OnGameRestarted));
                 EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.UnsubscribeFromEvent(Event.GameStarted , new Action(OnGameStarted));
+                EventsManager.UnsubscribeFromEvent(Event.JoystickDownPressed , new Action(OnJoystickDownPressed));
+                EventsManager.UnsubscribeFromEvent(Event.JoystickLeftPressed , new Action(OnJoystickLeftPressed));
+                EventsManager.UnsubscribeFromEvent(Event.JoystickRightPressed , new Action(OnJoystickRightPressed));
+                EventsManager.UnsubscribeFromEvent(Event.JoystickUpPressed , new Action(OnJoystickUpPressed));
+                EventsManager.UnsubscribeFromEvent(Event.JoystickXPressed , new Action(OnJoystickXPressed));
                 EventsManager.UnsubscribeFromEvent(Event.MouseLeftClicked , new Action(OnMouseLeftClicked));
                 EventsManager.UnsubscribeFromEvent(Event.MouseMoved , new Action(OnMouseMoved));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersSelected , (Action<int>)OnNumberOfPlayersSelected);
