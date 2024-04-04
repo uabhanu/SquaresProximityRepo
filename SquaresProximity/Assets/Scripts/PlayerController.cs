@@ -11,7 +11,29 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+        
+            if(Keyboard.current.tabKey.wasPressedThisFrame)
+            {
+                EventsManager.Invoke(Event.KeyboardTabPressed);
+            }
+            
+            if(Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                if(EventSystem.current.IsPointerOverGameObject())
+                {
+                    return; // Ignore the click on UI elements.
+                }
+                
+                EventsManager.Invoke(Event.MouseLeftClicked);
+            }
 
+            if(Mouse.current.delta.ReadValue().magnitude > mouseThreshold)
+            {
+                EventsManager.Invoke(Event.MouseMoved);
+            }
+
+            if(Gamepad.current == null) return;
+            
             if(Gamepad.current.buttonSouth.wasPressedThisFrame)
             {
                 EventsManager.Invoke(Event.JoystickXPressed);
@@ -35,26 +57,6 @@ public class PlayerController : MonoBehaviour
             if(Gamepad.current.dpad.up.wasPressedThisFrame)
             {
                 EventsManager.Invoke(Event.JoystickUpPressed);
-            }
-            
-            if(Keyboard.current.tabKey.wasPressedThisFrame)
-            {
-                EventsManager.Invoke(Event.KeyboardTabPressed);
-            }
-            
-            if(Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                if(EventSystem.current.IsPointerOverGameObject())
-                {
-                    return; // Ignore the click on UI elements.
-                }
-                
-                EventsManager.Invoke(Event.MouseLeftClicked);
-            }
-
-            if(Mouse.current.delta.ReadValue().magnitude > mouseThreshold)
-            {
-                EventsManager.Invoke(Event.MouseMoved);
             }
             
         #endif
