@@ -5,6 +5,12 @@ namespace Utils
     
     public class SceneInitializer : MonoBehaviour
     {
+        private Dictionary<string , int> _platformToIndex = new()
+        {
+            { "UNITY_STANDALONE" , 0 },
+            { "UNITY_WEBGL" , 1 }
+        };
+        
         [SerializeField] private List<GameObject> sceneObjectsList;
         [SerializeField] private List<GameObject> uiObjectsList;
 
@@ -13,6 +19,21 @@ namespace Utils
             InstantiateSceneObjects();
             InstantiateUIObjects();
             Destroy(gameObject);
+        }
+        
+        private string GetPlatformName()
+        {
+            #if UNITY_ANDROID
+                return "UNITY_ANDROID";
+            #elif UNITY_IOS
+                return "UNITY_IOS";
+            #elif UNITY_STANDALONE
+                return "UNITY_STANDALONE";
+            #elif UNITY_WEBGL
+                return "UNITY_WEBGL";
+            #else
+                return "UNKNOWN_PLATFORM";
+            #endif
         }
 
         private void InstantiateSceneObjects()
@@ -25,17 +46,17 @@ namespace Utils
 
         private void InstantiateUIObjects()
         {
-            #if UNITY_ANDROID || UNITY_IOS
-                Instantiate(uiObjectsList[0]);
-            #endif
-
-            #if UNITY_STANDALONE
-                Instantiate(uiObjectsList[1]);
-            #endif
+            string currentPlatform = GetPlatformName();
             
-            #if UNITY_WEBGL
-                Instantiate(uiObjectsList[2]);
-            #endif
+            if(_platformToIndex.ContainsKey(currentPlatform))
+            {
+                int index = _platformToIndex[currentPlatform];
+                Instantiate(uiObjectsList[index]);
+            }
+            else
+            {
+                Debug.LogError("Platform not supported for UI object instantiation: " + currentPlatform);
+            }
         }
     }
 }
