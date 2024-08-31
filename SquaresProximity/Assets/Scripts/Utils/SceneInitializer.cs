@@ -8,7 +8,8 @@ namespace Utils
         private Dictionary<string , int> _platformToIndex = new()
         {
             { "UNITY_STANDALONE" , 0 },
-            { "UNITY_WEBGL" , 1 }
+            { "UNITY_ANDROID" , 1 },
+            { "UNITY_WEBGL" , 2 }
         };
         
         [SerializeField] private List<GameObject> sceneObjectsList;
