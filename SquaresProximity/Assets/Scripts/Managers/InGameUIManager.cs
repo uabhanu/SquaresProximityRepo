@@ -15,8 +15,7 @@ namespace Managers
 
         private const string HolesKey = "Holes";
         private const string RandomTurnsKey = "Random Turns";
-
-        private bool _isPlayerOnline;
+        
         private bool _holesToggleBool;
         private bool _isServerPrivate;
         private bool _playerIsOnline;
@@ -41,8 +40,6 @@ namespace Managers
         [SerializeField] private GameObject inGameUIPanelsObj;
         [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
         [SerializeField] private GameObject leaderboardPanelObj;
-        [SerializeField] private GameObject lobbyPanelObj;
-        [SerializeField] private GameObject onlineMultiplayerPanelObj;
         [SerializeField] private GameObject pauseButtonObj;
         [SerializeField] private GameObject pauseMenuPanelObj;
         [SerializeField] private GameObject numberOfPlayersSelectionPanelObj;
@@ -53,8 +50,6 @@ namespace Managers
         [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
-        [SerializeField] private LobbyManager lobbyManager;
-        [SerializeField] private TMP_InputField networkPlayerNameTMPInputField;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
         [SerializeField] private TMP_Text[] gameTitleTMPTexts;
@@ -66,9 +61,6 @@ namespace Managers
         [SerializeField] private Toggle randomTurnsToggle;
         [SerializeField] private Toggle[] aiHumanTogglesArray;
         [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
-        [SerializeField] private Toggle[] offlineOnlineSelectionTogglesArray;
-
-        public int NumberOfPlayers => _numberOfPlayers;
 
         #endregion
     
@@ -81,14 +73,11 @@ namespace Managers
             gameTiedPanelObj.SetActive(false);
             inGameUIPanelsObj.SetActive(false);
             leaderboardPanelObj.SetActive(false);
-            lobbyPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(false);
-            onlineMultiplayerPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
             
             _numberOfPlayersSelectionsBoolArray = new bool[numberOfPlayersSelectionTogglesArray.Length];
-            _offlineOnlineSelectionsBoolArray = new bool[offlineOnlineSelectionTogglesArray.Length];
             _playersTotalWinsArray = new int[_numberOfPlayers];
             _totalReceivedArray = new int[_numberOfPlayers];
             
@@ -115,21 +104,6 @@ namespace Managers
                 numberOfPlayersKeys[i] = "Number Of Players" + i;
                 PlayerPrefsManager.LoadData(ref _numberOfPlayersSelectionsBoolArray , numberOfPlayersKeys);
                 numberOfPlayersSelectionTogglesArray[i].isOn = _numberOfPlayersSelectionsBoolArray[i];
-            }
-
-            string[] offlineOnlineKeys = new string[offlineOnlineSelectionTogglesArray.Length];
-            
-            for(int i = 0; i < offlineOnlineSelectionTogglesArray.Length; i++)
-            {
-                offlineOnlineKeys[i] = "Player" + i + "Offline or Online";
-                PlayerPrefsManager.LoadData(ref _offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
-                offlineOnlineSelectionTogglesArray[i].isOn = _offlineOnlineSelectionsBoolArray[i];
-                _playerIsOnline = _offlineOnlineSelectionsBoolArray[1];
-
-                if(offlineOnlineSelectionTogglesArray[1].isOn)
-                {
-                    EventsManager.Invoke(Event.PlayerIsOnline);
-                }
             }
             
             SetPlayersNumber();
@@ -190,15 +164,7 @@ namespace Managers
             }
         
             numberOfPlayersSelectionPanelObj.SetActive(false);
-
-            if(offlineOnlineSelectionTogglesArray[1].isOn)
-            {
-                onlineMultiplayerPanelObj.SetActive(true);
-            }
-            else
-            {
-                playerInputPanelObj.SetActive(true);   
-            }
+            playerInputPanelObj.SetActive(true);   
             
             string[] nameKeys = new string[_numberOfPlayers];
             string[] winsKeys = new string[_numberOfPlayers];
@@ -456,117 +422,6 @@ namespace Managers
             pauseButtonObj.SetActive(false);
         }
 
-        public void MainMenuButton()
-        {
-            onlineMultiplayerPanelObj.SetActive(false);
-            numberOfPlayersSelectionPanelObj.SetActive(true);
-        }
-
-        public void NetworkGoButton()
-        {
-            if(!_isPlayerOnline) return;
-            
-            string[] defaultPlayerNames =
-            {
-                "Player 1",
-                "Player 2",
-                "Player 3",
-                "Player 4"
-            };
-
-            if(_numberOfPlayers == 2)
-            {
-                #if UNITY_ANDROID || UNITY_IOS
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 500;          
-                #endif
-                
-                #if UNITY_STANDALONE || UNITY_WEBGL
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 650;          
-                #endif
-            }
-            
-            else if(_numberOfPlayers == 3)
-            {
-                #if UNITY_ANDROID || UNITY_IOS
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 150;         
-                #endif
-                
-                #if UNITY_STANDALONE || UNITY_WEBGL
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 250;          
-                #endif
-            }
-            
-            else if(_numberOfPlayers == 4)
-            {
-                #if UNITY_ANDROID || UNITY_IOS
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;         
-                #endif
-                
-                #if UNITY_STANDALONE || UNITY_WEBGL
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 125;          
-                #endif
-            }
-
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                inGameUIPlayerNamesDisplayPanelObjs[i].SetActive(true);
-                _playerNamesArray[i] = playerNameTMPInputFields[i].text;
-
-                if(string.IsNullOrEmpty(playerNameTMPInputFields[i].text))
-                {
-                    if(!aiHumanTogglesArray[i].isOn)
-                    {
-                        _playerNamesArray[i] = defaultPlayerNames[i];
-                        playerNameTMPInputFields[i].text = _playerNamesArray[i];
-                    }
-                }
-                
-                UpdateInGamePlayerNames(i);
-            }
-        
-            inGameUIPanelsObj.SetActive(true);
-            lobbyPanelObj.SetActive(false);
-            playerInputPanelObj.SetActive(false);
-            EventsManager.Invoke(Event.GameStarted);
-            
-            for(int i = 0; i < gameTitleTMPTexts.Length; i++)
-            {
-                gameTitleTMPTexts[i].enabled = false;
-            }
-            
-            string[] nameKeys = new string[_numberOfPlayers];
-            
-            for(int i = 0; i < _numberOfPlayers; i++)
-            {
-                nameKeys[i] = "Player" + i + "Name";
-            }
-            
-            PlayerPrefsManager.SaveData(_playerNamesArray , nameKeys);
-        }
-
-        public void NetworkLobbyCreateButton()
-        {
-            lobbyManager.CreateLobby("Bhanu Lobby" , false , _numberOfPlayers);
-            lobbyPanelObj.SetActive(true);
-            onlineMultiplayerPanelObj.SetActive(false);
-        }
-
-        public void NetworkLobbyQuickJoinButton()
-        {
-            lobbyManager.QuickJoin();
-            lobbyPanelObj.SetActive(true);
-            onlineMultiplayerPanelObj.SetActive(false);
-        }
-
-        public void NetworkReadyButton()
-        {
-            if(!string.IsNullOrEmpty(networkPlayerNameTMPInputField.text))
-            {
-                _isPlayerOnline = true;
-                Debug.Log("Player is Online : " + _isPlayerOnline);
-            }
-        }
-
         public void OkButton()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -617,7 +472,6 @@ namespace Managers
                 _aiHumanSelectionsBoolArray[i] = false;
                 aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
                 _offlineOnlineSelectionsBoolArray[i] = false;
-                offlineOnlineSelectionTogglesArray[i].isOn = _offlineOnlineSelectionsBoolArray[i];
                 _holesToggleBool = false;
                 holesToggle.isOn = _holesToggleBool;
                 _randomTurnsToggleBool = false;
@@ -749,20 +603,6 @@ namespace Managers
             }
         }
 
-        public void OfflineOnlineToggle()
-        {
-            string[] offlineOnlineKeys = new string[_offlineOnlineSelectionsBoolArray.Length];
-            
-            for(int i = 0; i < _offlineOnlineSelectionsBoolArray.Length; i++)
-            {
-                bool isOfflineOnline = offlineOnlineSelectionTogglesArray[i].isOn;
-                offlineOnlineKeys[i] = "Player" + i + "Offline or Online";
-                _offlineOnlineSelectionsBoolArray[i] = isOfflineOnline;
-            }
-            
-            PlayerPrefsManager.SaveData(_offlineOnlineSelectionsBoolArray , offlineOnlineKeys);
-        }
-
         public void RandomTurnsToggle()
         {
             EventsManager.Invoke(Event.RandomTurnsToggled);
@@ -834,42 +674,9 @@ namespace Managers
             }
         }
 
-        private void OnLobbyCreated()
-        {
-            onlineMultiplayerPanelObj.SetActive(false);
-        }
-
         private void OnNumberOfPlayersToggled()
         {
             SetPlayersNumber();
-        }
-
-        private void OnPlayerJoinedLobby()
-        {
-            onlineMultiplayerPanelObj.SetActive(false);
-        }
-
-        private void OnPlayerLeftLobby()
-        {
-            onlineMultiplayerPanelObj.SetActive(true);
-        }
-
-        private void OnPlayerOfflineOnlineToggled()
-        {
-            for(int i = 0; i < offlineOnlineSelectionTogglesArray.Length; i++)
-            {
-                if(offlineOnlineSelectionTogglesArray[i].isOn && i == 1)
-                {
-                    _playerIsOnline = true;
-                    EventsManager.Invoke(Event.PlayerIsOnline);
-                }
-                
-                else if(offlineOnlineSelectionTogglesArray[i].isOn && i == 0)
-                {
-                    _playerIsOnline = false;
-                    EventsManager.Invoke(Event.PlayerIsOffline);
-                }
-            }
         }
 
         private void OnPlayerWins(int highestScorePlayerID)
@@ -911,11 +718,7 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
-                EventsManager.SubscribeToEvent(Event.LobbyCreated , new Action(OnLobbyCreated));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
-                EventsManager.SubscribeToEvent(Event.PlayerJoinedLobby , new Action(OnPlayerJoinedLobby));
-                EventsManager.SubscribeToEvent(Event.PlayerLeftLobby , new Action(OnPlayerLeftLobby));
-                EventsManager.SubscribeToEvent(Event.PlayerOfflineOnlineToggled , new Action(OnPlayerOfflineOnlineToggled));
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);    
@@ -927,11 +730,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameResumed , new Action(OnGameResumed));
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
-                EventsManager.UnsubscribeFromEvent(Event.LobbyCreated , new Action(OnLobbyCreated));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
-                EventsManager.UnsubscribeFromEvent(Event.PlayerJoinedLobby , new Action(OnPlayerJoinedLobby));
-                EventsManager.UnsubscribeFromEvent(Event.PlayerLeftLobby , new Action(OnPlayerLeftLobby));
-                EventsManager.UnsubscribeFromEvent(Event.PlayerOfflineOnlineToggled , new Action(OnPlayerOfflineOnlineToggled));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
