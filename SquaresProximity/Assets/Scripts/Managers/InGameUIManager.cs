@@ -109,6 +109,9 @@ namespace Managers
             SetPlayersNumber();
 
             ToggleEventSubscription(true);
+            
+            //TODO Once the IronSource Account is approved, build APK and test the ads
+            AdsManager.Instance.ShowInterstitialAd();
         }
 
         private void OnDestroy()
@@ -266,7 +269,7 @@ namespace Managers
             else if(_numberOfPlayers == 3)
             {
                 #if UNITY_ANDROID || UNITY_IOS
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 150;         
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 150;  
                 #endif
                 
                 #if UNITY_STANDALONE || UNITY_WEBGL
@@ -277,7 +280,7 @@ namespace Managers
             else if(_numberOfPlayers == 4)
             {
                 #if UNITY_ANDROID || UNITY_IOS
-                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;         
+                    inGameUIPlayerNamesDisplayPanelObj.GetComponent<HorizontalLayoutGroup>().spacing = 25;   
                 #endif
                 
                 #if UNITY_STANDALONE || UNITY_WEBGL
