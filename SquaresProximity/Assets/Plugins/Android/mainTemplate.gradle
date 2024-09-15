@@ -1,10 +1,30 @@
+// Add buildscript repositories to the top
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 apply plugin: 'com.android.library'
 apply from: '../shared/keepUnitySymbols.gradle'
 **APPLY_PLUGINS**
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-**DEPS**}
+    
+    // Add Google Play Games Services SDK dependency
+    implementation "com.google.android.gms:play-services-games-v2:+"
+
+    **DEPS**
+}
 
 android {
     namespace "com.unity3d.player"
@@ -21,6 +41,11 @@ android {
     defaultConfig {
         minSdkVersion **MINSDKVERSION**
         targetSdkVersion **TARGETSDKVERSION**
+
+        // Include the games-ids.xml resource
+        resValue "string", "app_id", "511150139107"
+        resValue "string", "package_name", "com.Able3Studios.sp"
+        
         ndk {
             abiFilters **ABIFILTERS**
             debugSymbolLevel **DEBUGSYMBOLLEVEL**
@@ -28,7 +53,7 @@ android {
         versionCode **VERSIONCODE**
         versionName '**VERSIONNAME**'
         consumerProguardFiles 'proguard-unity.txt'**USER_PROGUARD**
-**DEFAULT_CONFIG_SETUP**
+        **DEFAULT_CONFIG_SETUP**
     }
 
     lintOptions {
@@ -37,9 +62,11 @@ android {
 
     aaptOptions {
         noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
-        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
-    }**PACKAGING_OPTIONS**
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*!~"
+    }
+    **PACKAGING_OPTIONS**
 }
+
 **IL_CPP_BUILD_SETUP**
 **SOURCE_BUILD_SETUP**
 **EXTERNAL_SOURCES**
