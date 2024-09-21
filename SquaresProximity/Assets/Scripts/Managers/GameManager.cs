@@ -548,7 +548,12 @@ namespace Managers
                 Vector2 snapPos = _gridManager.CellToWorld(_cellIndexAtMousePosition.x , _cellIndexAtMousePosition.y);
                 
                 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-                    TrailObj.transform.position = snapPos;
+
+                    if(TrailObj != null)
+                    {
+                        TrailObj.transform.position = snapPos;    
+                    }
+                
                 #endif
             }
             else
