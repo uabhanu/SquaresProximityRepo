@@ -1,6 +1,5 @@
 namespace Managers
 {
-    using Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,7 +23,6 @@ namespace Managers
         private bool[] _aiHumanSelectionsBoolArray;
         private bool[] _numberOfPlayersSelectionsBoolArray;
         private bool[] _offlineOnlineSelectionsBoolArray;
-        private IGooglePlayGamesManager _iGooglePlayGamesManager;
         private int _highestScorePlayerID;
         private int _numberOfPlayers;
         private int[] _playerScoresArray;
@@ -81,9 +79,6 @@ namespace Managers
             numberOfPlayersSelectionPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelObj.SetActive(false);
-            
-            _iGooglePlayGamesManager = GooglePlayGamesManager.Instance;
-            _iGooglePlayGamesManager.Authenticate();
             
             _numberOfPlayersSelectionsBoolArray = new bool[numberOfPlayersSelectionTogglesArray.Length];
             _playersTotalWinsArray = new int[_numberOfPlayers];
