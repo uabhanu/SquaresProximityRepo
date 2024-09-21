@@ -1,6 +1,5 @@
 namespace Managers
 {
-    using GooglePlayGames;
     using Interfaces;
     using Random = UnityEngine.Random;
     using System;
@@ -180,20 +179,6 @@ namespace Managers
             #if UNITY_STANDALONE || UNITY_WEBGL
                 _trailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
             #endif
-            
-            PlayGamesPlatform.Activate();
-            
-            Social.localUser.Authenticate(success =>
-            {
-                if(success)
-                {
-                    Debug.Log("Signed in to Google Play Games successfully.");
-                }
-                else
-                {
-                    Debug.LogError("Failed to sign in to Google Play Games.");
-                }
-            });
             
             ToggleEventSubscription(true);
             UpdateTrailVisibility();
