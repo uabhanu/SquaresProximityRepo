@@ -70,6 +70,9 @@ namespace Managers
         
         private void Start()
         {
+            //TODO Once the IronSource Account is approved, build APK and test the ads
+            AdsManager.Instance.ShowInterstitialAd();
+            
             continueButtonObj.SetActive(false);
             gameOverPanelsObj.SetActive(false);
             gameTiedPanelObj.SetActive(false);
@@ -114,9 +117,6 @@ namespace Managers
             SetPlayersNumber();
 
             ToggleEventSubscription(true);
-            
-            //TODO Once the IronSource Account is approved, build APK and test the ads
-            AdsManager.Instance.ShowInterstitialAd();
         }
 
         private void OnDestroy()
