@@ -1,6 +1,7 @@
 namespace Managers
 {
     using GooglePlayGames;
+    using GooglePlayGames.BasicApi;
     using Interfaces;
     using UnityEngine;
 
