@@ -1,7 +1,6 @@
 namespace Managers
 {
     using GooglePlayGames;
-    using GooglePlayGames.BasicApi;
     using Interfaces;
     using UnityEngine;
 
@@ -27,26 +26,32 @@ namespace Managers
 
         private void Start()
         {
-            PlayGamesPlatform.Activate();
+            #if UNITY_ANDROID
+                PlayGamesPlatform.Activate();
+            #endif
         }
 
         public void Authenticate()
         {
-            Debug.Log("Starting authentication with Google Play Games...");
-            
-            PlayGamesPlatform.Instance.Authenticate(success =>
-            {
-                if(success == SignInStatus.Success)
+            #if UNITY_ANDROID
+                Debug.Log("Starting authentication with Google Play Games...");
+                
+                PlayGamesPlatform.Instance.Authenticate(success =>
                 {
-                    _isAuthenticated = true;
-                    Debug.Log("Signed in to Google Play Games successfully.");
-                }
-                else
-                {
-                    _isAuthenticated = false;
-                    Debug.LogError("Failed to sign in to Google Play Games.");
-                }
-            });
+                    if(success == SignInStatus.Success)
+                    {
+                        _isAuthenticated = true;
+                        Debug.Log("Signed in to Google Play Games successfully.");
+                    }
+                    else
+                    {
+                        _isAuthenticated = false;
+                        Debug.LogError("Failed to sign in to Google Play Games.");
+                    }
+                });
+            #else
+                Debug.LogWarning("Google Play Games is only supported on Android.");
+            #endif
         }
     }
 }
