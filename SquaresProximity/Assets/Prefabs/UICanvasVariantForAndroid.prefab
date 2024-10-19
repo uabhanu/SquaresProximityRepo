@@ -8,6 +8,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 728693648492266782, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1122885363569118904, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2479561115582890254, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 74.000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 3299529407321363483, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3765542928803298545, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3810974290281087918, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4068030536438497016, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -27,6 +51,10 @@ PrefabInstance:
     - target: {fileID: 4202334081415690906, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
       propertyPath: m_Spacing
       value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4537471146500638256, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4546586411086007052, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -71,6 +99,14 @@ PrefabInstance:
     - target: {fileID: 6044010295568214694, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
       propertyPath: m_Name
       value: UICanvasVariantForAndroid
+      objectReference: {fileID: 0}
+    - target: {fileID: 6980116349391767850, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -74
+      objectReference: {fileID: 0}
+    - target: {fileID: 7208399487214468721, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8230045708429692459, guid: 573fdf160c4426e4c81db0d7695bd41c, type: 3}
       propertyPath: m_AnchorMax.y
