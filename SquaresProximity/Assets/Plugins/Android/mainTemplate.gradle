@@ -23,11 +23,29 @@ dependencies {
     // Add Google Play Games Services SDK dependency
     implementation "com.google.android.gms:play-services-games-v2:2.2.1" // Replace + with a stable version number
 
+// Android Resolver Dependencies Start
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:17
+    implementation 'com.google.android.gms:play-services-basement:18.1.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:25
+    implementation 'com.google.games:gpgs-plugin-support:0.11.01' // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
+    implementation 'com.ironsource.sdk:mediationsdk:8.3.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:9
+// Android Resolver Dependencies End
     **DEPS**
 }
 
+// Android Resolver Exclusions Start
 android {
-    packagingOptions {
+  packagingOptions {
+      exclude ('/lib/armeabi/*' + '*')
+      exclude ('/lib/mips/*' + '*')
+      exclude ('/lib/mips64/*' + '*')
+      exclude ('/lib/x86/*' + '*')
+      exclude ('/lib/x86_64/*' + '*')
+  }
+}
+// Android Resolver Exclusions End
+android {
+    ndkVersion "**NDKVERSION**"
+    packaging {
         exclude ('/lib/armeabi/*' + '*')
         exclude ('/lib/mips/*' + '*')
         exclude ('/lib/mips64/*' + '*')
@@ -38,7 +56,7 @@ android {
     namespace "com.unity3d.player"
     ndkPath "**NDKPATH**"
 
-    compileSdkVersion **APIVERSION**
+    compileSdk **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 
     compileOptions {
@@ -47,8 +65,8 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion **MINSDKVERSION**
-        targetSdkVersion **TARGETSDKVERSION**
+        minSdk **MINSDK**
+        targetSdk **TARGETSDK**
 
         // Include the games-ids.xml resource
         resValue "string", "app_id", "511150139107"
@@ -64,15 +82,15 @@ android {
         **DEFAULT_CONFIG_SETUP**
     }
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 
-    aaptOptions {
+    androidResources {
         noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*!~"
     }
-    **PACKAGING_OPTIONS**
+    **PACKAGING**
 }
 
 **IL_CPP_BUILD_SETUP**
