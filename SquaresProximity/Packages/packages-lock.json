@@ -145,7 +145,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.31",
+      "version": "3.0.34",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -154,7 +154,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.11.1",
+      "version": "1.11.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -203,12 +203,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.levelplay": {
-      "version": "8.3.0",
+      "version": "8.4.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.services.core": "1.8.1",
-        "com.unity.modules.jsonserialize": "1.0.0"
+        "com.unity.services.core": "1.8.1"
       },
       "url": "https://packages.unity.com"
     },
