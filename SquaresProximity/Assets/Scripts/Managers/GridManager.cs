@@ -1,7 +1,6 @@
-using Data;
-
 namespace Managers
 {
+    using Data;
     using Random = UnityEngine.Random;
     using System;
     using System.Collections.Generic;

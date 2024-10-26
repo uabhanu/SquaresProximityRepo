@@ -1,7 +1,7 @@
 namespace Managers
 {
-    using System;
     using JetBrains.Annotations;
+    using System;
     using UnityEngine;
     
     public static class PlayerPrefsManager
