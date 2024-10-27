@@ -181,6 +181,7 @@ namespace Managers
                 _trailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
             #endif
             
+            ServiceLocator.Register(new GameMode());
             ToggleEventSubscription(true);
             UpdateTrailVisibility();
         }
