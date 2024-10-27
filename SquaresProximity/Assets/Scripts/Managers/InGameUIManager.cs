@@ -1,5 +1,6 @@
 namespace Managers
 {
+    using Misc;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,11 +15,12 @@ namespace Managers
         #region Variable Declarations
 
         private const string HolesKey = "Holes";
+        private const string OnlineKey = "Online";
         private const string RandomTurnsKey = "Random Turns";
         
         private bool _holesToggleBool;
         private bool _isServerPrivate;
-        private bool _playerIsOnline;
+        private bool _onlineToggleBool;
         private bool _randomTurnsToggleBool;
         private bool[] _aiHumanSelectionsBoolArray;
         private bool[] _numberOfPlayersSelectionsBoolArray;
@@ -43,7 +45,8 @@ namespace Managers
         [SerializeField] private GameObject pauseButtonObj;
         [SerializeField] private GameObject pauseMenuPanelObj;
         [SerializeField] private GameObject numberOfPlayersSelectionPanelObj;
-        [SerializeField] private GameObject playerInputPanelObj;
+        [SerializeField] private GameObject playerInputPanelOfflineObj;
+        [SerializeField] private GameObject playerInputPanelOnlineObj;
         [SerializeField] private GameObject totalReceivedPanelObj;
         [SerializeField] private GameObject totalWinsPanelObj;
         [SerializeField] private GameObject[] inGameUIPlayerNamesDisplayPanelObjs;
@@ -58,6 +61,7 @@ namespace Managers
         [SerializeField] private TMP_Text[] playerWinsLabelsTMPTexts;
         [SerializeField] private TMP_Text[] coinScoreTMPTexts;
         [SerializeField] private Toggle holesToggle;
+        [SerializeField] private Toggle onlineToggle;
         [SerializeField] private Toggle randomTurnsToggle;
         [SerializeField] private Toggle[] aiHumanTogglesArray;
         [SerializeField] private Toggle[] numberOfPlayersSelectionTogglesArray;
@@ -78,7 +82,8 @@ namespace Managers
             leaderboardPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
-            playerInputPanelObj.SetActive(false);
+            playerInputPanelOfflineObj.SetActive(false);
+            playerInputPanelOnlineObj.SetActive(false);
             
             _numberOfPlayersSelectionsBoolArray = new bool[numberOfPlayersSelectionTogglesArray.Length];
             _playersTotalWinsArray = new int[_numberOfPlayers];
@@ -86,6 +91,9 @@ namespace Managers
             
             PlayerPrefsManager.LoadData(ref _holesToggleBool , HolesKey);
             holesToggle.isOn = _holesToggleBool;
+            
+            PlayerPrefsManager.LoadData(ref _onlineToggleBool , OnlineKey);
+            onlineToggle.isOn = _onlineToggleBool;
             
             PlayerPrefsManager.LoadData(ref _randomTurnsToggleBool , RandomTurnsKey);
             randomTurnsToggle.isOn = _randomTurnsToggleBool;
@@ -128,7 +136,7 @@ namespace Managers
             if(backButtonTMPText.text == "Back")
             {
                 leaderboardPanelObj.SetActive(false);
-                playerInputPanelObj.SetActive(true);   
+                playerInputPanelOfflineObj.SetActive(true);   
             }
             else
             {
@@ -143,7 +151,8 @@ namespace Managers
         public void BackButtonMain()
         {
             numberOfPlayersSelectionPanelObj.SetActive(true);
-            playerInputPanelObj.SetActive(false);
+            playerInputPanelOfflineObj.SetActive(false);
+            playerInputPanelOnlineObj.SetActive(false);
         }
 
         public void ConfirmButton()
@@ -152,7 +161,7 @@ namespace Managers
             
             for(int i = 0; i < _numberOfPlayers; i++)
             {
-                if(_playerIsOnline)
+                if(_onlineToggleBool)
                 {
                     aiHumanTogglesArray[i].isOn = false;
                     aiHumanTogglesArray[i].gameObject.SetActive(false);
@@ -167,7 +176,15 @@ namespace Managers
             }
         
             numberOfPlayersSelectionPanelObj.SetActive(false);
-            playerInputPanelObj.SetActive(true);   
+
+            if(_onlineToggleBool)
+            {
+                playerInputPanelOnlineObj.SetActive(true);
+            }
+            else
+            {
+                playerInputPanelOfflineObj.SetActive(true);   
+            }
             
             string[] nameKeys = new string[_numberOfPlayers];
             string[] winsKeys = new string[_numberOfPlayers];
@@ -312,7 +329,7 @@ namespace Managers
             }
         
             inGameUIPanelsObj.SetActive(true);
-            playerInputPanelObj.SetActive(false);
+            playerInputPanelOfflineObj.SetActive(false);
             EventsManager.Invoke(Event.GameStarted);
             
             for(int i = 0; i < gameTitleTMPTexts.Length; i++)
@@ -375,7 +392,7 @@ namespace Managers
                 leaderboardWinsPanelObjs[i].SetActive(true);
             }
             
-            playerInputPanelObj.SetActive(false);
+            playerInputPanelOfflineObj.SetActive(false);
         }
 
         public void LeaderBoardButtonPauseMenu()
@@ -535,13 +552,7 @@ namespace Managers
         
         #region Other Functions
         
-        private void UpdateInGamePlayerNames(int playerID)
-        {
-            string playerName = playerNameTMPInputFields[playerID].text;
-            EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
-        }
-
-        public void SetPlayersNumber()
+        private void SetPlayersNumber()
         {
             int selectedPlayers = 0;
 
@@ -569,6 +580,12 @@ namespace Managers
 
             PlayerPrefs.SetInt("NumberOfPlayers" , _numberOfPlayers);
             PlayerPrefs.Save();
+        }
+        
+        private void UpdateInGamePlayerNames(int playerID)
+        {
+            string playerName = playerNameTMPInputFields[playerID].text;
+            EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
         }
         
         #endregion
@@ -603,6 +620,21 @@ namespace Managers
                 numberOfPlayersKeys[i] = "Number Of Players" + i;
                 
                 PlayerPrefsManager.SaveData(_numberOfPlayersSelectionsBoolArray , numberOfPlayersKeys);
+            }
+        }
+        
+        public void OnlineToggle()
+        {
+            _onlineToggleBool = onlineToggle.isOn;
+            PlayerPrefsManager.SaveData(_onlineToggleBool , OnlineKey); // Save toggle state
+
+            // Update GameMode and notify relevant classes
+            OnlineMode onlineMode = ServiceLocator.Get<OnlineMode>();
+            
+            if(onlineMode != null)
+            {
+                onlineMode.SetOnlineMode(_onlineToggleBool);
+                EventsManager.Invoke(Event.PlayerNowOnline , _onlineToggleBool);  // Notify listeners of the mode change
             }
         }
 
