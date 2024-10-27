@@ -22,8 +22,8 @@ namespace Misc
         #region Variables Declarations
 
         private GameManager _gameManager;
-        private GridManager _gridManager;
         private GameMode _gameMode;
+        private GridManager _gridManager;
 
         #endregion
 
