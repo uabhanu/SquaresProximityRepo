@@ -1,9 +1,7 @@
 namespace Misc
 {
-    using Event = Managers.Event;
     using Interfaces;
     using Managers;
-    using Object = UnityEngine.Object;
     using System;
     using TMPro;
     using UnityEngine;
@@ -11,29 +9,37 @@ namespace Misc
     public class CoinPlacer : ICoinPlacer
     {
         #region Constructor
-        
+
         public CoinPlacer(GameManager gameManager , GridManager gridManager)
         {
             _gameManager = gameManager;
             _gridManager = gridManager;
+            _gameMode = ServiceLocator.Get<GameMode>();
         }
-        
+
         #endregion
 
         #region Variables Declarations
-        
+
         private GameManager _gameManager;
         private GridManager _gridManager;
-        
+        private GameMode _gameMode;
+
         #endregion
 
         #region Functions
-        
+
         public void BuffUpAdjacentCoin(Vector2Int cellIndexAtMousePosition)
         {
+            if(_gameMode.IsOnlineMode)
+            {
+                // Multiplayer synchronization logic, e.g., notify other players or server.
+                return;
+            }
+
             int currentPlayerID = _gridManager.PlayerIDData.GetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y);
 
-            ProcessAdjacentCells(cellIndexAtMousePosition , (x, y, adjacentCoinObj) =>
+            ProcessAdjacentCells(cellIndexAtMousePosition , (x , y , adjacentCoinObj) =>
             {
                 if(adjacentCoinObj != null)
                 {
@@ -46,7 +52,7 @@ namespace Misc
                         _gridManager.CoinValueData.SetValue(x , y , newAdjacentCoinValue);
 
                         _gameManager.IPlayerTurnsManager.UpdateAdjacentCoinText(x , y , newAdjacentCoinValue);
-                        EventsManager.Invoke(Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);
+                        EventsManager.Invoke(Managers.Event.CoinBuffedUp , adjacentPlayerID , newAdjacentCoinValue - adjacentCoinValue);
                     }
                 }
             });
@@ -54,9 +60,15 @@ namespace Misc
 
         public void CaptureAdjacentCoin(Vector2Int cellIndexAtMousePosition)
         {
+            if(_gameMode.IsOnlineMode)
+            {
+                // Multiplayer synchronization logic, e.g., notify other players or server.
+                return;
+            }
+
             int currentPlayerID = _gridManager.PlayerIDData.GetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y);
 
-            ProcessAdjacentCells(cellIndexAtMousePosition, (x, y, adjacentCoinObj) =>
+            ProcessAdjacentCells(cellIndexAtMousePosition , (x , y , adjacentCoinObj) =>
             {
                 if(adjacentCoinObj != null)
                 {
@@ -66,7 +78,7 @@ namespace Misc
                     if(adjacentPlayerID != currentPlayerID && adjacentPlayerCoinValue < _gameManager.CoinValue)
                     {
                         _gridManager.PlayerIDData.SetValue(x , y , currentPlayerID);
-                        EventsManager.Invoke(Event.CoinCaptured , currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
+                        EventsManager.Invoke(Managers.Event.CoinCaptured , currentPlayerID , adjacentPlayerID , adjacentPlayerCoinValue);
                         _gameManager.IPlayerTurnsManager.UpdateCoinColor(x , y);
                     }
                 }
@@ -75,11 +87,17 @@ namespace Misc
 
         public void PlaceCoin(Vector2Int cellIndexAtMousePosition)
         {
+            if(_gameMode.IsOnlineMode)
+            {
+                EventsManager.Invoke(Managers.Event.CoinPlaced , _gameManager.CoinValue , _gameManager.CurrentPlayerID);
+                return;
+            }
+
             _gridManager.CoinValueData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , _gameManager.CoinValue);
             _gridManager.PlayerIDData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , _gameManager.CurrentPlayerID);
             _gridManager.TotalCells--;
 
-            EventsManager.Invoke(Event.CoinPlaced , _gameManager.CoinValue , _gameManager.CurrentPlayerID);
+            EventsManager.Invoke(Managers.Event.CoinPlaced , _gameManager.CoinValue , _gameManager.CurrentPlayerID);
 
             if(!_gridManager.IsCellBlockedData.GetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y))
             {
@@ -87,7 +105,7 @@ namespace Misc
                 CaptureAdjacentCoin(cellIndexAtMousePosition);
 
                 Vector2 spawnPos = _gridManager.CellToWorld(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y);
-                GameObject newCoinObj = Object.Instantiate(_gameManager.CoinObj , spawnPos, Quaternion.identity , _gameManager.gameObject.transform);
+                GameObject newCoinObj = UnityEngine.Object.Instantiate(_gameManager.CoinObj , spawnPos , Quaternion.identity , _gameManager.gameObject.transform);
                 _gridManager.CoinOnTheCellData.SetValue(cellIndexAtMousePosition.x , cellIndexAtMousePosition.y , newCoinObj);
                 newCoinObj.GetComponentInChildren<TextMeshPro>().text = _gameManager.CoinValue.ToString();
 
@@ -135,7 +153,7 @@ namespace Misc
                 }
             }
         }
-        
+
         #endregion
     }
 }
