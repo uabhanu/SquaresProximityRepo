@@ -8,7 +8,7 @@ namespace Misc
 
     public class PlayerController : MonoBehaviour
     {
-        private GameMode _gameMode;
+        private OnlineMode _onlineMode;
         
         [SerializeField] private float mouseThreshold;
 
@@ -19,13 +19,13 @@ namespace Misc
 
         private void Update()
         {
-            if(_gameMode == null)
+            if(_onlineMode == null)
             {
                 InitializeGameMode();
-                if(_gameMode == null) return;  // Skip Update if GameMode is still not available
+                if(_onlineMode == null) return;  // Skip Update if OnlineMode is still not available
             }
 
-            if(_gameMode.IsOnlineMode && !IsLocalPlayerTurn())
+            if(_onlineMode.PlayerIsOnline && !IsLocalPlayerTurn())
             {
                 // Ignore inputs if it’s not the local player’s turn in Online Multiplayer
                 return;
@@ -36,11 +36,11 @@ namespace Misc
 
         private void InitializeGameMode()
         {
-            _gameMode = ServiceLocator.Get<GameMode>();
+            _onlineMode = ServiceLocator.Get<OnlineMode>();
             
-            if(_gameMode == null)
+            if(_onlineMode == null)
             {
-                Debug.LogWarning("GameMode is not yet registered. Ensure it's registered before PlayerController accesses it.");
+                Debug.LogWarning("OnlineMode is not yet registered. Ensure it's registered before PlayerController accesses it.");
             }
         }
 
@@ -95,7 +95,7 @@ namespace Misc
 
         private void ProcessEvent(Event eventType , Vector2? touchPosition = null)
         {
-            if(_gameMode.IsOnlineMode)
+            if(_onlineMode.PlayerIsOnline)
             {
                 SendRPC(eventType , touchPosition);
             }

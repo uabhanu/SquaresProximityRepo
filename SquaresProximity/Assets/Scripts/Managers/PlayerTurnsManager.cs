@@ -14,14 +14,14 @@ namespace Managers
         {
             _gameManager = gameManager;
             _gridManager = gridManager;
-            _gameMode = ServiceLocator.Get<GameMode>();
+            _onlineMode = ServiceLocator.Get<OnlineMode>();
         }
 
         #endregion
 
         #region Variables Declarations
 
-        private GameMode _gameMode;
+        private OnlineMode _onlineMode;
         private GameManager _gameManager;
         private GridManager _gridManager;
 
@@ -53,7 +53,7 @@ namespace Managers
 
         public void EndPlayerTurn()
         {
-            if(_gameMode.IsOnlineMode)
+            if(_onlineMode.PlayerIsOnline)
             {
                 // Handle multiplayer end turn logic (e.g., notify server, wait for network events)
             }
@@ -65,7 +65,7 @@ namespace Managers
 
         public void StartPlayerTurn()
         {
-            if(_gameMode.IsOnlineMode)
+            if(_onlineMode.PlayerIsOnline)
             {
                 // Handle multiplayer start turn logic here (e.g., sync with server)
             }

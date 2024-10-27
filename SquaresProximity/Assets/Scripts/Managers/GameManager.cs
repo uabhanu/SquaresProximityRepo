@@ -40,6 +40,11 @@ namespace Managers
         private GameObject _coinUIObj;
         private GameObject _trailObj;
         private GridManager _gridManager;
+        private int _coinValue;
+        private int _currentPlayerID;
+        private int _numberOfPlayers;
+        private int _playersListsCapacity;
+        private int[] _totalReceivedArray;
         private List<int> _lesserCoinValuesList;
         private List<int> _otherPlayerCoinValuesList;
         private List<int> _selfCoinValuesList;
@@ -47,11 +52,6 @@ namespace Managers
         private List<Vector2Int> _lesserCoinsCellIndicesList;
         private List<Vector2Int> _selfCoinsCellIndicesList;
         private List<Vector2Int> _unblockedCellIndicesList;
-        private int _coinValue;
-        private int _currentPlayerID;
-        private int _numberOfPlayers;
-        private int _playersListsCapacity;
-        private int[] _totalReceivedArray;
         private List<int> _playersRemainingList;
         private List<List<int>> _playerNumbersList;
         private Vector2Int _cellIndexAtJoystickPosition;
@@ -63,14 +63,14 @@ namespace Managers
         [SerializeField] private Color[] coinBackgroundColours;
         [SerializeField] private Color[] coinForegroundColours;
         [SerializeField] private float aiCoinPlaceDelay;
+        [SerializeField] private GameObject coinObj;
+        [SerializeField] private GameObject trailObj;
         [SerializeField] private int coinValueForTesting;
         [SerializeField] private int maxCoinValue;
         [SerializeField] private int maxDifferenceAttack;
         [SerializeField] private int maxHigherCoinValue;
         [SerializeField] private int minCoinValue;
         [SerializeField] private int minHigherCoinValue;
-        [SerializeField] private GameObject coinObj;
-        [SerializeField] private GameObject trailObj;
 
         public bool IsRandomTurns => _isRandomTurns;
         public bool[] IsAIArray => _isAIArray;
@@ -87,9 +87,9 @@ namespace Managers
 
         public int MinHigherCoinValue => minHigherCoinValue;
         public int NumberOfPlayers => _numberOfPlayers;
-        public IPlayerTurnsManager IPlayerTurnsManager => _iPlayerTurnsManager;
         public List<List<int>> PlayerNumbersList => _playerNumbersList;
         public List<int> PlayersRemainingList => _playersRemainingList;
+        public IPlayerTurnsManager IPlayerTurnsManager => _iPlayerTurnsManager;
         
         public bool IsGamePaused
         {
@@ -181,7 +181,7 @@ namespace Managers
                 _trailObj = Instantiate(trailObj , Vector3.zero , Quaternion.identity , gameObject.transform);
             #endif
             
-            ServiceLocator.Register(new GameMode());
+            ServiceLocator.Register(new OnlineMode());
             ToggleEventSubscription(true);
             UpdateTrailVisibility();
         }

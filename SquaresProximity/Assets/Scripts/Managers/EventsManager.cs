@@ -12,7 +12,6 @@ namespace Managers
         GameDataReset,
         GameOver,
         JoystickXPressed,
-        GameModeChanged,
         GamePaused,
         GameRestarted,
         GameResumed,
@@ -31,6 +30,7 @@ namespace Managers
         PlayerTotalReceived,
         PlayerWins,
         PlayerNamesUpdated,
+        PlayerNowOnline,
         RandomTurnsToggled,
         ScoreUpdated,
         TouchscreenTapped

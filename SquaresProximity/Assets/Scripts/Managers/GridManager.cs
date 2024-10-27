@@ -14,7 +14,7 @@ namespace Managers
         private static readonly int HoleSize = Shader.PropertyToID("_HoleSize");
 
         private bool _shouldGenerateEmptyCellsBool;
-        private GameMode _gameMode;
+        private OnlineMode _onlineMode;
         private GridData<bool> _isCellBlockedData;
         private GridData<GameObject> _coinOnTheCellData;
         private GridData<GameObject> _cellPrefabData;
@@ -86,7 +86,7 @@ namespace Managers
 
         private void Awake()
         {
-            _gameMode = ServiceLocator.Get<GameMode>();
+            _onlineMode = ServiceLocator.Get<OnlineMode>();
             _randomSpritesIndex = Random.Range(0 , availableSprites.Length);
 
             if(isTestingMode)
@@ -115,7 +115,7 @@ namespace Managers
         
         private void BroadcastCellUpdate(int col , int row , int coinValue , int playerID)
         {
-            if(!_gameMode.IsOnlineMode) return; // Only broadcast in online mode
+            if(!_onlineMode.PlayerIsOnline) return; // Only broadcast in online mode
 
             // Placeholder for networking code to sync with other players
             Debug.Log($"Broadcasting cell update: ({col} , {row}) , Coin Value: {coinValue} , Player ID: {playerID}");
@@ -204,7 +204,7 @@ namespace Managers
         
         private void UpdateCellFromNetwork(int col , int row , int coinValue , int playerID)
         {
-            if(!_gameMode.IsOnlineMode) return; // Only handle in online mode
+            if(!_onlineMode.PlayerIsOnline) return; // Only handle in online mode
 
             CoinValueData.SetValue(col , row , coinValue);
             PlayerIDData.SetValue(col , row , playerID);
