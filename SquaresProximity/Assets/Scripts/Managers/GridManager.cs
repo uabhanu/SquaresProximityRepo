@@ -1,33 +1,36 @@
 namespace Managers
 {
     using Data;
+    using Misc;
     using Random = UnityEngine.Random;
     using System;
     using System.Collections.Generic;
     using UnityEngine;
-    
+
     public class GridManager : MonoBehaviour
     {
         #region Variables Declarations
-        
+
         private static readonly int HoleSize = Shader.PropertyToID("_HoleSize");
-        
+
         private bool _shouldGenerateEmptyCellsBool;
-        private int _holeCellsCount;
-        private int _randomSpritesIndex;
-        private int _totalCells;
+        private GameMode _gameMode;
         private GridData<bool> _isCellBlockedData;
         private GridData<GameObject> _coinOnTheCellData;
         private GridData<GameObject> _cellPrefabData;
         private GridData<int> _coinValueData;
         private GridData<int> _playerIDData;
         private GridData<SpriteRenderer> _cellSpriteRenderersData;
+        private int _holeCellsCount;
+        private int _randomSpritesIndex;
+        private int _totalCells;
         private readonly Vector2Int _invalidCellIndex = new (-1 , -1);
 
+        [HideInInspector] [SerializeField] private GridInfo gridInfo;
+        
         [SerializeField] private bool isTestingMode;
         [SerializeField] private float holeSize;
         [SerializeField] private GameObject cellPrefab;
-        [HideInInspector] [SerializeField] private GridInfo gridInfo;
         [SerializeField] private int columns;
         [SerializeField] private int rows;
         [SerializeField] private Material holeMaterial;
@@ -36,25 +39,25 @@ namespace Managers
         #endregion
 
         #region Helper Properties
-        
+
         public GridData<bool> IsCellBlockedData
         {
             get => _isCellBlockedData;
             set => _isCellBlockedData = value;
         }
-    
+
         public GridData<GameObject> CoinOnTheCellData
         {
             get => _coinOnTheCellData;
             set => _coinOnTheCellData = value;
         }
-    
+
         public GridData<int> CoinValueData
         {
             get => _coinValueData;
             set => _coinValueData = value;
         }
-    
+
         public GridData<int> PlayerIDData
         {
             get => _playerIDData;
@@ -66,9 +69,9 @@ namespace Managers
             get => _cellSpriteRenderersData;
             set => _cellSpriteRenderersData = value;
         }
-    
+
         public GridInfo GridInfo => gridInfo;
-    
+
         public int TotalCells
         {
             get => _totalCells;
@@ -76,15 +79,16 @@ namespace Managers
         }
 
         public Vector2Int InvalidCellIndex => _invalidCellIndex;
-        
+
         #endregion
 
         #region MonoBehaviour Functions
-        
+
         private void Awake()
         {
+            _gameMode = ServiceLocator.Get<GameMode>();
             _randomSpritesIndex = Random.Range(0 , availableSprites.Length);
-            
+
             if(isTestingMode)
             {
                 GridInfo.Cols = 12;
@@ -96,14 +100,7 @@ namespace Managers
                 GridInfo.Rows = rows;
             }
 
-            _cellPrefabData = new GridData<GameObject>(GridInfo);
-            CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
-            CoinOnTheCellData = new GridData<GameObject>(GridInfo);
-            CoinValueData = new GridData<int>(GridInfo);
-            _holeCellsCount = GetRandomDivisibleNumber(18 , 30 , 2 , 3);
-            IsCellBlockedData = new GridData<bool>(GridInfo);
-            PlayerIDData = new GridData<int>(GridInfo);
-            TotalCells = GridInfo.Cols * GridInfo.Rows;
+            InitializeGridData();
             ToggleEventSubscription(true);
         }
 
@@ -111,49 +108,30 @@ namespace Managers
         {
             ToggleEventSubscription(false);
         }
-        
+
         #endregion
-    
+
         #region User Defined Functions
         
-        private int GetRandomDivisibleNumber(int minValue , int maxValue , int divisor1 , int divisor2)
+        private void BroadcastCellUpdate(int col , int row , int coinValue , int playerID)
         {
-            int randomValue = Random.Range(minValue , maxValue + 1);
-        
-            while(randomValue % divisor1 != 0 || randomValue % divisor2 != 0)
-            {
-                randomValue = Random.Range(minValue , maxValue + 1);
-            }
-        
-            return randomValue;
-        }
+            if(!_gameMode.IsOnlineMode) return; // Only broadcast in online mode
 
+            // Placeholder for networking code to sync with other players
+            Debug.Log($"Broadcasting cell update: ({col} , {row}) , Coin Value: {coinValue} , Player ID: {playerID}");
+        }
+        
         public Vector2 CellToWorld(int col , int row)
         {
             var x = (col * GridInfo.CellSize) + transform.position.x;
             var y = row * GridInfo.CellSize  + transform.position.y;
             return new Vector2(x , y);
         }
-
-        public Vector2Int WorldToCell(Vector3 worldPosition)
-        {
-            Vector2 localPosition = (worldPosition / GridInfo.CellSize - transform.position);
-
-            int col = Mathf.FloorToInt(localPosition.x);
-            int row = Mathf.FloorToInt(localPosition.y);
-
-            if(col >= 0 && col < GridInfo.Cols && row >= 0 && row < GridInfo.Rows)
-            {
-                return new Vector2Int(col , row);
-            }
-
-            return InvalidCellIndex;
-        }
-
+        
         private void GenerateGrid()
         {
             List<Vector2Int> cellIndices = new List<Vector2Int>();
-        
+
             for(int col = 0; col < GridInfo.Cols; col++)
             {
                 for(int row = 0; row < GridInfo.Rows; row++)
@@ -200,10 +178,60 @@ namespace Managers
             }
         }
         
-        #endregion
-    
-        #region Events Related Functions
+        private int GetRandomDivisibleNumber(int minValue , int maxValue , int divisor1 , int divisor2)
+        {
+            int randomValue = Random.Range(minValue , maxValue + 1);
+
+            while(randomValue % divisor1 != 0 || randomValue % divisor2 != 0)
+            {
+                randomValue = Random.Range(minValue , maxValue + 1);
+            }
+
+            return randomValue;
+        }
         
+        private void InitializeGridData()
+        {
+            _cellPrefabData = new GridData<GameObject>(GridInfo);
+            CellSpriteRenderersData = new GridData<SpriteRenderer>(GridInfo);
+            CoinOnTheCellData = new GridData<GameObject>(GridInfo);
+            CoinValueData = new GridData<int>(GridInfo);
+            _holeCellsCount = GetRandomDivisibleNumber(18 , 30 , 2 , 3);
+            IsCellBlockedData = new GridData<bool>(GridInfo);
+            PlayerIDData = new GridData<int>(GridInfo);
+            TotalCells = GridInfo.Cols * GridInfo.Rows;
+        }
+        
+        private void UpdateCellFromNetwork(int col , int row , int coinValue , int playerID)
+        {
+            if(!_gameMode.IsOnlineMode) return; // Only handle in online mode
+
+            CoinValueData.SetValue(col , row , coinValue);
+            PlayerIDData.SetValue(col , row , playerID);
+            IsCellBlockedData.SetValue(col , row , true);
+
+            EventsManager.Invoke(Event.CoinPlaced , coinValue , playerID);
+        }
+
+        public Vector2Int WorldToCell(Vector3 worldPosition)
+        {
+            Vector2 localPosition = (worldPosition / GridInfo.CellSize - transform.position);
+
+            int col = Mathf.FloorToInt(localPosition.x);
+            int row = Mathf.FloorToInt(localPosition.y);
+
+            if(col >= 0 && col < GridInfo.Cols && row >= 0 && row < GridInfo.Rows)
+            {
+                return new Vector2Int(col , row);
+            }
+
+            return InvalidCellIndex;
+        }
+
+        #endregion
+
+        #region Events Related Functions
+
         private void OnGameStarted()
         {
             GenerateGrid();
@@ -227,7 +255,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.HolesToggled , new Action(OnHolesToggled));
             }
         }
-        
+
         #endregion
     }
 }
