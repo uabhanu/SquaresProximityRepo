@@ -1,41 +1,44 @@
 namespace Managers
 {
     using Interfaces;
+    using Misc;
     using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
-    
+
     public class PlayerTurnsManager : IPlayerTurnsManager
     {
         #region Constructor
-        
+
         public PlayerTurnsManager(GameManager gameManager , GridManager gridManager)
         {
             _gameManager = gameManager;
             _gridManager = gridManager;
+            _gameMode = ServiceLocator.Get<GameMode>();
         }
-        
+
         #endregion
 
         #region Variables Declarations
-        
+
+        private GameMode _gameMode;
         private GameManager _gameManager;
         private GridManager _gridManager;
 
         #endregion
 
         #region Functions
-        
+
         private void UpdateCoinValueAfterPlacement()
         {
             int currentPlayerID = _gameManager.CurrentPlayerID;
-        
+
             if(_gameManager.PlayerNumbersList[currentPlayerID].Count > 0)
             {
                 _gameManager.CoinValue = _gameManager.GetCurrentCoinValue();
                 TMP_Text coinUITMP = _gameManager.CoinUIObj.GetComponentInChildren<TMP_Text>();
                 coinUITMP.text = _gameManager.CoinValue.ToString();
-    
+
                 for(int i = 0; i < _gameManager.TotalReceivedArray.Length; i++)
                 {
                     if(currentPlayerID == i)
@@ -43,58 +46,72 @@ namespace Managers
                         _gameManager.TotalReceivedArray[i] += _gameManager.CoinValue;
                     }
                 }
-    
+
                 _gameManager.PlayerNumbersList[currentPlayerID].RemoveAt(0);
             }
         }
 
         public void EndPlayerTurn()
         {
-            _gameManager.CurrentPlayerID = (_gameManager.CurrentPlayerID + 1) % _gameManager.NumberOfPlayers;
+            if(_gameMode.IsOnlineMode)
+            {
+                // Handle multiplayer end turn logic (e.g., notify server, wait for network events)
+            }
+            else
+            {
+                _gameManager.CurrentPlayerID = (_gameManager.CurrentPlayerID + 1) % _gameManager.NumberOfPlayers;
+            }
         }
 
         public void StartPlayerTurn()
         {
-            if(_gameManager.IsRandomTurns)
+            if(_gameMode.IsOnlineMode)
             {
-                int remainingPlayersCount = _gameManager.PlayersRemainingList.Count;
-                int randomIndex = Random.Range(0 , remainingPlayersCount);
-                _gameManager.CurrentPlayerID = _gameManager.PlayersRemainingList[randomIndex];
-                _gameManager.PlayersRemainingList.RemoveAt(randomIndex);
+                // Handle multiplayer start turn logic here (e.g., sync with server)
             }
-
-            bool foundUnblockedCell = false;
-            int maxIterations = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
-            int currentIteration = 0;
-
-            UpdateCoinValueAfterPlacement();
-
-            if(_gameManager.PlayersRemainingList.Count == 0)
+            else
             {
-                _gameManager.ResetPlayersRemaining();
-            }
-
-            while(!foundUnblockedCell && currentIteration < maxIterations)
-            {
-                for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
+                if(_gameManager.IsRandomTurns)
                 {
-                    if(_gameManager.IsAIArray[i] && _gameManager.CurrentPlayerID == i)
-                    {
-                        _gameManager.CellIndexToUse = _gameManager.IAIManager.FindCellToPlaceCoinOn();
-
-                        if(_gameManager.CellIndexToUse != _gridManager.InvalidCellIndex)
-                        {
-                            _gameManager.StartCoroutine(_gameManager.IAIManager.AIPlaceCoinCoroutine());
-                            foundUnblockedCell = true;
-                        }
-                    }
+                    int remainingPlayersCount = _gameManager.PlayersRemainingList.Count;
+                    int randomIndex = Random.Range(0 , remainingPlayersCount);
+                    _gameManager.CurrentPlayerID = _gameManager.PlayersRemainingList[randomIndex];
+                    _gameManager.PlayersRemainingList.RemoveAt(randomIndex);
                 }
 
-                currentIteration++;
-            }
+                bool foundUnblockedCell = false;
+                int maxIterations = _gridManager.GridInfo.Cols * _gridManager.GridInfo.Rows;
+                int currentIteration = 0;
 
-            UpdateCoinUIImageColors();
-            UpdateTrailColor();
+                UpdateCoinValueAfterPlacement();
+
+                if(_gameManager.PlayersRemainingList.Count == 0)
+                {
+                    _gameManager.ResetPlayersRemaining();
+                }
+
+                while(!foundUnblockedCell && currentIteration < maxIterations)
+                {
+                    for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
+                    {
+                        if(_gameManager.IsAIArray[i] && _gameManager.CurrentPlayerID == i)
+                        {
+                            _gameManager.CellIndexToUse = _gameManager.IAIManager.FindCellToPlaceCoinOn();
+
+                            if(_gameManager.CellIndexToUse != _gridManager.InvalidCellIndex)
+                            {
+                                _gameManager.StartCoroutine(_gameManager.IAIManager.AIPlaceCoinCoroutine());
+                                foundUnblockedCell = true;
+                            }
+                        }
+                    }
+                    
+                    currentIteration++;
+                }
+
+                UpdateCoinUIImageColors();
+                UpdateTrailColor();
+            }
         }
 
         public void UpdateAdjacentCoinText(int x , int y , int newCoinValue)
@@ -150,15 +167,15 @@ namespace Managers
             {
                 SpriteRenderer coinRenderer = coin.GetComponentInChildren<SpriteRenderer>();
                 TMP_Text coinValueTMP = coin.GetComponentInChildren<TMP_Text>();
-                
+
                 coinRenderer.color = _gameManager.GetCoinBackgroundColour(_gameManager.CurrentPlayerID);
                 coinValueTMP.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
-            
+
                 for(int i = 0; i < _gameManager.IsAIArray.Length; i++)
                 {
                     if(_gameManager.IsAIArray[i])
                     {
-                        _gameManager.StartCoroutine(_gameManager.IAIManager.AnimateCoinEffect(coinRenderer , coinRenderer.color));       
+                        _gameManager.StartCoroutine(_gameManager.IAIManager.AnimateCoinEffect(coinRenderer , coinRenderer.color));
                     }
                 }
             }
@@ -171,7 +188,7 @@ namespace Managers
                 Color coinColour = _gameManager.GetCoinBackgroundColour(_gameManager.CurrentPlayerID);
                 Image coinUIImage = _gameManager.CoinUIObj.GetComponent<Image>();
                 TMP_Text coinUIText = _gameManager.CoinUIObj.GetComponentInChildren<TMP_Text>();
-                
+
                 coinUIImage.color = coinColour;
                 coinUIText.color = _gameManager.GetCoinForegroundColour(_gameManager.CurrentPlayerID);
             }
@@ -188,7 +205,7 @@ namespace Managers
                 trailRenderer.color = playerColour;
             }
         }
-        
+
         #endregion
     }
 }
