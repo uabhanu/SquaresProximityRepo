@@ -53,6 +53,7 @@ namespace Managers
         [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
+        [SerializeField] private TMP_InputField lobbyNameInputField;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
         [SerializeField] private TMP_Text[] gameTitleTMPTexts;
@@ -442,6 +443,21 @@ namespace Managers
             pauseButtonObj.SetActive(false);
         }
 
+        public void LobbyCreateButton()
+        {
+            EventsManager.Invoke(Event.LobbyCreate);
+        }
+
+        public void LobbyJoinButton()
+        {
+            EventsManager.Invoke(Event.LobbyJoin);
+        }
+
+        public void LobbyLeaveButton()
+        {
+            EventsManager.Invoke(Event.LobbyLeave);
+        }
+
         public void OkButton()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -551,6 +567,11 @@ namespace Managers
         #endregion
         
         #region Other Functions
+
+        public void LobbyNameUpdated()
+        {
+            EventsManager.Invoke(Event.LobbyNameUpdated , lobbyNameInputField.text);
+        }
         
         private void SetPlayersNumber()
         {

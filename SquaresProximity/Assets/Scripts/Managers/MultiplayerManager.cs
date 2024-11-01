@@ -3,7 +3,6 @@ namespace Managers
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using TMPro;
     using Unity.Services.Core;
     using Unity.Services.Authentication;
     using Unity.Services.Lobbies;
@@ -16,12 +15,16 @@ namespace Managers
         private const int MaxPlayers = 4;
         private Lobby _currentLobby;
         private string _lobbyName;
-        
-        [SerializeField] private TMP_InputField lobbyNameInputField;
 
         private async void Start()
         {
             await InitializeUnityServices();
+            ToggleEventSubscription(true);
+        }
+
+        private void OnDestroy()
+        {
+            ToggleEventSubscription(false);
         }
 
         private async Task InitializeUnityServices()
@@ -92,7 +95,7 @@ namespace Managers
                     Debug.LogError($"No lobby found with the name: {_lobbyName}");
                 }
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 Debug.LogError($"Failed to join lobby by name: {e.Message}");
             }
@@ -142,20 +145,25 @@ namespace Managers
         
         public async void CreateLobbyButton()
         {
-            _lobbyName = lobbyNameInputField != null ? lobbyNameInputField.text : "DefaultLobbyName";
-            await CreateLobbyWithRelay();
+            if(!string.IsNullOrEmpty(_lobbyName))
+            {
+                await CreateLobbyWithRelay();
+            }
+            else
+            {
+                Debug.LogError("Lobby name is empty.");
+            }
         }
 
         public async void JoinLobbyButton()
         {
-            if(lobbyNameInputField != null && !string.IsNullOrEmpty(lobbyNameInputField.text))
+            if(!string.IsNullOrEmpty(_lobbyName))
             {
-                _lobbyName = lobbyNameInputField.text;
                 await JoinLobbyByName();
             }
             else
             {
-                Debug.LogError("Lobby name input field is empty or not assigned.");
+                Debug.LogError("Lobby name is empty.");
             }
         }
 
@@ -164,9 +172,56 @@ namespace Managers
             await LeaveLobby();
         }
 
-        public void UpdateValue()
+        private async void OnLobbyCreated()
         {
-            _lobbyName = lobbyNameInputField.text;
+            if(!string.IsNullOrEmpty(_lobbyName))
+            {
+                await CreateLobbyWithRelay();
+            }
+            else
+            {
+                Debug.LogError("Lobby name is empty.");
+            }
+        }
+        
+        private async void OnLobbyJoined()
+        {
+            if(!string.IsNullOrEmpty(_lobbyName))
+            {
+                await JoinLobbyByName();
+            }
+            else
+            {
+                Debug.LogError("Lobby name is empty.");
+            }
+        }
+        
+        private async void OnLobbyLeft()
+        {
+            await LeaveLobby();
+        }
+
+        private void OnLobbyNameUpdated(string lobbyName)
+        {
+            _lobbyName = lobbyName;
+        }
+        
+        private void ToggleEventSubscription(bool shouldSubscribe)
+        {
+            if(shouldSubscribe)
+            {
+                EventsManager.SubscribeToEvent(Event.LobbyCreate , new Action(OnLobbyCreated));
+                EventsManager.SubscribeToEvent(Event.LobbyJoin , new Action(OnLobbyJoined));
+                EventsManager.SubscribeToEvent(Event.LobbyLeave , new Action(OnLobbyLeft));
+                EventsManager.SubscribeToEvent(Event.LobbyNameUpdated , new Action<string>(OnLobbyNameUpdated));
+            }
+            else
+            {
+                EventsManager.UnsubscribeFromEvent(Event.LobbyCreate , new Action(OnLobbyCreated));
+                EventsManager.UnsubscribeFromEvent(Event.LobbyJoin , new Action(OnLobbyJoined));
+                EventsManager.UnsubscribeFromEvent(Event.LobbyLeave , new Action(OnLobbyLeft));
+                EventsManager.UnsubscribeFromEvent(Event.LobbyNameUpdated , new Action<string>(OnLobbyNameUpdated));
+            }
         }
     }
 }
