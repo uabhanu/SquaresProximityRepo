@@ -152,6 +152,22 @@ namespace Managers
         public void BackButtonMain()
         {
             numberOfPlayersSelectionPanelObj.SetActive(true);
+            
+            if(!onlineToggle.isOn)
+            {
+                for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+                {
+                    numberOfPlayersSelectionTogglesArray[i].gameObject.SetActive(true); 
+                }    
+            }
+            else
+            {
+                for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+                {
+                    numberOfPlayersSelectionTogglesArray[i].gameObject.SetActive(false); 
+                }
+            }
+            
             playerInputPanelOfflineObj.SetActive(false);
             playerInputPanelOnlineObj.SetActive(false);
         }
@@ -175,7 +191,7 @@ namespace Managers
                     aiHumanTogglesArray[i].isOn = _aiHumanSelectionsBoolArray[i];
                 }
             }
-        
+            
             numberOfPlayersSelectionPanelObj.SetActive(false);
 
             if(_onlineToggleBool)
@@ -485,6 +501,21 @@ namespace Managers
         {
             gameIntroPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(true);
+
+            if(!onlineToggle.isOn)
+            {
+                for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+                {
+                    numberOfPlayersSelectionTogglesArray[i].gameObject.SetActive(true); 
+                }   
+            }
+            else
+            {
+                for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+                {
+                    numberOfPlayersSelectionTogglesArray[i].gameObject.SetActive(false); 
+                }
+            }
             
             for(int i = 0; i < gameTitleTMPTexts.Length; i++)
             {
@@ -735,6 +766,24 @@ namespace Managers
             SetPlayersNumber();
         }
 
+        private void OnPlayerNowOnline(bool onlineStatus)
+        {
+            if(onlineStatus)
+            {
+                for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+                {
+                   numberOfPlayersSelectionTogglesArray[i].gameObject.SetActive(false); 
+                }
+            }
+            else
+            {
+                for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
+                {
+                    numberOfPlayersSelectionTogglesArray[i].gameObject.SetActive(true); 
+                }
+            }
+        }
+
         private void OnPlayerWins(int highestScorePlayerID)
         {
             _highestScorePlayerID = highestScorePlayerID;
@@ -775,6 +824,7 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
+                EventsManager.SubscribeToEvent(Event.PlayerNowOnline , (Action<bool>)OnPlayerNowOnline);
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);    
@@ -787,6 +837,7 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
+                EventsManager.UnsubscribeFromEvent(Event.PlayerNowOnline , (Action<bool>)OnPlayerNowOnline);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);
