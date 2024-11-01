@@ -13,6 +13,8 @@ namespace Managers
     public class MultiplayerManager : MonoBehaviour
     {
         private const int MaxPlayers = 4;
+
+        private bool _isLeavingLobby;
         private Lobby _currentLobby;
         private string _lobbyName;
 
@@ -125,51 +127,51 @@ namespace Managers
                 Debug.LogError($"Failed to join lobby with Relay: {e.Message}");
             }
         }
-
+        
         private async Task LeaveLobby()
         {
+            if(_currentLobby == null)
+            {
+                Debug.LogWarning("No active lobby to leave.");
+                return;
+            }
+    
+            if(_isLeavingLobby)
+            {
+                Debug.LogWarning("Leave operation is already in progress.");
+                return;
+            }
+    
+            _isLeavingLobby = true;
+
             try
             {
-                if(_currentLobby != null)
+                await LobbyService.Instance.DeleteLobbyAsync(_currentLobby.Id);
+                Debug.Log($"Successfully left the lobby with ID: {_currentLobby.Id}");
+                _currentLobby = null;
+            }
+            catch(LobbyServiceException e)
+            {
+                if(e.Message.Contains("rate limit exceeded" , StringComparison.OrdinalIgnoreCase))
                 {
-                    await LobbyService.Instance.DeleteLobbyAsync(_currentLobby.Id);
-                    Debug.Log("Left the lobby.");
+                    Debug.LogWarning("Rate limit exceeded while trying to leave the lobby. Please try again later.");
+                }
+                
+                else if(e.Message.Contains("lobby not found" , StringComparison.OrdinalIgnoreCase))
+                {
+                    Debug.LogWarning("Lobby not found on the server. Clearing local reference.");
                     _currentLobby = null;
                 }
+                
+                else
+                {
+                    Debug.LogError($"Failed to leave the lobby: {e.Message}");
+                }
             }
-            catch(Exception e)
+            finally
             {
-                Debug.LogError($"Failed to leave lobby: {e.Message}");
+                _isLeavingLobby = false;
             }
-        }
-        
-        public async void CreateLobbyButton()
-        {
-            if(!string.IsNullOrEmpty(_lobbyName))
-            {
-                await CreateLobbyWithRelay();
-            }
-            else
-            {
-                Debug.LogError("Lobby name is empty.");
-            }
-        }
-
-        public async void JoinLobbyButton()
-        {
-            if(!string.IsNullOrEmpty(_lobbyName))
-            {
-                await JoinLobbyByName();
-            }
-            else
-            {
-                Debug.LogError("Lobby name is empty.");
-            }
-        }
-
-        public async void LeaveLobbyButton()
-        {
-            await LeaveLobby();
         }
 
         private async void OnLobbyCreated()
