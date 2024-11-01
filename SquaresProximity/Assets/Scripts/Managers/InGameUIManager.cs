@@ -42,6 +42,7 @@ namespace Managers
         [SerializeField] private GameObject inGameUIPanelsObj;
         [SerializeField] private GameObject inGameUIPlayerNamesDisplayPanelObj;
         [SerializeField] private GameObject leaderboardPanelObj;
+        [SerializeField] private GameObject lobbyPanelObj;
         [SerializeField] private GameObject pauseButtonObj;
         [SerializeField] private GameObject pauseMenuPanelObj;
         [SerializeField] private GameObject numberOfPlayersSelectionPanelObj;
@@ -81,6 +82,7 @@ namespace Managers
             gameTiedPanelObj.SetActive(false);
             inGameUIPanelsObj.SetActive(false);
             leaderboardPanelObj.SetActive(false);
+            lobbyPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(false);
             pauseMenuPanelObj.SetActive(false);
             playerInputPanelOfflineObj.SetActive(false);
@@ -151,6 +153,7 @@ namespace Managers
     
         public void BackButtonMain()
         {
+            lobbyPanelObj.SetActive(false);
             numberOfPlayersSelectionPanelObj.SetActive(true);
             
             if(!onlineToggle.isOn)
@@ -164,6 +167,7 @@ namespace Managers
             {
                 for(int i = 0; i < numberOfPlayersSelectionTogglesArray.Length; i++)
                 {
+                    LobbyLeaveButton();
                     numberOfPlayersSelectionTogglesArray[i].gameObject.SetActive(false); 
                 }
             }
@@ -462,6 +466,8 @@ namespace Managers
         public void LobbyCreateButton()
         {
             EventsManager.Invoke(Event.LobbyCreate);
+            lobbyPanelObj.SetActive(true);
+            numberOfPlayersSelectionPanelObj.SetActive(false);
         }
 
         public void LobbyJoinButton()
