@@ -811,9 +811,9 @@ namespace Managers
             }
         }
 
-        private void OnPlayersListUpdated(List<string> playerNames)
+        private void OnPlayersListUpdated(List<string> playerNamesList)
         {
-            _playerNamesList = playerNames;
+            _playerNamesList = playerNamesList;
             UpdateLobbyPlayersListTMP();
         }
 
