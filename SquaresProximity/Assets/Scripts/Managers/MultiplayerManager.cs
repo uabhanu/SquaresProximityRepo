@@ -29,7 +29,6 @@ namespace Managers
         {
             await InitializeUnityServices();
             await CheckAndLeaveLobbyIfMember();
-            await CreateLobbyIfNoneExists();
             ToggleEventSubscription(true);
         }
 
@@ -73,7 +72,7 @@ namespace Managers
             }
         }
         
-        private async Task CreateLobbyIfNoneExists()
+        private async Task CreateOrJoinLobby()
         {
             int retryCount = 0;
 
@@ -89,17 +88,17 @@ namespace Managers
                         }
                     });
 
-                    if(queryResponse.Results.Count == 0)
+                    if(queryResponse.Results.Count > 0)
                     {
-                        _isHost = true;
-                        await CreateLobbyWithRelay();
-                    }
-                    else
-                    {
-                        Debug.Log("Lobby already exists; awaiting player to join.");
+                        var lobby = queryResponse.Results[0];
+                        Debug.Log($"Found existing lobby with ID: {lobby.Id}. Joining it.");
+                        await JoinLobby(lobby.Id);
+                        return;
                     }
 
-                    break;
+                    _isHost = true;
+                    await CreateLobbyWithRelay();
+                    return;
                 }
                 catch(Exception e)
                 {
@@ -107,10 +106,10 @@ namespace Managers
                     {
                         retryCount++;
                         
-                        if(retryCount >= _maxRetries)
+                        if (retryCount >= _maxRetries)
                         {
-                            Debug.LogError("Max retries reached. Could not create or find a lobby due to rate limits.");
-                            break;
+                            Debug.LogError("Max retries reached. Could not create or join a lobby due to rate limits.");
+                            return;
                         }
 
                         int delay = _baseDelayMs * (int)Math.Pow(2 , retryCount);
@@ -119,8 +118,8 @@ namespace Managers
                     }
                     else
                     {
-                        Debug.LogError($"Failed to create or check for the default lobby: {e.Message}");
-                        break;
+                        Debug.LogError($"Failed to create or join the default lobby: {e.Message}");
+                        return;
                     }
                 }
             }
@@ -184,6 +183,20 @@ namespace Managers
                 Debug.LogError($"Failed to initialize Unity Services: {e.Message}");
             }
         }
+        
+        private async Task JoinLobby(string lobbyId)
+        {
+            try
+            {
+                _currentLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+                await UpdateLobbyPlayerList();
+                Debug.Log($"Joined existing lobby with ID: {_currentLobby.Id}");
+            }
+            catch(LobbyServiceException e)
+            {
+                Debug.LogError($"Failed to join lobby: {e.Message}");
+            }
+        }
 
         private async Task LeaveLobby()
         {
@@ -239,14 +252,15 @@ namespace Managers
         private async void OnLobbyJoined()
         {
             if(string.IsNullOrEmpty(_lobbyPlayerName)) return;
-            
+
             if(_currentLobby != null)
             {
-                UpdateLobbyPlayerList();
+                Debug.Log("Already in a lobby, updating player list.");
+                await UpdateLobbyPlayerList();
                 return;
             }
-            
-            await CreateLobbyIfNoneExists();
+
+            await CreateOrJoinLobby();
         }
 
         private async void OnLobbyLeft()
