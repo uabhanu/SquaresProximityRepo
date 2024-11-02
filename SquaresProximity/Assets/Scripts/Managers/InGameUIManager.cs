@@ -126,6 +126,8 @@ namespace Managers
             SetPlayersNumber();
 
             ToggleEventSubscription(true);
+            
+            UpdateLobbyPlayersListTMP();
         }
 
         private void OnDestroy()
@@ -653,7 +655,7 @@ namespace Managers
             EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
         }
         
-        private void UpdatePlayerListUI()
+        private void UpdateLobbyPlayersListTMP()
         {
             playersListTMPText.text = $"Players Joined:\n" + string.Join("\n" , _playerNamesList);
             playButton.interactable = _playerNamesList.Count > 1;
@@ -788,7 +790,7 @@ namespace Managers
         private void OnPlayerJoinedLobby(string playerName)
         {
             _playerNamesList.Add(playerName);
-            UpdatePlayerListUI();
+            UpdateLobbyPlayersListTMP();
         }
 
         private void OnPlayerNowOnline(bool onlineStatus)
@@ -812,7 +814,7 @@ namespace Managers
         private void OnPlayersListUpdated(List<string> playerNames)
         {
             _playerNamesList = playerNames;
-            UpdatePlayerListUI();
+            UpdateLobbyPlayersListTMP();
         }
 
         private void OnPlayerWins(int highestScorePlayerID)
