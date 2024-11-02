@@ -30,10 +30,12 @@ namespace Managers
         private int[] _playerScoresArray;
         private int[] _playersTotalWinsArray;
         private int[] _totalReceivedArray;
+        private List<string> _playerNamesList = new();
         private string _serverName;
         private string _serverPassword;
         private string[] _playerNamesArray;
 
+        [SerializeField] private Button playButton;
         [SerializeField] private GameObject coinUIObj;
         [SerializeField] private GameObject continueButtonObj;
         [SerializeField] private GameObject gameIntroPanelObj;
@@ -54,9 +56,10 @@ namespace Managers
         [SerializeField] private GameObject[] leaderboardWinsPanelObjs;
         [SerializeField] private GameObject[] totalReceivedPanelObjs;
         [SerializeField] private GameObject[] winsPanelObjs;
-        [SerializeField] private TMP_InputField lobbyNameInputField;
+        [SerializeField] private TMP_InputField lobbyPlayerNameInputField;
         [SerializeField] private TMP_InputField[] playerNameTMPInputFields;
         [SerializeField] private TMP_Text backButtonTMPText;
+        [SerializeField] private TMP_Text playersListTMPText;
         [SerializeField] private TMP_Text[] gameTitleTMPTexts;
         [SerializeField] private TMP_Text[] totalReceivedTMPTexts;
         [SerializeField] private TMP_Text[] playerTotalWinsLabelsTMPTexts;
@@ -463,21 +466,25 @@ namespace Managers
             pauseButtonObj.SetActive(false);
         }
 
-        public void LobbyCreateButton()
-        {
-            EventsManager.Invoke(Event.LobbyCreate);
-            lobbyPanelObj.SetActive(true);
-            numberOfPlayersSelectionPanelObj.SetActive(false);
-        }
-
         public void LobbyJoinButton()
         {
             EventsManager.Invoke(Event.LobbyJoin);
+            
+            if(!string.IsNullOrEmpty(lobbyPlayerNameInputField.text))
+            {
+                lobbyPanelObj.SetActive(true);
+                numberOfPlayersSelectionPanelObj.SetActive(false);   
+            }
         }
 
         public void LobbyLeaveButton()
         {
             EventsManager.Invoke(Event.LobbyLeave);
+        }
+
+        public void LobbyPlayButton()
+        {
+            //TODO Put the same logic as the Enter Button but with Network Logic
         }
 
         public void OkButton()
@@ -604,10 +611,10 @@ namespace Managers
         #endregion
         
         #region Other Functions
-
-        public void LobbyNameUpdated()
+        
+        public void LobbyPlayerNameUpdated()
         {
-            EventsManager.Invoke(Event.LobbyNameUpdated , lobbyNameInputField.text);
+            EventsManager.Invoke(Event.LobbyPlayerNameUpdated , lobbyPlayerNameInputField.text);
         }
         
         private void SetPlayersNumber()
@@ -644,6 +651,12 @@ namespace Managers
         {
             string playerName = playerNameTMPInputFields[playerID].text;
             EventsManager.Invoke(Event.PlayerNamesUpdated , playerID , playerName);
+        }
+        
+        private void UpdatePlayerListUI()
+        {
+            playersListTMPText.text = $"Players Joined:\n" + string.Join("\n" , _playerNamesList);
+            playButton.interactable = _playerNamesList.Count > 1;
         }
         
         #endregion
@@ -772,6 +785,12 @@ namespace Managers
             SetPlayersNumber();
         }
 
+        private void OnPlayerJoinedLobby(string playerName)
+        {
+            _playerNamesList.Add(playerName);
+            UpdatePlayerListUI();
+        }
+
         private void OnPlayerNowOnline(bool onlineStatus)
         {
             if(onlineStatus)
@@ -788,6 +807,12 @@ namespace Managers
                     numberOfPlayersSelectionTogglesArray[i].gameObject.SetActive(true); 
                 }
             }
+        }
+
+        private void OnPlayersListUpdated(List<string> playerNames)
+        {
+            _playerNamesList = playerNames;
+            UpdatePlayerListUI();
         }
 
         private void OnPlayerWins(int highestScorePlayerID)
@@ -830,7 +855,9 @@ namespace Managers
                 EventsManager.SubscribeToEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.SubscribeToEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.SubscribeToEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
+                EventsManager.SubscribeToEvent(Event.PlayerJoinedLobby , new Action<string>(OnPlayerJoinedLobby));
                 EventsManager.SubscribeToEvent(Event.PlayerNowOnline , (Action<bool>)OnPlayerNowOnline);
+                EventsManager.SubscribeToEvent(Event.PlayersListUpdated , (Action<List<string>>)OnPlayersListUpdated);
                 EventsManager.SubscribeToEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.SubscribeToEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.SubscribeToEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);    
@@ -843,7 +870,9 @@ namespace Managers
                 EventsManager.UnsubscribeFromEvent(Event.GameTied , new Action(OnGameTied));
                 EventsManager.UnsubscribeFromEvent(Event.KeyboardTabPressed , new Action(OnKeyboardTabPressed));
                 EventsManager.UnsubscribeFromEvent(Event.NumberOfPlayersToggled , new Action(OnNumberOfPlayersToggled));
+                EventsManager.UnsubscribeFromEvent(Event.PlayerJoinedLobby , new Action<string>(OnPlayerJoinedLobby));
                 EventsManager.UnsubscribeFromEvent(Event.PlayerNowOnline , (Action<bool>)OnPlayerNowOnline);
+                EventsManager.UnsubscribeFromEvent(Event.PlayersListUpdated , (Action<List<string>>)OnPlayersListUpdated);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerWins , (Action<int>)OnPlayerWins);
                 EventsManager.UnsubscribeFromEvent(Event.ScoreUpdated , (Action<int[]>)OnScoreUpdated);
                 EventsManager.UnsubscribeFromEvent(Event.PlayerTotalReceived , (Action<int[]>)OnTotalReceived);

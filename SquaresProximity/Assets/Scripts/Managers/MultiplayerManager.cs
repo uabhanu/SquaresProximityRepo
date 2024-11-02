@@ -8,25 +8,162 @@ namespace Managers
     using Unity.Services.Lobbies;
     using Unity.Services.Lobbies.Models;
     using Unity.Services.Relay;
+    using System.Linq;
     using UnityEngine;
-    
+
     public class MultiplayerManager : MonoBehaviour
     {
         private const int MaxPlayers = 4;
+        
+        private readonly int _maxRetries = 5;
+        private readonly int _baseDelayMs = 1000;
 
+        private bool _isHost;
         private bool _isLeavingLobby;
+        private bool _lobbyChecked;
         private Lobby _currentLobby;
-        private string _lobbyName;
+        private string _lobbyName = "Lobby";
+        private string _lobbyPlayerName;
 
         private async void Start()
         {
             await InitializeUnityServices();
+            await CheckAndLeaveLobbyIfMember();
+            await CreateLobbyIfNoneExists();
             ToggleEventSubscription(true);
         }
 
         private void OnDestroy()
         {
             ToggleEventSubscription(false);
+        }
+        
+        private async void OnApplicationQuit()
+        {
+            await LeaveLobby();
+        }
+        
+        private async Task CheckAndLeaveLobbyIfMember()
+        {
+            try
+            {
+                var queryResponse = await LobbyService.Instance.QueryLobbiesAsync(new QueryLobbiesOptions
+                {
+                    Filters = new List<QueryFilter>
+                    {
+                        new(QueryFilter.FieldOptions.Name , _lobbyName , QueryFilter.OpOptions.EQ)
+                    }
+                });
+                
+                foreach(var lobby in queryResponse.Results)
+                {
+                    if (lobby.Players.Any(player => player.Id == AuthenticationService.Instance.PlayerId))
+                    {
+                        _currentLobby = lobby;
+                        await LeaveLobby();
+                        _currentLobby = null;
+                        Debug.Log("Left existing lobby on startup.");
+                        break;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.LogError($"Error checking or leaving lobby: {e.Message}");
+            }
+        }
+        
+        private async Task CreateLobbyIfNoneExists()
+        {
+            int retryCount = 0;
+
+            while(retryCount < _maxRetries)
+            {
+                try
+                {
+                    var queryResponse = await LobbyService.Instance.QueryLobbiesAsync(new QueryLobbiesOptions
+                    {
+                        Filters = new List<QueryFilter>
+                        {
+                            new(QueryFilter.FieldOptions.Name , _lobbyName , QueryFilter.OpOptions.EQ)
+                        }
+                    });
+
+                    if(queryResponse.Results.Count == 0)
+                    {
+                        _isHost = true;
+                        await CreateLobbyWithRelay();
+                    }
+                    else
+                    {
+                        Debug.Log("Lobby already exists; awaiting player to join.");
+                    }
+
+                    break;
+                }
+                catch(Exception e)
+                {
+                    if(e.Message.Contains("Rate limit" , StringComparison.OrdinalIgnoreCase))
+                    {
+                        retryCount++;
+                        
+                        if(retryCount >= _maxRetries)
+                        {
+                            Debug.LogError("Max retries reached. Could not create or find a lobby due to rate limits.");
+                            break;
+                        }
+
+                        int delay = _baseDelayMs * (int)Math.Pow(2 , retryCount);
+                        Debug.LogWarning($"Rate limit exceeded. Retrying in {delay / 1000} seconds... (Attempt {retryCount}/{_maxRetries})");
+                        await Task.Delay(delay);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to create or check for the default lobby: {e.Message}");
+                        break;
+                    }
+                }
+            }
+        }
+        
+        private async Task CreateLobbyWithRelay()
+        {
+            try
+            {
+                var allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1);
+                var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
+                if(string.IsNullOrEmpty(joinCode))
+                {
+                    Debug.LogError("Failed to get a valid join code from Relay.");
+                    return;
+                }
+
+                Debug.Log($"Relay created with join code: {joinCode}");
+
+                _currentLobby = await LobbyService.Instance.CreateLobbyAsync(_lobbyName , MaxPlayers , new CreateLobbyOptions
+                {
+                    Data = new Dictionary<string, DataObject>
+                    {
+                        { "joinCode" , new DataObject(DataObject.VisibilityOptions.Public , joinCode) },
+                        { "lobbyName" , new DataObject(DataObject.VisibilityOptions.Public , _lobbyName) }
+                    }
+                });
+
+                if(_currentLobby == null)
+                {
+                    Debug.LogError("Lobby creation returned null.");
+                }
+                else
+                {
+                    Debug.Log($"Lobby created with ID: {_currentLobby.Id} and join code: {joinCode}");
+                    await UpdateLobbyPlayerList();
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.LogError($"Failed to create lobby with Relay: {e.Message}");
+            }
         }
 
         private async Task InitializeUnityServices()
@@ -35,7 +172,7 @@ namespace Managers
             {
                 await UnityServices.InitializeAsync();
                 Debug.Log("Unity Services Initialized Successfully.");
-                
+
                 if(!AuthenticationService.Instance.IsSignedIn)
                 {
                     await AuthenticationService.Instance.SignInAnonymouslyAsync();
@@ -47,34 +184,8 @@ namespace Managers
                 Debug.LogError($"Failed to initialize Unity Services: {e.Message}");
             }
         }
-
-        private async Task CreateLobbyWithRelay()
-        {
-            try
-            {
-                var allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1);
-                var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-
-                Debug.Log($"Relay created with join code: {joinCode}");
-                
-                _currentLobby = await LobbyService.Instance.CreateLobbyAsync(_lobbyName , MaxPlayers , new CreateLobbyOptions
-                {
-                    Data = new Dictionary<string, DataObject>
-                    {
-                        { "joinCode" , new DataObject(DataObject.VisibilityOptions.Public , joinCode) },
-                        { "lobbyName" , new DataObject(DataObject.VisibilityOptions.Public , _lobbyName) }
-                    }
-                });
-
-                Debug.Log($"Lobby created with name: {_lobbyName} and ID: {_currentLobby.Id}");
-            }
-            catch(Exception e)
-            {
-                Debug.LogError($"Failed to create lobby with Relay: {e.Message}");
-            }
-        }
         
-        private async Task JoinLobbyByName()
+        private async Task JoinLobby()
         {
             try
             {
@@ -82,24 +193,25 @@ namespace Managers
                 {
                     Filters = new List<QueryFilter>
                     {
-                        new(field: QueryFilter.FieldOptions.Name ,  op: QueryFilter.OpOptions.EQ , value: _lobbyName)
+                        new(field: QueryFilter.FieldOptions.Name , op: QueryFilter.OpOptions.EQ , value: _lobbyName)
                     }
                 });
-                
+
                 if(queryResponse.Results.Count > 0)
                 {
                     var lobby = queryResponse.Results[0];
-                    Debug.Log($"Found lobby with name: {_lobbyName} , ID: {lobby.Id}");
+                    Debug.Log($"Found existing default lobby with ID: {lobby.Id}");
                     await JoinLobbyWithRelay(lobby.Id);
                 }
                 else
                 {
-                    Debug.LogError($"No lobby found with the name: {_lobbyName}");
+                    Debug.LogWarning("No lobby found to join. Please try again.");
+                    CreateLobbyIfNoneExists();
                 }
             }
             catch(Exception e)
             {
-                Debug.LogError($"Failed to join lobby by name: {e.Message}");
+                Debug.LogError($"Failed to join the default lobby: {e.Message}");
             }
         }
 
@@ -109,39 +221,69 @@ namespace Managers
             {
                 _currentLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
                 Debug.Log($"Joined lobby with ID: {_currentLobby.Id}");
-                
+
                 if(_currentLobby.Data.TryGetValue("joinCode" , out var joinCodeData))
                 {
                     var joinCode = joinCodeData.Value;
-                    
-                    await RelayService.Instance.JoinAllocationAsync(joinCode);
-                    Debug.Log("Joined Relay server.");
+
+                    try
+                    {
+                        await RelayService.Instance.JoinAllocationAsync(joinCode);
+                        Debug.Log("Joined Relay server.");
+                        await UpdateLobbyPlayerList();
+                    }
+                    catch(Exception relayException)
+                    {
+                        Debug.LogError($"Failed to join Relay server: {relayException.Message}");
+
+                        if(_isHost)
+                        {
+                            await RegenerateJoinCode();
+                        }
+                    }
                 }
-                else
+                
+                else if(_isHost)
                 {
-                    Debug.LogError("No Relay join code found in the lobby data.");
+                    await RegenerateJoinCode();
                 }
             }
-            catch(Exception e)
+            catch(LobbyServiceException e)
             {
                 Debug.LogError($"Failed to join lobby with Relay: {e.Message}");
             }
         }
-        
+
+        private async Task RegenerateJoinCode()
+        {
+            if(_currentLobby == null || !_isHost) return;
+
+            try
+            {
+                var allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1);
+                var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
+                await LobbyService.Instance.UpdateLobbyAsync(_currentLobby.Id , new UpdateLobbyOptions
+                {
+                    Data = new Dictionary<string, DataObject>
+                    {
+                        { "joinCode" , new DataObject(DataObject.VisibilityOptions.Public , joinCode) }
+                    }
+                });
+
+                Debug.Log($"New join code generated: {joinCode}");
+            }
+            catch(Exception ex)
+            {
+                Debug.LogError($"Failed to regenerate join code: {ex.Message}");
+            }
+        }
+
         private async Task LeaveLobby()
         {
-            if(_currentLobby == null)
-            {
-                Debug.LogWarning("No active lobby to leave.");
-                return;
-            }
-    
-            if(_isLeavingLobby)
-            {
-                Debug.LogWarning("Leave operation is already in progress.");
-                return;
-            }
-    
+            if(_currentLobby == null) return;
+            if(_isLeavingLobby) return;
+
             _isLeavingLobby = true;
 
             try
@@ -152,21 +294,7 @@ namespace Managers
             }
             catch(LobbyServiceException e)
             {
-                if(e.Message.Contains("rate limit exceeded" , StringComparison.OrdinalIgnoreCase))
-                {
-                    Debug.LogWarning("Rate limit exceeded while trying to leave the lobby. Please try again later.");
-                }
-                
-                else if(e.Message.Contains("lobby not found" , StringComparison.OrdinalIgnoreCase))
-                {
-                    Debug.LogWarning("Lobby not found on the server. Clearing local reference.");
-                    _currentLobby = null;
-                }
-                
-                else
-                {
-                    Debug.LogError($"Failed to leave the lobby: {e.Message}");
-                }
+                Debug.LogError($"Failed to leave the lobby: {e.Message}");
             }
             finally
             {
@@ -174,55 +302,67 @@ namespace Managers
             }
         }
 
-        private async void OnLobbyCreated()
+        private async Task UpdateLobbyPlayerList()
         {
-            if(!string.IsNullOrEmpty(_lobbyName))
+            if(_currentLobby == null || string.IsNullOrEmpty(_lobbyPlayerName)) return;
+
+            var currentPlayerList = _currentLobby.Data.TryGetValue("playerList" , out var playerListData) ? playerListData.Value : "";
+
+            var playerNames = currentPlayerList.Split(',');
+
+            if(!playerNames.Any(name => name.Equals(_lobbyPlayerName, StringComparison.Ordinal)))
             {
-                await CreateLobbyWithRelay();
-            }
-            else
-            {
-                Debug.LogError("Lobby name is empty.");
+                currentPlayerList += string.IsNullOrEmpty(currentPlayerList) ? _lobbyPlayerName : $" , {_lobbyPlayerName}";
+
+                if(_isHost)
+                {
+                    await LobbyService.Instance.UpdateLobbyAsync(_currentLobby.Id , new UpdateLobbyOptions
+                    {
+                        Data = new Dictionary<string, DataObject>
+                        {
+                            { "playerList", new DataObject(DataObject.VisibilityOptions.Public , currentPlayerList) }
+                        }
+                    });
+                }
+
+                EventsManager.Invoke(Event.PlayersListUpdated , new List<string>(currentPlayerList.Split(',')));
             }
         }
-        
+
         private async void OnLobbyJoined()
         {
-            if(!string.IsNullOrEmpty(_lobbyName))
+            if(_currentLobby != null)
             {
-                await JoinLobbyByName();
+                Debug.Log("Player is already in a lobby.");
+                return;
             }
-            else
-            {
-                Debug.LogError("Lobby name is empty.");
-            }
+
+            await JoinLobby();
         }
-        
+
         private async void OnLobbyLeft()
         {
             await LeaveLobby();
         }
 
-        private void OnLobbyNameUpdated(string lobbyName)
+        private void OnLobbyPlayerNameUpdated(string lobbyPlayerName)
         {
-            _lobbyName = lobbyName;
+            _lobbyPlayerName = lobbyPlayerName;
         }
-        
+
         private void ToggleEventSubscription(bool shouldSubscribe)
         {
             if(shouldSubscribe)
             {
-                EventsManager.SubscribeToEvent(Event.LobbyCreate , new Action(OnLobbyCreated));
                 EventsManager.SubscribeToEvent(Event.LobbyJoin , new Action(OnLobbyJoined));
                 EventsManager.SubscribeToEvent(Event.LobbyLeave , new Action(OnLobbyLeft));
-                EventsManager.SubscribeToEvent(Event.LobbyNameUpdated , new Action<string>(OnLobbyNameUpdated));
+                EventsManager.SubscribeToEvent(Event.LobbyPlayerNameUpdated , new Action<string>(OnLobbyPlayerNameUpdated));
             }
             else
             {
-                EventsManager.UnsubscribeFromEvent(Event.LobbyCreate , new Action(OnLobbyCreated));
                 EventsManager.UnsubscribeFromEvent(Event.LobbyJoin , new Action(OnLobbyJoined));
                 EventsManager.UnsubscribeFromEvent(Event.LobbyLeave , new Action(OnLobbyLeft));
-                EventsManager.UnsubscribeFromEvent(Event.LobbyNameUpdated , new Action<string>(OnLobbyNameUpdated));
+                EventsManager.UnsubscribeFromEvent(Event.LobbyPlayerNameUpdated , new Action<string>(OnLobbyPlayerNameUpdated));
             }
         }
     }
