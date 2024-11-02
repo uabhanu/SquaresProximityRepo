@@ -57,7 +57,7 @@ namespace Managers
                 
                 foreach(var lobby in queryResponse.Results)
                 {
-                    if (lobby.Players.Any(player => player.Id == AuthenticationService.Instance.PlayerId))
+                    if(lobby.Players.Any(player => player.Id == AuthenticationService.Instance.PlayerId))
                     {
                         _currentLobby = lobby;
                         await LeaveLobby();
@@ -184,100 +184,6 @@ namespace Managers
                 Debug.LogError($"Failed to initialize Unity Services: {e.Message}");
             }
         }
-        
-        private async Task JoinLobby()
-        {
-            try
-            {
-                var queryResponse = await LobbyService.Instance.QueryLobbiesAsync(new QueryLobbiesOptions
-                {
-                    Filters = new List<QueryFilter>
-                    {
-                        new(field: QueryFilter.FieldOptions.Name , op: QueryFilter.OpOptions.EQ , value: _lobbyName)
-                    }
-                });
-
-                if(queryResponse.Results.Count > 0)
-                {
-                    var lobby = queryResponse.Results[0];
-                    Debug.Log($"Found existing default lobby with ID: {lobby.Id}");
-                    await JoinLobbyWithRelay(lobby.Id);
-                }
-                else
-                {
-                    Debug.LogWarning("No lobby found to join. Please try again.");
-                    CreateLobbyIfNoneExists();
-                }
-            }
-            catch(Exception e)
-            {
-                Debug.LogError($"Failed to join the default lobby: {e.Message}");
-            }
-        }
-
-        private async Task JoinLobbyWithRelay(string lobbyId)
-        {
-            try
-            {
-                _currentLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
-                Debug.Log($"Joined lobby with ID: {_currentLobby.Id}");
-
-                if(_currentLobby.Data.TryGetValue("joinCode" , out var joinCodeData))
-                {
-                    var joinCode = joinCodeData.Value;
-
-                    try
-                    {
-                        await RelayService.Instance.JoinAllocationAsync(joinCode);
-                        Debug.Log("Joined Relay server.");
-                        await UpdateLobbyPlayerList();
-                    }
-                    catch(Exception relayException)
-                    {
-                        Debug.LogError($"Failed to join Relay server: {relayException.Message}");
-
-                        if(_isHost)
-                        {
-                            await RegenerateJoinCode();
-                        }
-                    }
-                }
-                
-                else if(_isHost)
-                {
-                    await RegenerateJoinCode();
-                }
-            }
-            catch(LobbyServiceException e)
-            {
-                Debug.LogError($"Failed to join lobby with Relay: {e.Message}");
-            }
-        }
-
-        private async Task RegenerateJoinCode()
-        {
-            if(_currentLobby == null || !_isHost) return;
-
-            try
-            {
-                var allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1);
-                var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-
-                await LobbyService.Instance.UpdateLobbyAsync(_currentLobby.Id , new UpdateLobbyOptions
-                {
-                    Data = new Dictionary<string, DataObject>
-                    {
-                        { "joinCode" , new DataObject(DataObject.VisibilityOptions.Public , joinCode) }
-                    }
-                });
-
-                Debug.Log($"New join code generated: {joinCode}");
-            }
-            catch(Exception ex)
-            {
-                Debug.LogError($"Failed to regenerate join code: {ex.Message}");
-            }
-        }
 
         private async Task LeaveLobby()
         {
@@ -298,6 +204,7 @@ namespace Managers
             }
             finally
             {
+                _currentLobby = null;
                 _isLeavingLobby = false;
             }
         }
@@ -320,7 +227,7 @@ namespace Managers
                     {
                         Data = new Dictionary<string, DataObject>
                         {
-                            { "playerList", new DataObject(DataObject.VisibilityOptions.Public , currentPlayerList) }
+                            { "playerList" , new DataObject(DataObject.VisibilityOptions.Public , currentPlayerList) }
                         }
                     });
                 }
@@ -331,13 +238,15 @@ namespace Managers
 
         private async void OnLobbyJoined()
         {
+            if(string.IsNullOrEmpty(_lobbyPlayerName)) return;
+            
             if(_currentLobby != null)
             {
-                Debug.Log("Player is already in a lobby.");
+                UpdateLobbyPlayerList();
                 return;
             }
-
-            await JoinLobby();
+            
+            await CreateLobbyIfNoneExists();
         }
 
         private async void OnLobbyLeft()
