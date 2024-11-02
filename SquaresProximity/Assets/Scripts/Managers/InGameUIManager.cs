@@ -657,7 +657,7 @@ namespace Managers
         
         private void UpdateLobbyPlayersListTMP()
         {
-            playersListTMPText.text = $"Players Joined:\n" + string.Join("\n" , _playerNamesList);
+            playersListTMPText.text = $"Players Joined\n" + string.Join("\n" , _playerNamesList);
             playButton.interactable = _playerNamesList.Count > 1;
         }
         
